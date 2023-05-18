@@ -1,0 +1,46 @@
+.register {
+  height: 97vh;
+  display: flex;
+  align-items: center;
+}
+
+.registerWrap {
+  background: #33333399;
+  border-radius: 15px;
+  padding: 55px;
+  max-width: max-content;
+  margin: 0 auto;
+}
+
+.titleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  color: white;
+  font-size: 53px;
+}
+
+hr {
+  background: white;
+  width: 240px;
+  height: 4px;
+  margin-top: 10px;
+}
+
+.registerTitle {
+  color: white;
+  font-size: 42px;
+  margin-top: 10px;
+}
+
+.form {
+  display: table-caption;
+  margin-top: 70px;
+}
+
+.confPassWrap {
+  display: flex;
+}
