@@ -11,7 +11,6 @@ const Input = ({ pHText, name, onchange, dC, idElem, typeElem }) => {
       id={idElem}
       name={name}
       type={typeElem}
-      onChange={onChange}
     />
   );
 };

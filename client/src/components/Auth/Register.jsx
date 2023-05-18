@@ -7,15 +7,24 @@ import { useState } from "react";
 const Register = () => {
   const [user, setUser] = useState({
     login: "",
-    phone: 0,
+    phone: null,
     pass: "",
     confirmPass: "",
   });
   const handleChange = (event) => {
-    setUser((prevUser) => ({ ...prevUser, [event.target.name]: event.target.value }));
+    setUser((prevUser) => ({
+      ...prevUser,
+      [event.target.name]: event.target.value,
+    }));
   };
   const handleSubmit = (event) => {
-    setUser(event.target.value);
+    event.preventDefault();
+    if (user.pass === user.confirmPass) {
+      console.log("Пароль успешно подтвержден");
+    } else {
+      console.log("Пароль и его подтверждение не совпадают");
+    }
+    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
 
   return (
@@ -28,8 +37,18 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input onchange={handleChange} name="login" value={user.login} pHText={"Login"} />
-          <Input onchange={handleChange} name="phone" value={user.phone} pHText={"Phone"} />
+          <Input
+            onchange={handleChange}
+            name="login"
+            value={user.login}
+            pHText={"Login"}
+          />
+          <Input
+            onchange={handleChange}
+            name="phone"
+            value={user.phone}
+            pHText={"Phone"}
+          />
           <Input
             onchange={handleChange}
             name="pass"
@@ -38,7 +57,12 @@ const Register = () => {
           />
 
           <div className={styles.confPassWrap}>
-            <Input  onchange={handleChange} name="confirmPass" typeElem={"password"} pHText={"Confirm Password"} />
+            <Input
+              onchange={handleChange}
+              name="confirmPass"
+              typeElem={"password"}
+              pHText={"Confirm Password"}
+            />
             <Btn type="submit" textBtn={"Autificated"} />
           </div>
         </form>
