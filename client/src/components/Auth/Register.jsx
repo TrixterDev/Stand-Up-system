@@ -27,14 +27,15 @@ const Register = () => {
             className={styles.ConfirmPassword}
           /> */}
 
-          <Input></Input>
-          <Input></Input>
-          <Input></Input>
+          <Input pHText={"Login"} />
+          <Input pHText={"Phone"} />
+          <Input typeElem={"password"} pHText={"Passoword"} />
+
           <div className={styles.confPassWrap}>
-            <Input></Input>
+            <Input typeElem={"password"} pHText={"Confirm Password"} />
+            <Btn textBtn={"Autificated"} />
           </div>
         </form>
-        <Btn></Btn>
       </div>
     </div>
   );
