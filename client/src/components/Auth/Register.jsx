@@ -37,9 +37,9 @@ const Register = () => {
     if (user.pass === user.confirmPass) {
       console.log("Пароль успешно подтвержден");
       setPasswordsMatch(true);
-      RegUser(user)
-      .catch((error) => {
-        console.error(error);
+      RegUser(user).then((resp) => {
+        Cookie.set("key", resp.jwt);
+        navigate("/");
       });
     } else {
       console.log("Пароль и его подтверждение не совпадают");
