@@ -1,6 +1,7 @@
 import st from "./style.module.sass";
 
-const Input = ({ name, onChange, pHText, dC, idElem, typeElem }) => {
+const Input = ({ pHText, name, onchange, dC, idElem, typeElem }) => {
+
   return (
     <input
       name={name}
@@ -8,7 +9,9 @@ const Input = ({ name, onChange, pHText, dC, idElem, typeElem }) => {
       className={`${st.input} ${dC}`}
       placeholder={pHText}
       id={idElem}
+      name={name}
       type={typeElem}
+      onChange={onchange}
     />
   );
 };
