@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
 import { getUserInfo, loginUser } from "../../api";
 import { useNavigate } from "react-router";
+import { NavLink } from "react-router-dom";
 const Auth = () => {
   const navigate = useNavigate();
   const [adminInfo] = useState({
@@ -44,7 +45,7 @@ const Auth = () => {
       .then((resp) => {
         Cookie.set("key", resp.jwt);
         console.log(resp);
-        navigate("/");
+        navigate("/home");
       })
       .catch((error) => {
         console.error(error);
@@ -85,6 +86,10 @@ const Auth = () => {
               </div>
               <Btn textBtn="Войти" />
             </div>
+            <span className={st.span}>
+              Если у вас нет аккаунта то{" "}
+              <NavLink to={"/register"}>зарегестрируйтесь</NavLink>
+            </span>
           </div>
         </form>
       </div>
@@ -92,5 +97,4 @@ const Auth = () => {
   );
 };
 
-
-export default Auth
+export default Auth;

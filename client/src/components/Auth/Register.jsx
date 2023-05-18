@@ -3,15 +3,23 @@ import Btn from "../ui/Btn/Btn";
 
 import styles from "./Register.module.css";
 import { useState } from "react";
-
+import { RegUser, getUserInfo } from "../../api";
+import Cookie from "js-cookie";
+import { useNavigate } from "react-router";
 const Register = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    login: "",
+    username: "",
     phone: null,
     email: "",
-    pass: "",
+    password: "",
     confirmPass: "",
   });
+  const [regInfo] = useState({
+    token: Cookie.get("key") || null,
+    isConfirmed: false,
+  });
+
   const handleChange = (event) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -20,6 +28,10 @@ const Register = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    RegUser(user).then((resp) => {
+      Cookie.set("key", resp.jwt);
+      navigate("/");
+    });
     if (user.pass === user.confirmPass) {
       console.log("Пароль успешно подтвержден");
     } else {
@@ -27,6 +39,14 @@ const Register = () => {
     }
     setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
+
+  if (regInfo.token) {
+    getUserInfo(regInfo.token).then((resp) => {
+      if (resp.role.type === "Authenticated") {
+        regInfo.isConfirmed = true;
+      }
+    });
+  }
 
   return (
     <div className={styles.register}>
@@ -40,8 +60,8 @@ const Register = () => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input
             onchange={handleChange}
-            name="login"
-            value={user.login}
+            name="username"
+            value={user.username}
             pHText={"Login"}
             required
           />
@@ -62,7 +82,7 @@ const Register = () => {
 
           <Input
             onchange={handleChange}
-            name="pass"
+            name="password"
             typeElem={"password"}
             pHText={"Passoword"}
             required
@@ -72,12 +92,9 @@ const Register = () => {
             <Input
               onchange={handleChange}
               name="confirmPass"
-              typeElem={"password"}
               pHText={"Confirm Password"}
               onChange={handleChange}
-              name="confirmPass"
               typeElem={"password"}
-              pHText={"Confirm Password"}
               required
             />
             <Btn type="submit" textBtn={"Autificated"} />

@@ -9,7 +9,7 @@ const Home = () => {
       <button
         onClick={() => {
           Cookie.remove("key");
-          navigate("/auth");
+          navigate("/home");
         }}
       >
         exit
