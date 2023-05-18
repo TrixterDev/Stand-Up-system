@@ -1,5 +1,5 @@
-import Input from '../ui/Input/Input'
-import Btn from '../ui/Btn/Btn'
+import Input from "../ui/Input/Input";
+import Btn from "../ui/Btn/Btn";
 
 import styles from "./Register.module.css";
 import { useState } from "react";
@@ -42,21 +42,21 @@ const Register = () => {
             name="login"
             value={user.login}
             pHText={"Login"}
-required
+            required
           />
           <Input
             onchange={handleChange}
             name="phone"
             value={user.phone}
             pHText={"Phone"}
-required
+            required
           />
           <Input
             onchange={handleChange}
             name="pass"
             typeElem={"password"}
             pHText={"Passoword"}
-required
+            required
           />
 
           <div className={styles.confPassWrap}>
@@ -69,7 +69,7 @@ required
               name="confirmPass"
               typeElem={"password"}
               pHText={"Confirm Password"}
-required
+              required
             />
             <Btn type="submit" textBtn={"Autificated"} />
           </div>
@@ -79,5 +79,4 @@ required
   );
 };
 
-
-export default Register
+export default Register;
