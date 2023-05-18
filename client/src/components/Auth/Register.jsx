@@ -7,7 +7,7 @@ import { useState } from "react";
 const Register = () => {
   const [user, setUser] = useState({
     login: "",
-    phone: 0,
+    phone: null,
     pass: "",
     confirmPass: "",
   });
@@ -18,7 +18,13 @@ const Register = () => {
     }));
   };
   const handleSubmit = (event) => {
-    setUser(event.target.value);
+    event.preventDefault();
+    if (user.pass === user.confirmPass) {
+      console.log("Пароль успешно подтвержден");
+    } else {
+      console.log("Пароль и его подтверждение не совпадают");
+    }
+    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
 
   return (
@@ -55,6 +61,10 @@ required
 
           <div className={styles.confPassWrap}>
             <Input
+              onchange={handleChange}
+              name="confirmPass"
+              typeElem={"password"}
+              pHText={"Confirm Password"}
               onChange={handleChange}
               name="confirmPass"
               typeElem={"password"}
