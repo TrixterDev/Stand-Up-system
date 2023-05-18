@@ -28,17 +28,17 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input onChange={handleChange} name="login" value={user.login} pHText={"Login"} />
-          <Input onChange={handleChange} name="phone" value={user.phone} pHText={"Phone"} />
+          <Input onchange={handleChange} name="login" value={user.login} pHText={"Login"} />
+          <Input onchange={handleChange} name="phone" value={user.phone} pHText={"Phone"} />
           <Input
-            onChange={handleChange}
+            onchange={handleChange}
             name="pass"
             typeElem={"password"}
             pHText={"Passoword"}
           />
 
           <div className={styles.confPassWrap}>
-            <Input  onChange={handleChange} name="confirmPass" typeElem={"password"} pHText={"Confirm Password"} />
+            <Input  onchange={handleChange} name="confirmPass" typeElem={"password"} pHText={"Confirm Password"} />
             <Btn type="submit" textBtn={"Autificated"} />
           </div>
         </form>
