@@ -67,6 +67,7 @@ const Auth = () => {
                 name="identifier"
                 idElem="email"
                 onchange={handleInput}
+                required
               />
               <label htmlFor="email">E-mail</label>
             </div>
@@ -78,6 +79,7 @@ const Auth = () => {
                   name="password"
                   idElem="password"
                   typeElem="password"
+                  required
                 />
                 <label htmlFor="pass">Пароль</label>
               </div>
@@ -90,4 +92,5 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+
+export default Auth
