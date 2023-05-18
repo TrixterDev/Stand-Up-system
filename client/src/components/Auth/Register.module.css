@@ -10,7 +10,7 @@
 .registerWrap {
   background: #33333399;
   border-radius: 15px;
-  padding: 55px;
+  padding: 50px;
   max-width: max-content;
   margin: 0 auto;
 }
@@ -24,6 +24,7 @@
 .title {
   color: white;
   font-size: 53px;
+  margin: 0;
 }
 
 hr {
@@ -36,13 +37,13 @@ hr {
 .registerTitle {
   color: white;
   font-size: 42px;
-  margin-top: 10px;
+  margin: 10px 0 0 0;
 }
 
 .form {
   display: grid;
   gap: 16px;
-  margin-top: 70px;
+  margin-top: 50px;
   max-width: 500px;
   width: 100%;
 }

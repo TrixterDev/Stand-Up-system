@@ -8,6 +8,7 @@ const Register = () => {
   const [user, setUser] = useState({
     login: "",
     phone: null,
+    email: "",
     pass: "",
     confirmPass: "",
   });
@@ -51,6 +52,14 @@ const Register = () => {
             pHText={"Phone"}
             required
           />
+
+          <Input
+            onchange={handleChange}
+            name="email"
+            value={user.email}
+            pHText={"E-mail"}
+          />
+
           <Input
             onchange={handleChange}
             name="pass"
