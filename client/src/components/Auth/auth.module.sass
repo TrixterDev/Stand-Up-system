@@ -1,0 +1,78 @@
+.auth
+  &__wrap
+    height: 100vh
+    width: 100%
+    background: url(./bg.svg) no-repeat
+    background-size: cover
+    background-position: center center
+    display: flex
+    align-items: center
+    padding: 25px
+    justify-content: centerv
+    > div
+      width: 38.125rem
+      height: 25rem
+      margin: auto
+      position: relative
+  &__content
+    position: absolute
+    background: #85701F
+    border-radius: 2rem
+    padding: 3.4375rem
+    width: 100%
+    height: 100%
+    > hr
+      border: none
+      width: 100%
+      height: .125rem
+      background: #ffff
+  &__title
+    width: max-content
+    margin: auto
+    text-align: center
+    color: #fff
+  &__input
+    width: 100%
+    margin-top: 2.625rem
+  &__btn
+    margin-top: 1.875rem
+    display: flex
+    align-items: center
+    gap: 1.25rem
+    width: 100%
+    > input
+      width: 100%
+    > button
+      border-radius: .75rem
+
+.customInput
+  position: relative
+  width: 100%
+  > label
+    position: absolute
+    left: 1.5625rem
+    top: .9375rem
+    width: 80%
+    transition: .3s all
+  > input
+    width: 100%
+    color: #fff
+    &:focus
+      color: #000
+      + label
+        top: -1.5625rem
+        color: #fff
+        left: 0
+
+@media screen and (max-width: 370px)
+  .auth
+    &__wrap
+      > div
+        height: 460px
+    &__title
+      > h1
+        font-size: 2rem
+    &__btn
+      flex-direction: column
+      > button
+        width: 100%
