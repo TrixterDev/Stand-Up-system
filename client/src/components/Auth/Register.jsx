@@ -15,6 +15,8 @@ const Register = () => {
     password: "",
     confirmPass: "",
   });
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
   const [regInfo] = useState({
     token: Cookie.get("key") || null,
     isConfirmed: false,
@@ -34,10 +36,16 @@ const Register = () => {
     });
     if (user.pass === user.confirmPass) {
       console.log("Пароль успешно подтвержден");
+      setPasswordsMatch(true);
+      RegUser(user)
+      .catch((error) => {
+        console.error(error);
+      });
     } else {
       console.log("Пароль и его подтверждение не совпадают");
+      setPasswordsMatch(false);
     }
-    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
+
   };
 
   if (regInfo.token) {
