@@ -1,16 +1,25 @@
-import Input from '../ui/Input/Input'
-import Btn from '../ui/Btn/Btn'
+import Input from "../ui/Input/Input";
+import Btn from "../ui/Btn/Btn";
 
 import styles from "./Register.module.css";
 import { useState } from "react";
-
+import { RegUser, getUserInfo } from "../../api";
+import Cookie from "js-cookie";
+import { useNavigate } from "react-router";
 const Register = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    login: "",
-    phone: 0,
-    pass: "",
+    username: "",
+    phone: null,
+    email: "",
+    password: "",
     confirmPass: "",
   });
+  const [regInfo] = useState({
+    token: Cookie.get("key") || null,
+    isConfirmed: false,
+  });
+
   const handleChange = (event) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -18,8 +27,26 @@ const Register = () => {
     }));
   };
   const handleSubmit = (event) => {
-    setUser(event.target.value);
+    event.preventDefault();
+    RegUser(user).then((resp) => {
+      Cookie.set("key", resp.jwt);
+      navigate("/");
+    });
+    if (user.pass === user.confirmPass) {
+      console.log("Пароль успешно подтвержден");
+    } else {
+      console.log("Пароль и его подтверждение не совпадают");
+    }
+    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
+
+  if (regInfo.token) {
+    getUserInfo(regInfo.token).then((resp) => {
+      if (resp.role.type === "Authenticated") {
+        regInfo.isConfirmed = true;
+      }
+    });
+  }
 
   return (
     <div className={styles.register}>
@@ -33,33 +60,42 @@ const Register = () => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input
             onchange={handleChange}
-            name="login"
-            value={user.login}
+            name="username"
+            value={user.username}
             pHText={"Login"}
-required
+            required
           />
           <Input
             onchange={handleChange}
             name="phone"
             value={user.phone}
             pHText={"Phone"}
-required
+            required
           />
+
           <Input
             onchange={handleChange}
-            name="pass"
+            name="email"
+            value={user.email}
+            pHText={"E-mail"}
+          />
+
+          <Input
+            onchange={handleChange}
+            name="password"
             typeElem={"password"}
             pHText={"Passoword"}
-required
+            required
           />
 
           <div className={styles.confPassWrap}>
             <Input
-              onChange={handleChange}
+              onchange={handleChange}
               name="confirmPass"
-              typeElem={"password"}
               pHText={"Confirm Password"}
-required
+              onChange={handleChange}
+              typeElem={"password"}
+              required
             />
             <Btn type="submit" textBtn={"Autificated"} />
           </div>
@@ -69,5 +105,4 @@ required
   );
 };
 
-
-export default Register
+export default Register;

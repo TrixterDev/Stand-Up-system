@@ -1,18 +1,17 @@
-import st from './style.module.sass'
+import st from "./style.module.sass";
 
-const Input = ({ pHText, name, onchange, dC, idElem, typeElem, required }) => {
+const Input = ({ pHText, name, onchange, idElem, typeElem, required }) => {
   return (
     <input
-      className={`${st.input} ${dC}`}
+      name={name}
+      onChange={onchange}
+      className={`${st.input}`}
       placeholder={pHText}
       id={idElem}
-      name={name}
       type={typeElem}
-      onChange={onchange}
       required={required && required}
     />
   );
 };
 
-
-export default Input
+export default Input;
