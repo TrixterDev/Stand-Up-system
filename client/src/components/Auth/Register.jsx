@@ -1,44 +1,73 @@
 import Input from '../ui/Input/Input'
 import Btn from '../ui/Btn/Btn'
 
-import styles from './Register.module.css'
+import styles from "./Register.module.css";
+import { useState } from "react";
 
 const Register = () => {
-    return (
-        <div className={styles.register}>
-            <div className={styles.registerWrap}>
-                <div className={styles.titleWrap}>
-                    <h2 className={styles.title}>Stand Up</h2>
-                    <hr />
-                    <h3 className={styles.registerTitle}>Registration</h3>
-                </div>
+  const [user, setUser] = useState({
+    login: "",
+    phone: 0,
+    pass: "",
+    confirmPass: "",
+  });
+  const handleChange = (event) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [event.target.name]: event.target.value,
+    }));
+  };
+  const handleSubmit = (event) => {
+    setUser(event.target.value);
+  };
 
-                <form className={styles.form}>
-                    {/* <input type="text" placeholder="Login" className={styles.login} />
-          <input type="text" placeholder="Phone" className={styles.phone} />
-          <input
-            type="password"
-            placeholder="Password"
-            className={styles.password}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className={styles.ConfirmPassword}
-          /> */}
-
-                    <Input pHText={'Login'} required />
-                    <Input pHText={'Phone'} required />
-                    <Input typeElem={'password'} pHText={'Passoword'} />
-
-                    <div className={styles.confPassWrap}>
-                        <Input typeElem={'password'} pHText={'Confirm Password'} required />
-                        <Btn textBtn={'Autificated'} />
-                    </div>
-                </form>
-            </div>
+  return (
+    <div className={styles.register}>
+      <div className={styles.registerWrap}>
+        <div className={styles.titleWrap}>
+          <h2 className={styles.title}>Stand Up</h2>
+          <hr />
+          <h3 className={styles.registerTitle}>Registration</h3>
         </div>
-    )
-}
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
+            onchange={handleChange}
+            name="login"
+            value={user.login}
+            pHText={"Login"}
+required
+          />
+          <Input
+            onchange={handleChange}
+            name="phone"
+            value={user.phone}
+            pHText={"Phone"}
+required
+          />
+          <Input
+            onchange={handleChange}
+            name="pass"
+            typeElem={"password"}
+            pHText={"Passoword"}
+required
+          />
+
+          <div className={styles.confPassWrap}>
+            <Input
+              onChange={handleChange}
+              name="confirmPass"
+              typeElem={"password"}
+              pHText={"Confirm Password"}
+required
+            />
+            <Btn type="submit" textBtn={"Autificated"} />
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 
 export default Register
