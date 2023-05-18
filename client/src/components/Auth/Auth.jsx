@@ -1,13 +1,12 @@
 import st from "./auth.module.sass";
 import Input from "../../components/ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
 import { getUserInfo, loginUser } from "../../api";
-// import { useNavigate } from "react-router-dom";
-// const redirect = useNavigate();
-
+import { useNavigate } from "react-router";
 const Auth = () => {
+  const navigate = useNavigate();
   const [adminInfo] = useState({
     token: Cookie.get("key"),
     isConfirmed: false,
@@ -17,6 +16,12 @@ const Auth = () => {
     identifier: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (adminInfo.token) {
+      navigate("/");
+    }
+  }, []);
 
   if (adminInfo.token) {
     getUserInfo(adminInfo.token).then((resp) => {
@@ -39,8 +44,7 @@ const Auth = () => {
       .then((resp) => {
         Cookie.set("key", resp.jwt);
         console.log(resp);
-        // redirect("/");
-        window.location.href = "/admin";
+        navigate("/");
       })
       .catch((error) => {
         console.error(error);
