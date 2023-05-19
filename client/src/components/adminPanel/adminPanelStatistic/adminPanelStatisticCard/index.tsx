@@ -4,20 +4,27 @@ import Btn from "../../../ui/Btn/Btn";
 
 interface Props {
   children: ReactNode;
+  title: string;
+  count: number;
+  click: any;
 }
 
-const AdminPanelStatisticCard: React.FC<Props> = ({ children }) => {
+const AdminPanelStatisticCard: React.FC<Props> = ({
+  count,
+  title,
+  children,
+}) => {
   return (
     <div className={st.card}>
-      <div className="card__header">
-        <h5>Всего сотрудников</h5>
+      <div className={st.card__header}>
+        <h5>{title}</h5>
       </div>
-      <div className="card__body">
+      <div className={st.card__body}>
         {children}
-        <p>0</p>
+        <p>{count}</p>
       </div>
-      <div className="card__footer">
-        <Btn textBtn="Подробнее..." dC="" />
+      <div className={st.card__footer}>
+        <Btn textBtn="Подробнее..." dC={st.card__footer__btn} />
       </div>
     </div>
   );

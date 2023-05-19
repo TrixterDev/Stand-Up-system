@@ -1,30 +1,41 @@
 .card
-  border: 1px solid #eb0000
+  display: flex
+  flex-direction: column
+  background-color: #333333
+  border: 1px solid #333333
   border-radius: 4px
-  padding: 20px
-  background-color: #fff
+  background-color: #f0f0f0
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
-
+  width: 500px
   &__header
-    margin-bottom: 10px
-
+    text-align: start
+    max-width: 100%
+    padding: 20px
+    background-color: #333333
     h5
+      color: #f0f0f0
       font-size: 18px
       font-weight: bold
 
+    &__body
+      display: flex
+      justify-content: space-between
+      max-width: 100%
+      padding: 20px
+      background-color: #333333
+      text-align: center
+      align-items: center
 
-  &__body
-    margin-bottom: 20px
+      p
+        font-size: 70px
+        color: #f0f0f0
 
-    p
-      font-size: 16px
-
-
-
-  &__footer
-    text-align: right
-
-    .btn
-      // Customize the style of Btn component as needed
-
-
+    &__footer
+      text-align: end
+      padding: 20px
+      max-width: 100%
+      background-color: #333333
+      &__btn
+        color: #f0f0f0
+        background-color: #ffcc00
+>>>>>>> origin/admin-page-other
