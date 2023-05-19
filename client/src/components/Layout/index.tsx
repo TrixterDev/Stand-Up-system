@@ -1,6 +1,9 @@
 import React from "react";
 import st from "./style.module.sass";
 import { Link } from "react-router-dom";
+import { ImStatsBars } from "react-icons/im";
+import { RiQuestionAnswerFill } from "react-icons/ri";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 interface props {
   children: any;
 }
@@ -10,9 +13,18 @@ const Layout: React.FC<props> = ({ children }) => {
       <div>{children}</div>
       <div>
         <nav className={st.nav}>
-          <Link to="">btn</Link>
-          <Link to="">btn2</Link>
-          <Link to="">btn3</Link>
+          <Link to="/statistic">
+            <ImStatsBars />
+            Статистика
+          </Link>
+          <Link to="/answer">
+            <RiQuestionAnswerFill />
+            Ответы
+          </Link>
+          <Link to="/question">
+            <BsFillQuestionCircleFill />
+            Вопросы
+          </Link>
         </nav>
       </div>
     </div>
