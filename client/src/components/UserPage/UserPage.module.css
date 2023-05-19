@@ -25,12 +25,7 @@
 }
 
 .avatar {
-    width: 150px;<h1>{{ title }}</h1>
-    <app-button/>
-    {{products[0].title}}
-    <app-product>
-    </app-product>
-
+    width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
