@@ -4,13 +4,13 @@ import { HiUser , HiUserGroup , HiUserRemove } from "react-icons/hi";
 const PanelStatistic = () => {
   return (
     <div className={st.PanelStats}>
-      <AdminPanelStatisticCard title="Всего сотрудников">
+      <AdminPanelStatisticCard click={0} count={0} title="Всего сотрудников">
       <HiUserGroup color="#f0f0f0" size={70} />
       </AdminPanelStatisticCard>
-      <AdminPanelStatisticCard title="Всего сотрудников онлайн">
+      <AdminPanelStatisticCard click={0} count={0}  title="Всего сотрудников онлайн">
         <HiUser color="#f0f0f0" size={70} />
       </AdminPanelStatisticCard>
-      <AdminPanelStatisticCard title="Всего сотрудников оффлайн">
+      <AdminPanelStatisticCard click={0} count={0} title="Всего сотрудников оффлайн">
         <HiUserRemove color="#f0f0f0" size={70} />
       </AdminPanelStatisticCard>
     </div>

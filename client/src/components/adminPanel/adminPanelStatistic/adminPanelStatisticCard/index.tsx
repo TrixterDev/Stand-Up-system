@@ -5,9 +5,11 @@ import Btn from "../../../ui/Btn/Btn";
 interface Props {
   children: ReactNode;
   title: string;
+  count: number;
+  click: any;
 }
 
-const AdminPanelStatisticCard: React.FC<Props> = ({ title, children }) => {
+const AdminPanelStatisticCard: React.FC<Props> = ({ count, title, children }) => {
   return (
     <div className={st.card}>
       <div className={st.card__header}>
@@ -15,7 +17,7 @@ const AdminPanelStatisticCard: React.FC<Props> = ({ title, children }) => {
       </div>
       <div className={st.card__body}>
         {children}
-        <p>0</p>
+        <p>{count}</p>
       </div>
       <div className={st.card__footer}>
         <Btn textBtn="Подробнее..." dC={st.card__footer__btn} />
