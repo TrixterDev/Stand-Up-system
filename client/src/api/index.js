@@ -22,3 +22,14 @@ export const RegUser = (data) => {
 export const getData = () => {
   return strapiAPI.get("data?populate=deep").json();
 };
+export const changeData = (data) => {
+  return strapiAPI
+    .put("stand-up?populate=deep", {
+      json: {
+        data: {
+          Products: data,
+        },
+      },
+    })
+    .json();
+};
