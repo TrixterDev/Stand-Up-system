@@ -20,7 +20,7 @@ function App() {
             <Route path="/admin-page/statistic" element={<PanelStatistic />} />
             <Route path="/admin-page/answer" element={<PanelAnswer />} />
             <Route path="/admin-page/question" element={<PanelQuestion />} />
-          <Route path="/admin-page/user-page" element={<UserPage />} />
+          <Route path="/user-page" element={<UserPage />} />
         </Routes>
       </BrowserRouter>
     </>
