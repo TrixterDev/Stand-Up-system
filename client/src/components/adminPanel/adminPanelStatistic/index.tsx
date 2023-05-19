@@ -1,7 +1,11 @@
-import React from "react";
+import AdminPanelStatisticCard from "./adminPanelStatisticCard";
 
 const PanelStatistic = () => {
-  return <div>PanelStatistic</div>;
+  return <div className="PanelStats">
+        <AdminPanelStatisticCard>
+
+        </AdminPanelStatisticCard>
+  </div>;
 };
 
 export default PanelStatistic;
