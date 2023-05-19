@@ -16,11 +16,11 @@ function App() {
           <Route path="/" element={<Auth />} />
           <Route path="/home" element={<Home />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin-page" element={<AdminPage />} />
-          <Route path="/statistic" element={<PanelStatistic />} />
-          <Route path="/answer" element={<PanelAnswer />} />
-          <Route path="/question" element={<PanelQuestion />} />
-          <Route path="/user-page" element={<UserPage />} />
+          <Route path="/admin-page" element={<AdminPage />}/>
+            <Route path="/admin-page/statistic" element={<PanelStatistic />} />
+            <Route path="/admin-page/answer" element={<PanelAnswer />} />
+            <Route path="/admin-page/question" element={<PanelQuestion />} />
+          <Route path="/admin-page/user-page" element={<UserPage />} />
         </Routes>
       </BrowserRouter>
     </>
