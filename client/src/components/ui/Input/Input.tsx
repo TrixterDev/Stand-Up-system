@@ -24,12 +24,11 @@ const Input: React.FC<InputProps> = ({
     <input
       name={name}
       onChange={onChange}
-      className={`${st.input}`}
+      className={`${st.input} ${secondClass}`}
       placeholder={pHText}
       id={idElem}
       type={typeElem}
       required={required}
-      secondClass={secondClass}
     />
   );
 };
