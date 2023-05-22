@@ -3,7 +3,7 @@ export const strapiAPI = ky.create({
   prefixUrl: "http://localhost:1337/api",
 });
 
-export const getUserInfo = (token) => {
+export const getUserInfo = (token: string) => {
   return strapiAPI
     .get("users/me?populate=role", {
       headers: { Authorization: `Bearer ${token}` },
@@ -11,11 +11,11 @@ export const getUserInfo = (token) => {
     .json();
 };
 
-export const loginUser = (data) => {
+export const loginUser = (data: any) => {
   return strapiAPI.post("auth/local", { json: data }).json();
 };
 
-export const RegUser = (data) => {
+export const RegUser = (data: any) => {
   return strapiAPI.post("auth/local/register", { json: data }).json();
 };
 
@@ -24,14 +24,14 @@ export const getUser = () => {
 };
 
 export const getData = () => {
-  return strapiAPI.get("data?populate=deep").json();
+  return strapiAPI.get("questions").json();
 };
-export const changeData = (data) => {
+export const changeData = (data: any, id: number) => {
   return strapiAPI
-    .put("stand-up?populate=deep", {
+    .put(`questions/${id}`, {
       json: {
         data: {
-          Products: data,
+          answer: data,
         },
       },
     })

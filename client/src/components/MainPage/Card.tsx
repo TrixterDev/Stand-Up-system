@@ -1,12 +1,10 @@
 import { changeData } from "../../api";
 import st from "./MainPage.module.sass";
 import React, { useState } from "react";
-
+import { questionItem } from ".";
 interface props {
-  productInfo: { answer: string; question: string };
-  data: any;
-  index: number;
   id: number;
+  productInfo: questionItem;
 }
 
 interface itemKeys {
@@ -14,26 +12,25 @@ interface itemKeys {
   question: string;
   id: number;
 }
-const Card: React.FC<props> = ({ productInfo, data, index, id }) => {
+const Card: React.FC<props> = ({ productInfo, id }) => {
   const [item, setItem] = useState<itemKeys>({
-    answer: productInfo?.answer,
-    question: productInfo?.question,
-    id,
+    answer: productInfo.answer,
+    question: productInfo.question,
+    id: id,
   });
-  const [submitted, setSubmitted] = useState(false);
+  console.log(item);
+
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(index);
-
-    let product = [...data];
-    product.splice(index, 1, item);
-    changeData(product);
+    console.log(item.answer);
+    changeData(item.answer, id);
     setSubmitted(true);
   };
 
   return (
     <div key={item?.id} className={st.grid_item}>
-      {item?.question}
+      {item.question}
       <form onSubmit={handleSubmit}>
         {submitted ? (
           <div>
