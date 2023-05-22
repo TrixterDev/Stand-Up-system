@@ -19,7 +19,7 @@ export const RegUser = (data) => {
   return strapiAPI.post("auth/local/register", { json: data }).json();
 };
 
-export const getUser = () => {
+export const getUsers = () => {
   return strapiAPI.get("users").json();
 };
 

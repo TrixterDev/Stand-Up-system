@@ -2,7 +2,7 @@ import AdminPanelStatisticCard from "./adminPanelStatisticCard";
 import st from "./style.module.sass";
 import { HiUser, HiUserGroup, HiUserRemove } from "react-icons/hi";
 import { useEffect } from "react";
-import { getUser } from "../../../api";
+import { getUsers } from "../../../api";
 import { useState } from "react";
 
 // interface user{
@@ -15,9 +15,9 @@ import { useState } from "react";
 const PanelStatistic = () => {
   const [users, setUsers] = useState<any>([]);
   console.log(users.length);
-  
+
   useEffect(() => {
-    getUser().then((res: any) => setUsers(res));
+    getUsers().then((res: any) => setUsers(res));
   }, []);
   return (
     <div className={st.PanelStats}>
