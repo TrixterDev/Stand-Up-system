@@ -5,12 +5,6 @@ import { useEffect } from "react";
 import { getUsers } from "../../../api";
 import { useState } from "react";
 
-// interface user{
-//     id: number,
-//     username: string,
-//     email: string,
-// }
-
 const PanelStatistic = () => {
   const [users, setUsers] = useState<any>([]);
   const [online, setOnline] = useState<any>([]);
