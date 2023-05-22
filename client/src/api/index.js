@@ -37,3 +37,4 @@ export const changeData = (data) => {
     })
     .json();
 };
+

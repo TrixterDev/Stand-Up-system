@@ -11,14 +11,22 @@ import { useState } from "react";
 //     email: string,
 // }
 
-
 const PanelStatistic = () => {
   const [users, setUsers] = useState<any>([]);
-  console.log(users.length);
+  const [online, setOnline] = useState<any>([]);
+  const [offline, setOffline] = useState<any>([]);
 
   useEffect(() => {
-    getUsers().then((res: any) => setUsers(res));
+    getUsers().then((res: any) => {
+      setUsers(res);
+      const onlineUsers = res.filter((data: any) => data.online);
+      const offlineUsers = res.filter((data: any) => !data.online);
+
+      setOnline(onlineUsers);
+      setOffline(offlineUsers);
+    });
   }, []);
+
   return (
     <div className={st.PanelStats}>
       <AdminPanelStatisticCard click={0} count={users.length} title="Всего сотрудников">
@@ -26,14 +34,14 @@ const PanelStatistic = () => {
       </AdminPanelStatisticCard>
       <AdminPanelStatisticCard
         click={0}
-        count={0}
+        count={online.length}
         title="Всего сотрудников онлайн"
       >
         <HiUser color="#f0f0f0" size={70} />
       </AdminPanelStatisticCard>
       <AdminPanelStatisticCard
         click={0}
-        count={0}
+        count={offline.length}
         title="Всего сотрудников оффлайн"
       >
         <HiUserRemove color="#f0f0f0" size={70} />
