@@ -1,21 +1,7 @@
-import Cookie from 'js-cookie'
-import { useNavigate } from 'react-router'
+import MainPage from "../components/MainPage";
 
 const Home = () => {
-    const navigate = useNavigate()
-    return (
-        <div>
-            Home
-            <button
-                onClick={() => {
-                    Cookie.remove('key')
-                    navigate('/home')
-                }}
-            >
-                exit
-            </button>
-        </div>
-    )
-}
+  return <MainPage />;
+};
 
-export default Home
+export default Home;

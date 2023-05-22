@@ -11,9 +11,13 @@ const MainPage = () => {
   useEffect(() => {
     getData().then((res: any) => {
       setData(res.data);
+      console.log(res.data);
     });
   }, []);
+  // interface dataType {
+  // data:
 
+  // }
   interface questionItem {
     answer: string;
     question: string;
@@ -25,7 +29,7 @@ const MainPage = () => {
       <div className={st.auth}></div>
       <div className={st.grid_container}>
         {data &&
-          data.map((el<questionItem>, index) => {
+          data.map((el: questionItem, index: number) => {
             return (
               <Card
                 key={el.id}
