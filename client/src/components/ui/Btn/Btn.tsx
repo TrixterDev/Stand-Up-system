@@ -5,7 +5,7 @@ interface BtnProps {
   textBtn?: string;
   dC?: string;
   type?: "button" | "submit" | "reset" | undefined;
-  onClick?: any;
+  onClick?: () => void;
   icon?: any;
 }
 

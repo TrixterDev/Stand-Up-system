@@ -8,6 +8,9 @@ import { FaEdit, FaShareAlt } from "react-icons/fa";
 interface User {
   username: string;
   email: string;
+  firstname?: string;
+  lastname?: string;
+  position?: string;
 }
 
 export const UserPage = () => {
@@ -24,26 +27,34 @@ export const UserPage = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles["user-card"]}>
-        <img
-          src="/img/base-avatar.png"
-          alt={`Аватарка пользователя ${user.username}`}
-          className={styles.avatar}
-        />
-        <div className={styles["user-card-info"]}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <h2>{user.email}</h2>
-        </div>
-        <div className={styles.buttons}>
-          <button className={styles.btn}>
-            <FaEdit />
-          </button>
-          <button className={styles.btn}>
-            <FaShareAlt />
-          </button>
+    <>
+      <Btn textBtn="Назад" onClick={() => history.back()} />
+      <div className={styles.container}>
+        <div className={styles["user-card"]}>
+          <img
+            src="/img/base-avatar.png"
+            alt={`Аватарка пользователя ${user.username}`}
+            className={styles.avatar}
+          />
+          <div className={styles["user-card-info"]}>
+            <h2 className={styles.username}>
+              {user.firstname
+                ? `${user.lastname} ${user.firstname}`
+                : `${user.username}`}
+            </h2>
+            <span className={styles.position}>{user.position}</span>
+            <h2 className={styles.email}>{user.email}</h2>
+          </div>
+          <div className={styles.buttons}>
+            <button className={styles.btn}>
+              <FaEdit />
+            </button>
+            <button className={styles.btn}>
+              <FaShareAlt />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
