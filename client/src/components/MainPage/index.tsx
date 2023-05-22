@@ -10,15 +10,14 @@ const MainPage = () => {
 
   useEffect(() => {
     getData().then((res: any) => {
-      setData(res.data.attributes.Products);
-      console.log();
+      setData(res.data);
     });
   }, []);
 
   interface questionItem {
     answer: string;
     question: string;
-    id;
+    id: number;
   }
 
   return (
