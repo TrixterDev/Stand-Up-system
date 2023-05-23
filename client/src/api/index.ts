@@ -13,7 +13,7 @@ export const getUserInfo = (token: string) => {
 };
 
 export const loginUser = (data: any) => {
-  return strapiAPI.post("auth/local", { json: data }).json();
+  return strapiAPI.post("auth/local?populate=role", { json: data }).json();
 };
 
 export const RegUser = (data: any) => {
@@ -21,12 +21,13 @@ export const RegUser = (data: any) => {
 };
 
 export const getUser = () => {
-  return strapiAPI.post(`users`).json();
+  return strapiAPI.post(`users?populate=*`).json();
 };
 
 export const getData = () => {
   return strapiAPI.get("questions").json();
 };
+
 export const changeData = (data: any, id: number) => {
   return strapiAPI
     .put(`questions/${id}`, {
