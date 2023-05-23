@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsers } from "../../../../../api";
-import st from "./style.module.sass";
+import st from "./online.module.sass";
 
 const APSCmore = () => {
   const [online, setOnline] = useState<any>([]);
