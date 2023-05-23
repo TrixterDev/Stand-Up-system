@@ -1,4 +1,5 @@
 import ky from "ky";
+import { json } from "react-router";
 export const strapiAPI = ky.create({
   prefixUrl: "http://localhost:1337/api",
 });
@@ -20,7 +21,7 @@ export const RegUser = (data: any) => {
 };
 
 export const getUser = () => {
-  return strapiAPI.get("users").json();
+  return strapiAPI.post(`users`).json();
 };
 
 export const getData = () => {
