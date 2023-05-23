@@ -1,0 +1,42 @@
+.overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background: rgba(0,0 ,0 ,0.5 )
+  z-index: 10
+  visibility: hidden
+  opacity: 0
+
+  &.active
+    visibility: visible
+    opacity: 1
+
+.modal
+  position: absolute
+  left: 50%
+  top: 0
+  transform: translate(-50%, -100%)
+  z-index: 11
+  background: #fff
+  padding: 15px
+  padding: 20px
+  border-radius: 10px
+
+  &.active
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+
+  &-content
+    padding: 15px 0
+
+.close
+  position: absolute
+  top: 10px
+  right: 10px
+  font-size: 1.5rem
+  border: unset
+  background: unset
+  outline: none

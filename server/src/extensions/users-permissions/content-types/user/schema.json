@@ -73,7 +73,15 @@
         "audios"
       ],
       "type": "media",
-      "multiple": false
+      "multiple": false,
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "position": {
+      "type": "string"
     }
   }
 }
