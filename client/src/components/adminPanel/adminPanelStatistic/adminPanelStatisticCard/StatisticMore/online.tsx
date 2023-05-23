@@ -14,7 +14,7 @@ const online = () => {
   }, []);
   return (
     <div className={st.wrapper}>
-      <h2 className={st.wrapper__title}>Всего сотрудников</h2>
+      <h2 className={st.wrapper__title}>Всего сотрудников онлайн</h2>
       <div className={st.wrapper__cards}>
         {online.map((data: any) => {
           return (

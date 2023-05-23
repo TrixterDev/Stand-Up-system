@@ -15,7 +15,7 @@ const Offline = () => {
   }, []);
   return (
     <div className={st.wrapper}>
-      <h2 className={st.wrapper__title}>Всего сотрудников</h2>
+      <h2 className={st.wrapper__title}>Всего сотрудников оффлайн</h2>
       <div className={st.wrapper__cards}>
         {offline.map((data: any) => {
           return (
