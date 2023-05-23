@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../../api";
-import StatisticMoreCard from "../StatisticMoreCard";
-import st from "./online.module.sass";
+import { getUsers } from "../../../../../api";
+import StatisticMoreCard from "./StatisticMoreCard";
+import st from "./allusers.module.sass";
 
 const online = () => {
   const [online, setOnline] = useState<any>([]);
@@ -13,14 +13,12 @@ const online = () => {
     });
   }, []);
   return (
-    <div className={st.wrap}>
-      <div>
-        <h2>Сотрудники онлайн</h2>
+    <div className={st.wrapper}>
+      <h2 className={st.wrapper__title}>Всего сотрудников</h2>
+      <div className={st.wrapper__cards}>
         {online.map((data: any) => {
           return (
-            <StatisticMoreCard username={data.username} status={data.online}>
-              d
-            </StatisticMoreCard>
+            <StatisticMoreCard username={data.username} status={data.online} />
           );
         })}
       </div>

@@ -8,9 +8,9 @@ import AdminPage from "./Page/AdminPage";
 import PanelStatistic from "./components/adminPanel/adminPanelStatistic";
 import PanelAnswer from "./components/adminPanel/adminPanelAnswers";
 import PanelQuestion from "./components/adminPanel/adminPanelQuestion";
-import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/OnlineUsers/online";
-import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/OfflineUsers/offline";
-import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers/AllUsers";
+import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/online";
+import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/offline";
+import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 function App() {
   return (
     <>
