@@ -18,7 +18,6 @@ const Card: React.FC<props> = ({ productInfo, id }) => {
     question: productInfo.question,
     id: id,
   });
-  console.log(item);
 
   const [submitted, setSubmitted] = useState<boolean>(false);
   const handleSubmit = (e: any) => {

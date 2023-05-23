@@ -17,7 +17,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div className={clsx(styles.modal, isVisible && styles.active)}>
-        <button className={styles.close}>
+        <button onClick={() => setIsVisible(false)} className={styles.close}>
           <FaTimes />
         </button>
         <div className={styles["modal-content"]}>{children}</div>

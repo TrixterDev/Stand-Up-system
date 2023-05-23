@@ -3,7 +3,7 @@ import Input from "../ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
-import { getUser, getUserInfo, loginUser } from "../../api";
+import { loginUser } from "../../api";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 
@@ -33,6 +33,13 @@ const Auth = () => {
     if (Cookie.get("key")) {
       navigate("/");
     }
+    loginUser(form)
+      .then((resp: any) => {
+        Cookie.set("key", resp.jwt);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const handleInput = (event: any) => {
@@ -47,7 +54,7 @@ const Auth = () => {
     loginUser(form)
       .then((resp: any) => {
         Cookie.set("key", resp.jwt);
-        console.log(resp);
+        console.log(resp.user);
 
         if (resp.user.email === "user@mail.ru") {
           navigate("/admin-page");

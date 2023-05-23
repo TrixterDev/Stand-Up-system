@@ -66,22 +66,18 @@
       "configurable": false
     },
     "avatarka": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false,
-    "firstname": {
-      "type": "string"
+      ]
     },
-    "lastname": {
-      "type": "string"
-    },
-    "position": {
-      "type": "string"
+    "about": {
+      "type": "richtext"
     }
   }
 }
