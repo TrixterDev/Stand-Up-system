@@ -8,6 +8,7 @@ interface InputProps {
   idElem?: string;
   typeElem?: string;
   secondClass?: string;
+  value?: any,
   required?: boolean;
 }
 
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   typeElem,
   required,
   secondClass,
+  value
 }) => {
   return (
     <input
@@ -29,6 +31,7 @@ const Input: React.FC<InputProps> = ({
       id={idElem}
       type={typeElem}
       required={required}
+      value={value}
     />
   );
 };
