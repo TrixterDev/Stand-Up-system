@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../api";
+import { getUsers } from "../../../../../../api";
+import StatisticMoreCard from "../StatisticMoreCard";
 import st from "./online.module.sass";
 
-const APSCmore = () => {
+const online = () => {
   const [online, setOnline] = useState<any>([]);
 
   useEffect(() => {
@@ -17,10 +18,9 @@ const APSCmore = () => {
         <h2>Сотрудники онлайн</h2>
         {online.map((data: any) => {
           return (
-            <div>
-              <h4>Пользователь: {data.username}</h4>
-              <h4>Статус: онлайн</h4>
-            </div>
+            <StatisticMoreCard username={data.username} status={data.online}>
+              d
+            </StatisticMoreCard>
           );
         })}
       </div>
@@ -28,4 +28,4 @@ const APSCmore = () => {
   );
 };
 
-export default APSCmore;
+export default online;

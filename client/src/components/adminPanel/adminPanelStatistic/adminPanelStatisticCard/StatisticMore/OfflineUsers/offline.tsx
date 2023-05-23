@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../api";
+import { getUsers } from "../../../../../../api";
+import StatisticMoreCard from "../StatisticMoreCard";
 
 const Offline = () => {
   const [offline, setOffline] = useState<any>([]);
@@ -16,10 +17,9 @@ const Offline = () => {
       <h2>Сотрудники офлайн</h2>
       {offline.map((data: any) => {
         return (
-          <div key={data.id}>
-            <h4>Пользователь: {data.username}</h4>
-            <h4>Статус: oфлайн</h4>
-          </div>
+          <StatisticMoreCard username={data.username} status={data.online}>
+            d
+          </StatisticMoreCard>
         );
       })}
     </div>
