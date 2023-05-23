@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import st from "./style.module.sass";
 import Btn from "../../../ui/Btn/Btn";
+import Layout from "../../../Layout";
 
 interface Props {
   children: ReactNode;
@@ -28,6 +29,7 @@ const AdminPanelStatisticCard: React.FC<Props> = ({
       <div className={st.card__footer}>
         <Btn textBtn="Подробнее..." dC={st.card__footer__btn} onClick={click} />
       </div>
+      <Layout>asdasd</Layout>
     </div>
   );
 };
