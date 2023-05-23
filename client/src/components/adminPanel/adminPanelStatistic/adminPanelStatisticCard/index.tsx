@@ -7,13 +7,15 @@ interface Props {
   children: ReactNode;
   title: string;
   count: number;
-  click: any;
+  click: () => void;
+  path?: string;
 }
 
 const AdminPanelStatisticCard: React.FC<Props> = ({
   count,
   title,
   children,
+  click,
 }) => {
   return (
     <div className={st.card}>
@@ -25,7 +27,7 @@ const AdminPanelStatisticCard: React.FC<Props> = ({
         <p>{count}</p>
       </div>
       <div className={st.card__footer}>
-        <Btn textBtn="Подробнее..." dC={st.card__footer__btn} />
+        <Btn textBtn="Подробнее..." dC={st.card__footer__btn} onClick={click} />
       </div>
       <Layout>asdasd</Layout>
     </div>
