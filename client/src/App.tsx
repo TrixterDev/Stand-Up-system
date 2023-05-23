@@ -8,6 +8,9 @@ import AdminPage from "./Page/AdminPage";
 import PanelStatistic from "./components/adminPanel/adminPanelStatistic";
 import PanelAnswer from "./components/adminPanel/adminPanelAnswers";
 import PanelQuestion from "./components/adminPanel/adminPanelQuestion";
+import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/online";
+import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/offline";
+import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 function App() {
   return (
     <>
@@ -17,7 +20,12 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin-page" element={<AdminPage />} />
-          <Route path="/admin-page/statistic" element={<PanelStatistic />} />
+          <Route path="/admin-page/statistic">
+            <Route index element={<PanelStatistic />} />
+            <Route path="online" element={<Online />} />
+            <Route path="offline" element={<Offline />} />
+            <Route path="all-users" element={<AllUsers />} />
+          </Route>
           <Route path="/admin-page/answer" element={<PanelAnswer />} />
           <Route path="/admin-page/question" element={<PanelQuestion />} />
           <Route path="/user-page" element={<UserPage />} />
