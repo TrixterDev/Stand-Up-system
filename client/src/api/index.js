@@ -33,3 +33,11 @@ export const changeData = (data) => {
     })
     .json();
 };
+
+export const createQuestion = (data) => {
+  return strapiAPI.post("questions", {
+    json: {
+      data,
+    },
+  });
+};
