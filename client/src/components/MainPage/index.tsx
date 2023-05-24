@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router";
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
-import ava from "../../../public/img/base-avatar.png";
 import { GetloginUser, getData, getUserInfo } from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
 import st from "./MainPage.module.sass";
+import { Select } from "./Select";
 
 export interface questionItem {
   answer: string;
@@ -20,6 +20,7 @@ interface formKeys {
 const MainPage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const [data, setData] = useState<any>();
   const [loginUser, setloginUser] = useState<any>();
@@ -70,10 +71,9 @@ const MainPage = () => {
         <button onClick={() => setShowModal(false)}>skip</button>
       </Modal>
       <div className={st.auth}>
-        <img className={st.ava} src={ava} alt="img" />
-        <span>{dataUser?.username}</span>
         <form onClick={onSubmit}>
           <select
+            className={st.select_css}
             onChange={(event) => {
               if (event?.target.value === "Выйти") {
                 Cookie.remove("key");
@@ -85,7 +85,10 @@ const MainPage = () => {
               }
             }}
           >
-            <option>Выбор</option>
+            <option>
+              <span className={st.back}> </span>
+            </option>
+            <option>{dataUser?.username}</option>
             <option>Настройки</option>
             <option>Выйти</option>
           </select>

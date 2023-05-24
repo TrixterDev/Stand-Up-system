@@ -2,6 +2,7 @@ import { changeData } from "../../api";
 import st from "./MainPage.module.sass";
 import React, { useState } from "react";
 import { questionItem } from ".";
+import Btn from "../ui/Btn/Btn";
 interface props {
   id: number;
   productInfo: questionItem;
@@ -37,14 +38,15 @@ const Card: React.FC<props> = ({ productInfo, id }) => {
             <p>Вот ответ: {item.answer}</p>
           </div>
         ) : (
-          <div>
+          <div className={st.input_And_btn}>
             <input
+              className={st.input_style}
               type="text"
               name="answer"
               value={item.answer}
               onChange={(e) => setItem({ ...item, answer: e.target.value })}
             />
-            <button>submit</button>
+            <Btn textBtn="submit" />
           </div>
         )}
       </form>

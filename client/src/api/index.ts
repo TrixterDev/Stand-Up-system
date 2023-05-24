@@ -13,7 +13,7 @@ export const getUserInfo = (token: string) => {
 };
 
 export const loginUser = (data: any) => {
-  return strapiAPI.post("auth/local?populate=role", { json: data }).json();
+  return strapiAPI.post("auth/local", { json: data }).json();
 };
 
 export const GetloginUser = (token: any, data: string, id: number) => {
