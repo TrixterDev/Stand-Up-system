@@ -3,7 +3,7 @@ import { getUsers } from "../../../../../api";
 import StatisticMoreCard from "./StatisticMoreCard";
 import st from "./allusers.module.sass";
 
-const online = () => {
+const Online = () => {
   const [online, setOnline] = useState<any>([]);
 
   useEffect(() => {
@@ -26,4 +26,4 @@ const online = () => {
   );
 };
 
-export default online;
+export default Online;

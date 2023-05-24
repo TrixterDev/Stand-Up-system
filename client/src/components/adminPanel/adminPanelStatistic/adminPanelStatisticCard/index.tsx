@@ -29,7 +29,6 @@ const AdminPanelStatisticCard: React.FC<Props> = ({
       <div className={st.card__footer}>
         <Btn textBtn="Подробнее..." dC={st.card__footer__btn} onClick={click} />
       </div>
-      <Layout>asdasd</Layout>
     </div>
   );
 };

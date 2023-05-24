@@ -11,42 +11,40 @@ interface props {
 const Layout: React.FC<props> = ({ children }) => {
   return (
     <div className={st.wrap}>
-      <div>
-        <nav className={st.nav}>
-          <div className={st.nav__link}>
-            <img src="../../../public/img/logo.svg" alt="" />
-            <NavLink
-              to="/statistic"
-              className={({ isActive }) => (isActive ? st.isActive : "")}
-            >
-              <ImStatsBars />
-              <span>Статистика</span>
-            </NavLink>
-            <NavLink
-              to="/answer"
-              className={({ isActive }) => (isActive ? st.isActive : "")}
-            >
-              <RiQuestionAnswerFill />
-              <span>Ответы</span>
-            </NavLink>
-            <NavLink
-              to="/question"
-              className={({ isActive }) => (isActive ? st.isActive : "")}
-            >
-              <BsFillQuestionCircleFill />
-              <span>Вопросы</span>
-            </NavLink>
-          </div>
+      <nav className={st.nav}>
+        <div className={st.nav__link}>
+          <img src="../../../public/img/logo.svg" alt="" />
           <NavLink
-            to="/question"
+            to="/admin-page/statistic"
             className={({ isActive }) => (isActive ? st.isActive : "")}
           >
-            <ImExit />
-            <span>Выйти</span>
+            <ImStatsBars />
+            <span>Статистика</span>
           </NavLink>
-        </nav>
-      </div>
-      <div>{children}</div>
+          <NavLink
+            to="/admin-page/answer"
+            className={({ isActive }) => (isActive ? st.isActive : "")}
+          >
+            <RiQuestionAnswerFill />
+            <span>Ответы</span>
+          </NavLink>
+          <NavLink
+            to="/admin-page/question"
+            className={({ isActive }) => (isActive ? st.isActive : "")}
+          >
+            <BsFillQuestionCircleFill />
+            <span>Вопросы</span>
+          </NavLink>
+        </div>
+        <NavLink
+          to="/question"
+          className={({ isActive }) => (isActive ? st.isActive : "")}
+        >
+          <ImExit />
+          <span>Выйти</span>
+        </NavLink>
+      </nav>
+      {children}
     </div>
   );
 };
