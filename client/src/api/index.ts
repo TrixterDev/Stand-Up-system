@@ -16,7 +16,7 @@ export const loginUser = (data: any) => {
   return strapiAPI.post("auth/local?populate=role", { json: data }).json();
 };
 
-export const GetloginUser = (token: any, data: any, id: number) => {
+export const GetloginUser = (token: any, data: string, id: number) => {
   return strapiAPI
     .put(`users/${id}`, {
       headers: {

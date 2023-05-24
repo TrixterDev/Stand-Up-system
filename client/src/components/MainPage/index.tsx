@@ -1,13 +1,12 @@
-// import Cookie from "js-cookie";
-// import { useNavigate } from "react-router";
-import { GetloginUser, getData, getUserInfo } from "../../api";
-import Card from "./Card";
-import st from "./MainPage.module.sass";
+import { useNavigate } from "react-router";
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 import ava from "../../../public/img/base-avatar.png";
-import { Modal } from "../ui/Modal";
+import { GetloginUser, getData, getUserInfo } from "../../api";
 import Input from "../ui/Input/Input";
+import { Modal } from "../ui/Modal";
+import Card from "./Card";
+import st from "./MainPage.module.sass";
 
 export interface questionItem {
   answer: string;
@@ -19,7 +18,7 @@ interface formKeys {
 }
 
 const MainPage = () => {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const [data, setData] = useState<any>();
@@ -42,20 +41,10 @@ const MainPage = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (dataUser) {
-  //     GetloginUser(Cookie.get("key"), form, dataUser.id).then((el) => {
-  //       setloginUser(el);
-  //       console.log(el);
-  //     });
-  //   }
-  // }, []);
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
     GetloginUser(Cookie.get("key"), form.about, dataUser.id).then((el) => {
       setloginUser(el);
-      console.log(el);
     });
   };
 
@@ -64,6 +53,10 @@ const MainPage = () => {
       ...form,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
   };
 
   return (
@@ -79,6 +72,24 @@ const MainPage = () => {
       <div className={st.auth}>
         <img className={st.ava} src={ava} alt="img" />
         <span>{dataUser?.username}</span>
+        <form onClick={onSubmit}>
+          <select
+            onChange={(event) => {
+              if (event?.target.value === "Выйти") {
+                Cookie.remove("key");
+                navigate("/");
+              }
+              if (event?.target.value === "Настройки") {
+                Cookie.remove("key");
+                navigate("/user-page");
+              }
+            }}
+          >
+            <option>Выбор</option>
+            <option>Настройки</option>
+            <option>Выйти</option>
+          </select>
+        </form>
       </div>
       <div className={st.grid_container}>
         {data &&
