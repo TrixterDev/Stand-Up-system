@@ -12,6 +12,7 @@ import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatis
 import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/offline";
 import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 import Layout from "./components/Layout";
+import Draft from "./components/adminPanel/Draft";
 function App() {
   return (
     <>
@@ -32,6 +33,7 @@ function App() {
             </Route>
             <Route path="/admin-page/answer" element={<PanelAnswer />} />
             <Route path="/admin-page/question" element={<PanelQuestion />} />
+            <Route path="/admin-page/draft" element={<Draft />} />
           </Routes>
         </Layout>
       </BrowserRouter>

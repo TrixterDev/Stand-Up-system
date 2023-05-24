@@ -3,7 +3,7 @@ import st from "./style.module.sass";
 import { Link, NavLink } from "react-router-dom";
 import { ImStatsBars } from "react-icons/im";
 import { RiQuestionAnswerFill } from "react-icons/ri";
-import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { BsFillClipboard2Fill, BsFillQuestionCircleFill } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
 interface props {
   children: any;
@@ -27,6 +27,13 @@ const Layout: React.FC<props> = ({ children }) => {
           >
             <RiQuestionAnswerFill />
             <span>Ответы</span>
+          </NavLink>
+          <NavLink
+            to="/admin-page/draft"
+            className={({ isActive }) => (isActive ? st.isActive : "")}
+          >
+            <BsFillClipboard2Fill />
+            <span>Черновик</span>
           </NavLink>
           <NavLink
             to="/admin-page/question"
