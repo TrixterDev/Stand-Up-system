@@ -5,6 +5,7 @@ import Btn from "../../ui/Btn/Btn";
 import Input from "../../ui/Input/Input";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import clsx from "clsx";
+import { Loader } from "../../ui/Loader";
 
 interface Question {
   id: string;
@@ -13,6 +14,12 @@ interface Question {
   deleteTimer?: any;
   deleted?: boolean;
   category?: string;
+}
+
+interface Category {
+  id: any;
+  category_name: string;
+  edit?: boolean;
 }
 
 const PanelQuestion = () => {
@@ -36,12 +43,14 @@ const PanelQuestion = () => {
 
   const [basket, setBasket] = useState<Question[]>([]);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const [activeCategory, setActiveCategory] = useState<string>("portugal");
 
   const [categories, setCategories] = useState<any>([
-    "kyrgyzstan",
-    "portugal",
-    "germany",
+    { category_name: "kyrgyzstan", id: uuidv4(), edit: false },
+    { category_name: "portugal", id: uuidv4(), edit: false },
+    { category_name: "germany", id: uuidv4(), edit: false },
   ]);
 
   useEffect(() => {
@@ -103,6 +112,19 @@ const PanelQuestion = () => {
     });
   };
 
+  const addCategory = () => {
+    setCategories((prev: any) => {
+      return [
+        ...prev,
+        {
+          category_name: "",
+          edit: true,
+          id: uuidv4(),
+        },
+      ];
+    });
+  };
+
   const change = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     setQuestions((prev) => {
       const updatedQuestions = prev.map((item) => {
@@ -116,9 +138,32 @@ const PanelQuestion = () => {
     });
   };
 
+  const changeCategory = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    setCategories((prev: any) => {
+      const updatedCategories = prev.map((item: any) => {
+        if (item.id === id) {
+          return { ...item, [e.target.name]: e.target.value };
+        } else {
+          return item;
+        }
+      });
+      return updatedCategories;
+    });
+  };
+
   return (
     <section className={st.container}>
-      <h4>Категории</h4>
+      {loading && (
+        <div className={clsx(st["loader-wrap"], loading && st.active)}>
+          <Loader />
+        </div>
+      )}
+      <h4>
+        Категории <button onClick={addCategory}>Добавить категорию</button>
+      </h4>
       <div className={st.basket}>
         {basket.map((item) => (
           <div className={st["basket-card"]} key={item.id}>
@@ -137,15 +182,37 @@ const PanelQuestion = () => {
       </div>
 
       <div className={st.tabs}>
-        {categories.map((item: string) => {
-          return (
-            <button
-              className={clsx(st.tab, activeCategory === item && st.active)}
-              onClick={() => setActiveCategory(item)}
-            >
-              {item}
-            </button>
-          );
+        {categories.map((item: Category, index: number) => {
+          if (!item.edit) {
+            return (
+              <button
+                className={clsx(
+                  st.tab,
+                  activeCategory === item.category_name && st.active
+                )}
+                onClick={() => setActiveCategory(item.category_name)}
+              >
+                {item.category_name}
+              </button>
+            );
+          } else {
+            return (
+              <button
+                key={item.id}
+                className={clsx(
+                  st.tab,
+                  activeCategory === item.category_name && st.active
+                )}
+              >
+                <input
+                  value={item.category_name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    changeCategory(e, item.id)
+                  }
+                />
+              </button>
+            );
+          }
         })}
       </div>
       <h4>Вопросы в категории {activeCategory}</h4>
