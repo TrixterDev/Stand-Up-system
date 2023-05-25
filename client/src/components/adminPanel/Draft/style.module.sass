@@ -1,10 +1,37 @@
 .container
-  max-width: 1280px
+  width: 100%
   margin: 20px auto
   display: flex
   flex-direction: column
-  gap: 10px
-  .cards
-    display: grid
-    grid-template-columns: repeat(3, 1fr)
-    gap: 20px
+  padding: 50px
+  justify-content: center
+  align-items: center
+  gap: 25px
+.wrapper
+  display: flex
+  justify-content: space-between
+  gap: 200px
+  max-width: 100%
+  &__cards
+    display: flex
+    flex-direction: column
+    gap: 25px
+    text-align: center
+.card
+  max-width: 560px
+  flex-wrap: wrap
+  display: flex
+  gap: 20px
+.text
+  color: #333333
+.span
+  font-size: 24px
+.btn
+  color: #f0f0f0
+  background-color: #ffcc00
+  font-size: 20px
+.changeCategory
+  display: flex
+  justify-content: space-between
+  flex-direction: row
+  gap: 20px

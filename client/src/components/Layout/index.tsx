@@ -11,46 +11,48 @@ interface props {
 const Layout: React.FC<props> = ({ children }) => {
   return (
     <div className={st.wrap}>
-      <nav className={st.nav}>
-        <div className={st.nav__link}>
-          <img src="../../../public/img/logo.svg" alt="" />
+      <div className={st.wrap__content}>
+        <nav className={st.nav}>
+          <div className={st.nav__link}>
+            <img src="../../../public/img/logo.svg" alt="" />
+            <NavLink
+              to="/admin-page/statistic"
+              className={({ isActive }) => (isActive ? st.isActive : "")}
+            >
+              <ImStatsBars />
+              <span>Статистика</span>
+            </NavLink>
+            <NavLink
+              to="/admin-page/answer"
+              className={({ isActive }) => (isActive ? st.isActive : "")}
+            >
+              <RiQuestionAnswerFill />
+              <span>Ответы</span>
+            </NavLink>
+            <NavLink
+              to="/admin-page/draft"
+              className={({ isActive }) => (isActive ? st.isActive : "")}
+            >
+              <BsFillClipboard2Fill />
+              <span>Черновик</span>
+            </NavLink>
+            <NavLink
+              to="/admin-page/question"
+              className={({ isActive }) => (isActive ? st.isActive : "")}
+            >
+              <BsFillQuestionCircleFill />
+              <span>Вопросы</span>
+            </NavLink>
+          </div>
           <NavLink
-            to="/admin-page/statistic"
+            to="/question"
             className={({ isActive }) => (isActive ? st.isActive : "")}
           >
-            <ImStatsBars />
-            <span>Статистика</span>
+            <ImExit />
+            <span>Выйти</span>
           </NavLink>
-          <NavLink
-            to="/admin-page/answer"
-            className={({ isActive }) => (isActive ? st.isActive : "")}
-          >
-            <RiQuestionAnswerFill />
-            <span>Ответы</span>
-          </NavLink>
-          <NavLink
-            to="/admin-page/draft"
-            className={({ isActive }) => (isActive ? st.isActive : "")}
-          >
-            <BsFillClipboard2Fill />
-            <span>Черновик</span>
-          </NavLink>
-          <NavLink
-            to="/admin-page/question"
-            className={({ isActive }) => (isActive ? st.isActive : "")}
-          >
-            <BsFillQuestionCircleFill />
-            <span>Вопросы</span>
-          </NavLink>
-        </div>
-        <NavLink
-          to="/question"
-          className={({ isActive }) => (isActive ? st.isActive : "")}
-        >
-          <ImExit />
-          <span>Выйти</span>
-        </NavLink>
-      </nav>
+        </nav>
+      </div>
       {children}
     </div>
   );

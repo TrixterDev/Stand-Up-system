@@ -20,7 +20,7 @@ export const RegUser = (data) => {
 };
 
 export const getUsers = () => {
-  return strapiAPI.get("users").json();
+  return strapiAPI.get("users?populate=*").json();
 };
 
 export const getData = () => {
@@ -37,4 +37,3 @@ export const changeData = (data) => {
     })
     .json();
 };
-
