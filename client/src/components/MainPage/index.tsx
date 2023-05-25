@@ -6,7 +6,10 @@ import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
 import st from "./MainPage.module.sass";
-
+import Select from "../ui/Select";
+import ava from "../../../public/img/base-avatar.png";
+import { BiExit } from "react-icons/bi";
+import { CgOptions } from "react-icons/cg";
 export interface questionItem {
   answer: string;
   question: string;
@@ -45,6 +48,7 @@ const MainPage = () => {
     GetloginUser(Cookie.get("key"), form.about, dataUser.id).then((el) => {
       setloginUser(el);
     });
+    setShowModal(false);
   };
 
   const handleInput = (event: any) => {
@@ -69,28 +73,23 @@ const MainPage = () => {
         <button onClick={() => setShowModal(false)}>skip</button>
       </Modal>
       <div className={st.auth}>
-        <form onClick={onSubmit}>
-          <select
-            className={st.select_css}
-            onChange={(event) => {
-              if (event?.target.value === "Выйти") {
-                Cookie.remove("key");
-                navigate("/");
-              }
-              if (event?.target.value === "Настройки") {
-                Cookie.remove("key");
-                navigate("/user-page");
-              }
+        <Select title={dataUser?.username} src={ava} top={"20px"}>
+          <h4
+            onClick={() => {
+              navigate("/user-page");
             }}
           >
-            <option>
-              <span className={st.back}> </span>
-            </option>
-            <option>{dataUser?.username}</option>
-            <option>Настройки</option>
-            <option>Выйти</option>
-          </select>
-        </form>
+            <CgOptions />
+          </h4>
+          <h4
+            onClick={() => {
+              Cookie.remove("key");
+              navigate("/");
+            }}
+          >
+            <BiExit />
+          </h4>
+        </Select>
       </div>
       <div className={st.grid_container}>
         {data &&
