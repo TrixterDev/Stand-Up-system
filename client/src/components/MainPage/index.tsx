@@ -6,7 +6,6 @@ import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
 import st from "./MainPage.module.sass";
-import { Select } from "./Select";
 
 export interface questionItem {
   answer: string;
@@ -20,7 +19,6 @@ interface formKeys {
 const MainPage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const [data, setData] = useState<any>();
   const [loginUser, setloginUser] = useState<any>();
