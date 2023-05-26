@@ -2,7 +2,7 @@ import st from "./auth.module.sass";
 import Input from "../ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
 import { useEffect, useState } from "react";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import { loginUser } from "../../api";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -20,7 +20,7 @@ interface formKeys {
 const Auth = () => {
   const navigate = useNavigate();
   const [adminInfo] = useState<adminInfoKeys>({
-    token: Cookie.get("key"),
+    token: Cookies.get("key"),
     isConfirmed: false,
   });
 
@@ -30,12 +30,14 @@ const Auth = () => {
   });
 
   useEffect(() => {
-    if (Cookie.get("key")) {
-      navigate("/");
+    if (Cookies.get("key")) {
+      navigate("/home");
     }
     loginUser(form)
       .then((resp: any) => {
-        Cookie.set("key", resp.jwt);
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
+        Cookies.set("key", resp.jwt, { expires: expirationDate });
       })
       .catch((error) => {
         console.error(error);
@@ -53,9 +55,7 @@ const Auth = () => {
     event.preventDefault();
     loginUser(form)
       .then((resp: any) => {
-        Cookie.set("key", resp.jwt);
-        console.log(resp.user);
-
+        Cookies.set("key", resp.jwt, { expires: 7 });
         if (resp.user.email === "user@mail.ru") {
           navigate("/admin-page");
         } else {

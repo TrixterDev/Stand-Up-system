@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { GetloginUser, getData, getUserInfo } from "../../api";
 import Input from "../ui/Input/Input";
@@ -30,13 +30,16 @@ const MainPage = () => {
     about: "",
   });
   useEffect(() => {
-    getUserInfo(Cookie.get("key")).then((response: any) => {
-      setDataUser(response);
+    const key = Cookies.get("key");
+    if (key !== undefined) {
+      getUserInfo(key).then((response: any) => {
+        setDataUser(response);
 
-      if (response.about === "" || response.about === null) {
-        setShowModal(true);
-      }
-    });
+        if (response.about === "" || response.about === null) {
+          setShowModal(true);
+        }
+      });
+    }
 
     getData().then((res: any) => {
       setData(res.data);
@@ -45,7 +48,7 @@ const MainPage = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    GetloginUser(Cookie.get("key"), form.about, dataUser.id).then((el) => {
+    GetloginUser(Cookies.get("key"), form.about, dataUser.id).then((el) => {
       setloginUser(el);
     });
     setShowModal(false);
@@ -56,10 +59,6 @@ const MainPage = () => {
       ...form,
       [event.target.name]: event.target.value,
     });
-  };
-
-  const onSubmit = (e: any) => {
-    e.preventDefault();
   };
 
   return (
@@ -73,21 +72,33 @@ const MainPage = () => {
         <button onClick={() => setShowModal(false)}>skip</button>
       </Modal>
       <div className={st.auth}>
-        <Select title={dataUser?.username} src={ava} top={"20px"}>
+        <Select title={dataUser?.username} src={ava} top={"70px"}>
           <h4
+            style={{
+              display: "flex",
+              alignItems: "center",
+              border: "1px solid white",
+            }}
             onClick={() => {
               navigate("/user-page");
             }}
           >
-            <CgOptions />
+            <CgOptions size={"30px"} /> Настройки
           </h4>
           <h4
+            style={{
+              display: "flex",
+              alignItems: "center",
+              border: "1px solid white",
+              width: "135px",
+              gap: "5px",
+            }}
             onClick={() => {
-              Cookie.remove("key");
+              Cookies.remove("key");
               navigate("/");
             }}
           >
-            <BiExit />
+            <BiExit size={"30px"} /> Выход
           </h4>
         </Select>
       </div>

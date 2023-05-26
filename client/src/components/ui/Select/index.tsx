@@ -19,7 +19,7 @@ const Select: React.FC<Props> = ({ children, title, src, top }) => {
         onClick={() => setShow((show) => !show)}
       >
         <img className={styles.img} src={src} alt="" />
-        <p>{title}</p>
+        <h3>{title}</h3>
       </div>
       <div
         className={cn(styles.dropDown__list, show && styles.active)}
