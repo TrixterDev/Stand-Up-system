@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import st from "./style.module.sass";
 import Btn from "../../../ui/Btn/Btn";
-import Layout from "../../../Layout";
 
 interface Props {
   children: ReactNode;

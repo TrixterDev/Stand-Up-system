@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../api";
+import { getUser } from "../../../../../api";
 import StatisticMoreCard from "./StatisticMoreCard";
 import st from "./allusers.module.sass";
 
@@ -7,7 +7,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState<any>([]);
 
   useEffect(() => {
-    getUsers().then((res: any) => {
+    getUser().then((res: any) => {
       setUsers(res);
     });
   }, []);
