@@ -65,6 +65,7 @@
       "inversedBy": "users",
       "configurable": false
     },
+<<<<<<< HEAD
     "avatarka": {
       "type": "media",
       "multiple": false,
@@ -78,6 +79,10 @@
     },
     "about": {
       "type": "richtext"
+=======
+    "online": {
+      "type": "boolean"
+>>>>>>> admin/statistic
     }
   }
 }
