@@ -1,8 +1,8 @@
-import { changeData } from "../../api";
 import st from "./MainPage.module.sass";
 import React, { useState } from "react";
 import { questionItem } from ".";
 import Btn from "../ui/Btn/Btn";
+import { changeData } from "../../api";
 interface props {
   id: number;
   productInfo: questionItem;

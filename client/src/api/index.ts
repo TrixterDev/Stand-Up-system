@@ -41,7 +41,7 @@ export const getData = () => {
   return strapiAPI.get("questions").json();
 };
 
-export const changeData = (data: any, id: number) => {
+export const changeData = (data: any, id: any) => {
   return strapiAPI
     .put(`questions/${id}`, {
       json: {
