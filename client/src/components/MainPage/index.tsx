@@ -95,6 +95,7 @@ const MainPage = () => {
             }}
             onClick={() => {
               Cookies.remove("key");
+              Cookies.remove("role");
               navigate("/");
             }}
           >

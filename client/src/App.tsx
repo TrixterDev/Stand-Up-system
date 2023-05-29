@@ -12,18 +12,15 @@ import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatis
 import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/offline";
 import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 import Layout from "./components/Layout";
+import Cookies from "js-cookie";
 function App() {
-  return (
-    <>
+  if (Cookies.get("role") === "admin") {
+    return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Auth />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/user-page" element={<UserPage />} />
-        </Routes>
         <Layout>
           <Routes>
+            <Route path="/" element={<Auth />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/admin-page/statistic">
               <Route index element={<PanelStatistic />} />
               <Route path="online" element={<Online />} />
@@ -35,8 +32,18 @@ function App() {
           </Routes>
         </Layout>
       </BrowserRouter>
-    </>
-  );
+    );
+  } else {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/user-page" element={<UserPage />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 }
-
 export default App;

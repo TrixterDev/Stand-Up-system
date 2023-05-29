@@ -5,6 +5,7 @@ import { useState } from "react";
 import { RegUser } from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
+import { NavLink } from "react-router-dom";
 
 interface userKeys {
   username: string;
@@ -12,6 +13,7 @@ interface userKeys {
   email: string;
   password: string;
   confirmPass: string;
+  lastname: string;
 }
 
 const Register = () => {
@@ -22,6 +24,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPass: "",
+    lastname: "",
   });
 
   const handleChange = (event: any) => {
@@ -50,43 +53,81 @@ const Register = () => {
         <div className={styles.titleWrap}>
           <h2 className={styles.title}>Stand Up</h2>
           <hr />
-          <h3 className={styles.registerTitle}>Registration</h3>
+          <h3 className={styles.registerTitle}>Регистрация</h3>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input
-            onChange={handleChange}
-            name="username"
-            pHText={"Login"}
-            required
-          />
-          <Input
-            onChange={handleChange}
-            name="phone"
-            pHText={"Phone"}
-            required
-          />
-
-          <Input onChange={handleChange} name="email" pHText={"E-mail"} />
-
-          <Input
-            onChange={handleChange}
-            name="password"
-            typeElem={"password"}
-            pHText={"Passoword"}
-            required
-          />
-
-          <div className={styles.confPassWrap}>
+          <div className={styles.nameUser}>
+            <div className={styles.customInput}>
+              <Input
+                onChange={handleChange}
+                name="username"
+                idElem="username"
+                typeElem="text"
+                required
+              />
+              <label htmlFor="username">Имя</label>
+            </div>
+            <div className={styles.customInput}>
+              <Input
+                onChange={handleChange}
+                name="lastname"
+                idElem="lastname"
+                typeElem="text"
+                required
+              />
+              <label htmlFor="lastname">Фамилия</label>
+            </div>
+          </div>
+          <div className={styles.customInput}>
             <Input
-              name="confirmPass"
-              pHText={"Confirm Password"}
               onChange={handleChange}
-              typeElem={"password"}
+              name="phone"
+              idElem="phone"
+              typeElem="number"
               required
             />
-            <Btn type="submit" textBtn={"Autificated"} />
+            <label htmlFor="phone">Телефон</label>
           </div>
+
+          <div className={styles.customInput}>
+            <Input
+              onChange={handleChange}
+              name="email"
+              idElem="email"
+              typeElem="email"
+              required
+            />
+            <label htmlFor="email">E-mail</label>
+          </div>
+
+          <div className={styles.customInput}>
+            <Input
+              onChange={handleChange}
+              name="password"
+              idElem="password"
+              typeElem="password"
+              required
+            />
+            <label htmlFor="password">Пароль</label>
+          </div>
+
+          <div className={styles.confPassWrap}>
+            <div className={styles.customInput}>
+              <Input
+                onChange={handleChange}
+                name="confirmPass"
+                idElem="confirmPass"
+                typeElem="password"
+                required
+              />
+              <label htmlFor="confirmPass">Подтвердите пароль</label>
+            </div>
+            <Btn type="submit" textBtn={"Зарегистрироваться"} />
+          </div>
+          <span className={styles.span}>
+            Если у вас нет аккаунта то <NavLink to={"/"}>авторазуйтесь</NavLink>
+          </span>
         </form>
       </div>
     </div>

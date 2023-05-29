@@ -2,9 +2,20 @@
   background: url(./bg.svg) no-repeat center
   background-size: cover
   height: 100vh
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  overflow-y: scroll
   display: flex
   align-items: center
   padding: 0 20px
+
+.nameUser
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 1.25rem
 
 .registerWrap
   background: #33333399
@@ -17,6 +28,8 @@
   display: flex
   flex-direction: column
   align-items: center
+  width: max-content
+  margin: auto
 
 .title
   color: white
@@ -25,7 +38,7 @@
 
 hr
   background: white
-  width: 80%
+  width: 100%
   height: 4px
   margin-top: 10px
 
@@ -34,16 +47,54 @@ hr
   font-size: 42px
   margin: 10px 0 0 0
 
+.customInput
+  position: relative
+  width: 100%
+  > label
+    position: absolute
+    left: 1.5625rem
+    top: .9375rem
+    width: 80%
+    transition: .3s all
+  > input
+    width: 100%
+    color: #fff
+    &:focus
+      color: #000
+      + label
+        top: -1.5625rem
+        color: #fff
+        left: 0
+
+    &:valid
+      color: #000
+      + label
+        top: -1.5625rem
+        color: #fff
+        left: 0
+
 .form
   display: grid
-  gap: 16px
+  gap: 35px
   margin-top: 50px
   max-width: 500px
   width: 100%
 
 .confPassWrap
   display: flex
-  gap: 16px
+  gap: 1.25rem
+  align-items: center
+  justify-content: space-between
+  > input
+    width: 100%
+
+.span
+  color: white
+  margin-top: 1.5625rem
+  text-align: center
+  > a
+    color: #fc0
+    text-decoration: underline
 
 /* Media
 

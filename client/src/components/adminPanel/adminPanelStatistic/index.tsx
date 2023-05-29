@@ -2,9 +2,9 @@ import AdminPanelStatisticCard from "./adminPanelStatisticCard";
 import st from "./style.module.sass";
 import { HiUser, HiUserGroup, HiUserRemove } from "react-icons/hi";
 import { useEffect } from "react";
-import { getUser } from "../../../api";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { getUsers } from "../../../api";
 
 const PanelStatistic = () => {
   const [users, setUsers] = useState<any>([]);
@@ -13,7 +13,7 @@ const PanelStatistic = () => {
   const redirect = useNavigate();
 
   useEffect(() => {
-    getUser().then((res: any) => {
+    getUsers().then((res: any) => {
       setUsers(res);
       const onlineUsers = res.filter((data: any) => data.online);
       const offlineUsers = res.filter((data: any) => !data.online);

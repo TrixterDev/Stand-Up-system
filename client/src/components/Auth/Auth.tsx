@@ -30,8 +30,12 @@ const Auth = () => {
   });
 
   useEffect(() => {
-    if (Cookies.get("key")) {
+    if (Cookies.get("role") === "admin") {
+      navigate("/admin-page");
+    } else if (Cookies.get("role") === "auth") {
       navigate("/home");
+    } else {
+      navigate("/");
     }
     loginUser(form)
       .then((resp: any) => {
@@ -55,10 +59,13 @@ const Auth = () => {
     event.preventDefault();
     loginUser(form)
       .then((resp: any) => {
+        console.log(resp);
         Cookies.set("key", resp.jwt, { expires: 7 });
-        if (resp.user.email === "user@mail.ru") {
+        if (resp.user.admin) {
+          Cookies.set("role", "admin");
           navigate("/admin-page");
         } else {
+          Cookies.set("role", "auth");
           navigate("/home");
         }
       })
@@ -73,7 +80,7 @@ const Auth = () => {
         <form onSubmit={handleSubmit}>
           <div className={st.auth__content}>
             <div className={st.auth__title}>
-              <h1>Stand Up</h1>
+              <h2>Stand Up</h2>
               <hr />
               <p>Авторизация</p>
             </div>

@@ -1,14 +1,21 @@
 import React from "react";
 import st from "./style.module.sass";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ImStatsBars } from "react-icons/im";
 import { RiQuestionAnswerFill } from "react-icons/ri";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
+import Cookies from "js-cookie";
 interface props {
   children: any;
 }
+
 const Layout: React.FC<props> = ({ children }) => {
+  const exit = () => {
+    Cookies.remove("role");
+    Cookies.remove("key");
+  };
+
   return (
     <div className={st.wrap}>
       <nav className={st.nav}>
@@ -37,7 +44,8 @@ const Layout: React.FC<props> = ({ children }) => {
           </NavLink>
         </div>
         <NavLink
-          to="/question"
+          to="/"
+          onClick={exit}
           className={({ isActive }) => (isActive ? st.isActive : "")}
         >
           <ImExit />
