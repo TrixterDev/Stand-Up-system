@@ -1,51 +1,169 @@
 .container
-    max-width: 1280px
-    margin: 20px auto
+  position: relative
+  max-width: 1280px
+  margin: 20px auto
+  padding: 15px
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+.category-header
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+.button
+  width: 100%
+  font-size: 20px
+  background: #ffcc00
+  transition: .2s
+  color: #f3f3f3
+  font-weight: 600
+
+  &:hover
+    cursor: pointer
+    background: #917a1f
+
+.cards
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 20px
+
+.card
+  position: relative
+  min-height: 10.25rem
+  background: #555
+  color: #f3f3f3
+  text-align: center
+  padding: 10px 15px
+  border-radius: 10px
+  display: flex
+  flex-direction: column
+  justify-content: center
+  gap: 10px
+
+  &-content
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    .question-controls
+      position: absolute
+      top: 20px
+      right: 20px
+      display: flex
+      gap: 10px
+      font-size: 1.25rem
+
+.input
+  width: 100%
+  color: #555
+  font-size: 1rem
+
+.cancel-btn, .add-btn, .return-btn
+  padding: 10px
+  font-size: 1rem
+  font-weight: 600
+  transition: .2s
+  border: unset
+  outline: unset
+
+  &:hover
+    cursor: pointer
+
+.cancel-btn
+  background: red
+
+  &:hover
+    background: darkred
+
+.add-btn
+  background: #ffcc00
+
+  &:hover
+    background: darkorange
+
+.return-btn
+  background: #ffcc00
+  border-radius: 10px
+
+  &:hover
+    background: darkorange
+
+.save-btn
+  background: #ffcc00
+  border: unset
+  color: #f3f3f3
+  padding: 10px 20px
+  border-radius: 10px
+
+  &:hover
+    cursor: pointer
+    background: #c2a11b
+
+.basket
+  position: fixed
+  top: 20px
+  right: 20px
+  z-index: 10
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+  &-card
+    background: #f2f2f2
+    padding: 20px
+    color: #333
+    border-radius: 10px
     display: flex
     flex-direction: column
     gap: 10px
 
-    .cards
-        display: grid
-        grid-template-columns: repeat(3, 1fr)
-        gap: 20px
+    h2
+      font-size: 18px
+      margin-bottom: 10px
 
-    .card
-        background: #555
-        color: #f3f3f3
-        text-align: center
-        padding: 10px 15px
-        border-radius: 10px
-        display: flex
-        flex-direction: column
-        gap: 10px
+    span
+      display: inline-block
+      font-size: 14px
+      color: #777
+      margin-top: 5px
 
-    .input
-        width: 100%
-        color: #555
-        font-size: 1rem
+.tabs
+  display: flex
 
-    .button
-        width: 100%
-        font-size: 20px
-        background: #ffcc00
-        transition: .2s
-        color: #f3f3f3
-        font-weight: 600
+  .tab
+    border: unset
+    background: #f2f2f2
+    padding: 15px 20px
+    transition: .2s
+    font-size: 1.125rem
+    font-weight: 600
 
-        &:hover
-            cursor: pointer
-            background: #917a1f
+    &:hover
+      cursor: pointer
+      background: #b8b8b8
 
+    &.active
+      background: #ffcc00
+      color: #f2f2f2
 
-    .cancel-btn, .add-btn
-        padding: 10px
-        font-size: 1rem
-        font-weight: 600
+    &:first-child
+      border-top-left-radius: 10px
+      border-bottom-left-radius: 10px
 
+    &:last-child
+      border-top-right-radius: 10px
+      border-bottom-right-radius: 10px
 
-    .cancel-btn
-        background: red
-
-    .add-btn
-        background: #ffcc00
+.loader-wrap
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  background: rgba(0, 0, 0, 0.5)
+  z-index: 99

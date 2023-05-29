@@ -46,6 +46,8 @@ const Register = () => {
     }
     setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
+    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
+  };
 
   return (
     <div className={styles.register}>
@@ -134,4 +136,5 @@ const Register = () => {
   );
 };
 
+export default Register;
 export default Register;

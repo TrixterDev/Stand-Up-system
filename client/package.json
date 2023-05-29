@@ -25,6 +25,7 @@
     "react-router-dom": "^6.10.0",
     "sass": "^1.62.1",
     "sass-loader": "^13.2.2",
+    "uuid": "^9.0.0",
     "vite-plugin-sass": "^0.1.0"
   },
   "devDependencies": {

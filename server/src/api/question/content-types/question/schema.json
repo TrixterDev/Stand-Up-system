@@ -4,7 +4,8 @@
   "info": {
     "singularName": "question",
     "pluralName": "questions",
-    "displayName": "Question"
+    "displayName": "Вопросы",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,7 +16,16 @@
       "type": "text"
     },
     "answer": {
+      "type": "text",
+    "title": {
       "type": "text"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::question-category.question-category",
+      "inversedBy": "questions"
     }
   }
+}
 }

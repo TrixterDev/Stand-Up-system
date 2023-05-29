@@ -3,9 +3,9 @@ import Input from "../ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { loginUser } from "../../api";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
+import { loginUser } from "../../api";
 
 interface adminInfoKeys {
   token: string | any;
@@ -43,7 +43,7 @@ const Auth = () => {
         expirationDate.setDate(expirationDate.getDate() + 7);
         Cookies.set("key", resp.jwt, { expires: expirationDate });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(error);
       });
   }, []);
@@ -69,7 +69,7 @@ const Auth = () => {
           navigate("/home");
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(error);
       });
   };
@@ -102,7 +102,7 @@ const Auth = () => {
                   typeElem="password"
                   required
                 />
-                <label htmlFor="pass">Пароль</label>
+                <label htmlFor="password">Пароль</label>
               </div>
               <Btn textBtn="Войти" />
             </div>
