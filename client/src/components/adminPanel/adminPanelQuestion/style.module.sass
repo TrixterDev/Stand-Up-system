@@ -83,6 +83,21 @@
   &:hover
     background: darkorange
 
+.add-circle-btn
+  width: 25px
+  height: 25px
+  display: flex
+  justify-content: center
+  border: unset
+  align-items: center
+  border-radius: 50%
+  background: #555
+  color: #fff
+
+  &:hover
+    cursor: pointer
+    background: #333
+
 .return-btn
   background: #ffcc00
   border-radius: 10px
@@ -131,8 +146,13 @@
 
 .tabs
   display: flex
+  overflow-x: auto
 
   .tab
+    width: max-content
+    display: flex
+    align-items: center
+    gap: 10px
     border: unset
     background: #f2f2f2
     padding: 15px 20px

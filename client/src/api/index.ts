@@ -100,7 +100,7 @@ export const getCategories = async (): Promise<any> => {
 
 export const updateCategories = async (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
-    if (typeof item.id === "string") {
+    if (!item.id) {
       return strapiAPI.post(`question-categories`, {
         json: {
           data: {
@@ -126,24 +126,52 @@ export const updateCategories = async (data: any[]): Promise<any> => {
   });
 
   // Wait for all requests to finish
-  await Promise.all(requests);
+  return Promise.all(requests).then((responses) => {
+    return responses.map((response) => response.json());
+  });
+};
+
+export const getCategory = async (cateogory_name: string) => {
+  return await strapiAPI
+    .get(`question-categories?filters[category_name][$eq]=${cateogory_name}`, {
+      headers: {
+        Authorization: `Bearer ${Cookie.get("key")}`,
+      },
+    })
+    .json();
 };
 
 export const updateQuestions = async (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
     if (typeof item.id === "string") {
       if (!item.edit) {
-        return strapiAPI.post(`questions`, {
-          json: {
-            data: {
-              title: item.title,
-              category: item.category_id,
+        if (!item.category_id) {
+          getCategory(item.category).then((resp) => {
+            return strapiAPI.post(`questions`, {
+              json: {
+                data: {
+                  title: item.title,
+                  category: resp.data[0].id,
+                },
+              },
+              headers: {
+                Authorization: `Bearer ${Cookie.get("key")}`,
+              },
+            });
+          });
+        } else {
+          return strapiAPI.post(`questions`, {
+            json: {
+              data: {
+                title: item.title,
+                category: item.category_id,
+              },
             },
-          },
-          headers: {
-            Authorization: `Bearer ${Cookie.get("key")}`,
-          },
-        });
+            headers: {
+              Authorization: `Bearer ${Cookie.get("key")}`,
+            },
+          });
+        }
       }
     } else {
       return strapiAPI.put(`questions/${item.id}`, {
@@ -160,7 +188,9 @@ export const updateQuestions = async (data: any[]): Promise<any> => {
   });
 
   // Wait for all requests to finish
-  await Promise.all(requests);
+  return Promise.all(requests).then((responses) => {
+    return responses.map((response) => response.json());
+  });
 };
 
 export const removeQuestions = (data: any[]): Promise<any> => {
