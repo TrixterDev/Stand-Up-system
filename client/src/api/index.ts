@@ -38,6 +38,17 @@ export const changeData = (data: any, id: number) => {
     .json();
 };
 
+export const changeUserInfo = async (data: User, id: number) => {
+  return await strapiAPI
+    .put(`users/${id}`, {
+      json: data,
+      headers: {
+        Authorization: `Bearer ${Cookie.get("key")}`,
+      },
+    })
+    .json();
+};
+
 export const GetloginUser = (token: any, data: string, id: number) => {
   return strapiAPI
     .put(`users/${id}`, {
