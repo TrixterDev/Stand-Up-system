@@ -46,8 +46,6 @@ const Register = () => {
     }
     setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
   };
-    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
-  };
 
   return (
     <div className={styles.register}>
@@ -130,11 +128,11 @@ const Register = () => {
           <span className={styles.span}>
             Если у вас нет аккаунта то <NavLink to={"/"}>авторазуйтесь</NavLink>
           </span>
+          <h3 className={styles.registerTitle}>Registration</h3>
         </form>
       </div>
     </div>
   );
 };
 
-export default Register;
 export default Register;
