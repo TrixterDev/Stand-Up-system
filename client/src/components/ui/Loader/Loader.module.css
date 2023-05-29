@@ -3,12 +3,12 @@
   width: 85px;
   height: 50px;
   background-repeat: no-repeat;
-  background-image: linear-gradient(#ff5500 50px, transparent 0),
-    linear-gradient(#ff5500 50px, transparent 0),
-    linear-gradient(#ff5500 50px, transparent 0),
-    linear-gradient(#ff5500 50px, transparent 0),
-    linear-gradient(#ff5500 50px, transparent 0),
-    linear-gradient(#ff5500 50px, transparent 0);
+  background-image: linear-gradient(#f3f3f3 50px, transparent 0),
+    linear-gradient(#f3f3f3 50px, transparent 0),
+    linear-gradient(#f3f3f3 50px, transparent 0),
+    linear-gradient(#f3f3f3 50px, transparent 0),
+    linear-gradient(#f3f3f3 50px, transparent 0),
+    linear-gradient(#f3f3f3 50px, transparent 0);
   background-position: 0px center, 15px center, 30px center, 45px center,
     60px center, 75px center, 90px center;
   animation: rikSpikeRoll 1s linear infinite alternate;

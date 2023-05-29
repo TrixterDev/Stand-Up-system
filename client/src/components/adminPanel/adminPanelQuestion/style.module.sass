@@ -2,9 +2,15 @@
   position: relative
   max-width: 1280px
   margin: 20px auto
+  padding: 15px
   display: flex
   flex-direction: column
   gap: 10px
+
+.category-header
+  display: flex
+  align-items: center
+  justify-content: space-between
 
 .button
   width: 100%
@@ -84,6 +90,17 @@
   &:hover
     background: darkorange
 
+.save-btn
+  background: #ffcc00
+  border: unset
+  color: #f3f3f3
+  padding: 10px 20px
+  border-radius: 10px
+
+  &:hover
+    cursor: pointer
+    background: #c2a11b
+
 .basket
   position: fixed
   top: 20px
@@ -118,8 +135,10 @@
   .tab
     border: unset
     background: #f2f2f2
-    padding: 10px 15px
+    padding: 15px 20px
     transition: .2s
+    font-size: 1.125rem
+    font-weight: 600
 
     &:hover
       cursor: pointer

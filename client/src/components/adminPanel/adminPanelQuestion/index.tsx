@@ -6,8 +6,16 @@ import Input from "../../ui/Input/Input";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import clsx from "clsx";
 import { Loader } from "../../ui/Loader";
+import {
+  getCategories,
+  getQuestions,
+  removeQuestions,
+  strapiAPI,
+  updateCategories,
+  updateQuestions,
+} from "../../../api";
 
-interface Question {
+export interface Question {
   id: string;
   title: string;
   edit?: boolean;
@@ -24,38 +32,73 @@ interface Category {
 
 const PanelQuestion = () => {
   const [questions, setQuestions] = useState<Question[]>([
-    {
-      id: uuidv4(),
-      title: "Столица германии?",
-      category: "germany",
-    },
-    {
-      id: uuidv4(),
-      title: "Столица Португалии?",
-      category: "portugal",
-    },
-    {
-      id: uuidv4(),
-      title: "Столица Кыргызстан?",
-      category: "kyrgyzstan",
-    },
+    // {
+    //   id: uuidv4(),
+    //   title: "Столица германии?",
+    //   category: "germany",
+    // },
+    // {
+    //   id: uuidv4(),
+    //   title: "Столица Португалии?",
+    //   category: "portugal",
+    // },
+    // {
+    //   id: uuidv4(),
+    //   title: "Столица Кыргызстан?",
+    //   category: "kyrgyzstan",
+    // },
   ]);
+  useEffect(() => {
+    setLoading(true);
 
-  const [basket, setBasket] = useState<Question[]>([]);
+    getCategories().then((resp: any) => {
+      setCategories(
+        resp.data.map((item: any) => {
+          console.log(item);
+          return { ...item.attributes, edit: false, id: item.id };
+        })
+      );
+
+      getQuestions().then((questionResponse: any) => {
+        setActiveCategory({
+          category_name:
+            questionResponse.data[0].attributes.category.data.attributes
+              .category_name,
+          category_id: questionResponse.data[0].attributes.category.data.id,
+        });
+        setQuestions(
+          questionResponse.data.map((item: any) => {
+            return {
+              ...item.attributes,
+              id: item.id,
+              edit: false,
+              category: item.attributes.category.data.attributes.category_name,
+              category_id: item.attributes.category.data.id,
+            };
+          })
+        );
+        setLoading(false);
+      });
+    });
+  }, []);
+
+  const [questionsBasket, setQuestionsBasket] = useState<Question[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [activeCategory, setActiveCategory] = useState<string>("portugal");
-
   const [categories, setCategories] = useState<any>([
-    { category_name: "kyrgyzstan", id: uuidv4(), edit: false },
-    { category_name: "portugal", id: uuidv4(), edit: false },
-    { category_name: "germany", id: uuidv4(), edit: false },
+    // { category_name: "kyrgyzstan", id: uuidv4(), edit: false },
+    // { category_name: "portugal", id: uuidv4(), edit: false },
+    // { category_name: "germany", id: uuidv4(), edit: false },
   ]);
+
+  const [activeCategory, setActiveCategory] = useState<any | null>();
+
+  const [basket, setBasket] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setBasket((prevBasket) => {
+      setQuestionsBasket((prevBasket) => {
         const updatedBasket = prevBasket.map((item) => {
           if (item.deleteTimer === 0) {
             return { ...item, deleted: true };
@@ -63,7 +106,9 @@ const PanelQuestion = () => {
             return { ...item, deleteTimer: item.deleteTimer - 1 };
           }
         });
-        return updatedBasket.filter((item) => !item.deleted);
+
+        // return updatedBasket.filter((item) => !item.deleted);
+        return updatedBasket;
       });
     }, 1000);
 
@@ -75,26 +120,53 @@ const PanelQuestion = () => {
   const addQuestion = () => {
     setQuestions((prevQuestions) => [
       ...prevQuestions,
-      { id: uuidv4(), title: "", edit: true, category: activeCategory },
+      {
+        id: uuidv4(),
+        title: "",
+        edit: true,
+        category: activeCategory.category_name,
+        category_id: activeCategory.id,
+      },
     ]);
     // addQuestion();
+  };
+
+  const save = async () => {
+    setLoading(true);
+    await updateCategories(categories).then((resp) => {
+      console.log(resp);
+    });
+
+    await updateQuestions(questions).then((resp) => {
+      console.log(resp);
+    });
+
+    if (questionsBasket) {
+      await removeQuestions(questionsBasket).then((resp) => {
+        console.log(resp);
+      });
+    }
+
+    setLoading(false);
   };
 
   const removeQuestion = (id: string) => {
     const removedQuestion = questions.find((item) => item.id === id);
     if (removedQuestion) {
       setQuestions((prev) => prev.filter((item) => item.id !== id));
-      setBasket((prevBasket) => [
+      setQuestionsBasket((prevBasket) => [
         ...prevBasket,
-        { ...removedQuestion, deleteTimer: 5 },
+        { ...removedQuestion, deleteTimer: 3 },
       ]);
     }
   };
 
   const returnQuestion = (id: string) => {
-    const returnedQuestion = basket.find((item) => item.id === id);
+    const returnedQuestion = questionsBasket.find((item) => item.id === id);
     if (returnedQuestion) {
-      setBasket((prevBasket) => prevBasket.filter((item) => item.id !== id));
+      setQuestionsBasket((prevBasket) =>
+        prevBasket.filter((item) => item.id !== id)
+      );
       setQuestions((prevQuestions) => [...prevQuestions, returnedQuestion]);
     }
   };
@@ -112,6 +184,19 @@ const PanelQuestion = () => {
     });
   };
 
+  const changeCategoryStatus = (id: string, status: boolean) => {
+    setCategories((prev) => {
+      const updatedCategories = prev.map((item: Category) => {
+        if (item.id === id) {
+          return { ...item, edit: status };
+        } else {
+          return item;
+        }
+      });
+      return updatedCategories;
+    });
+  };
+
   const addCategory = () => {
     setCategories((prev: any) => {
       return [
@@ -125,11 +210,14 @@ const PanelQuestion = () => {
     });
   };
 
-  const change = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const change = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
     setQuestions((prev) => {
       const updatedQuestions = prev.map((item) => {
         if (item.id === id) {
-          return { ...item, [e.target.name]: e.target.value };
+          return {
+            ...item,
+            [e.target.name]: e.target.value,
+          };
         } else {
           return item;
         }
@@ -161,24 +249,33 @@ const PanelQuestion = () => {
           <Loader />
         </div>
       )}
-      <h4>
-        Категории <button onClick={addCategory}>Добавить категорию</button>
-      </h4>
+      <div className={st["category-header"]}>
+        <h4>
+          Категории <button onClick={addCategory}>Добавить категорию</button>
+        </h4>
+        <button onClick={save} className={st["save-btn"]}>
+          Сохранить
+        </button>
+      </div>
       <div className={st.basket}>
-        {basket.map((item) => (
-          <div className={st["basket-card"]} key={item.id}>
-            <p>
-              <strong>{item.title || "Пустой вопрос"}</strong> Удалится через{" "}
-              {item.deleteTimer}
-            </p>
-            <button
-              className={st["return-btn"]}
-              onClick={() => returnQuestion(item.id)}
-            >
-              Вернуть
-            </button>
-          </div>
-        ))}
+        {questionsBasket.map((item) => {
+          if (!item.deleted) {
+            return (
+              <div className={st["basket-card"]} key={item.id}>
+                <p>
+                  <strong>{item.title || "Пустой вопрос"}</strong>{" "}
+                  {item.category_name} Удалится через {item.deleteTimer}
+                </p>
+                <button
+                  className={st["return-btn"]}
+                  onClick={() => returnQuestion(item.id)}
+                >
+                  Вернуть
+                </button>
+              </div>
+            );
+          }
+        })}
       </div>
 
       <div className={st.tabs}>
@@ -188,16 +285,23 @@ const PanelQuestion = () => {
               <button
                 className={clsx(
                   st.tab,
-                  activeCategory === item.category_name && st.active
+                  activeCategory &&
+                    activeCategory.category_name === item.category_name &&
+                    st.active
                 )}
-                onClick={() => setActiveCategory(item.category_name)}
+                onClick={() =>
+                  setActiveCategory({
+                    category_name: item.category_name,
+                    id: item.id,
+                  })
+                }
               >
                 {item.category_name}
               </button>
             );
           } else {
             return (
-              <button
+              <div
                 key={item.id}
                 className={clsx(
                   st.tab,
@@ -209,22 +313,31 @@ const PanelQuestion = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     changeCategory(e, item.id)
                   }
+                  name="category_name"
                 />
-              </button>
+
+                <button onClick={() => changeCategoryStatus(item.id, false)}>
+                  Сохранить
+                </button>
+              </div>
             );
           }
         })}
       </div>
-      <h4>Вопросы в категории {activeCategory}</h4>
+      <h4>
+        Вопросы в категории {activeCategory && activeCategory.category_name}
+      </h4>
       <Btn
-        textBtn={`Добавить вопрос в категорию ${activeCategory}`}
+        textBtn={`Добавить вопрос в категорию ${
+          activeCategory && activeCategory.category_name
+        }`}
         dC={st.button}
         onClick={addQuestion}
       />
 
       <div className={st.cards}>
         {questions.map((item: Question) => {
-          if (item.category === activeCategory) {
+          if (item.category === activeCategory.category_name) {
             return (
               <article className={st.card} key={item.id}>
                 {item.edit ? (
