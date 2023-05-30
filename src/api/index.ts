@@ -131,6 +131,19 @@ export const updateCategories = async (data: any[]): Promise<any> => {
   });
 };
 
+export const GetloginUser = (token: any, data: string, id: number) => {
+  return strapiAPI
+    .put(`users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      json: {
+        about: data,
+      },
+    })
+    .json();
+};
+
 export const getCategory = async (cateogory_name: string) => {
   return await strapiAPI
     .get(`question-categories?filters[category_name][$eq]=${cateogory_name}`, {
