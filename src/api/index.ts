@@ -1,9 +1,5 @@
 import Cookie from "js-cookie";
-import ky from "ky";
-
-export const strapiAPI = ky.create({
-  prefixUrl: "http://localhost:1337/api",
-});
+import ky, { ResponsePromise } from "ky";
 
 export interface User {
   // Типы данных для пользователя
@@ -13,19 +9,29 @@ export interface Question {
   // Типы данных для вопроса
 }
 
+const strapiAPI = ky.create({
+  prefixUrl: "http://localhost:1337/api",
+});
+
+const request = <T>(
+  url: string,
+  options?: Record<string, any>
+): ResponsePromise<T> => {
+  const token = Cookie.get("key");
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  return strapiAPI(url, { ...options, headers }).json();
+};
+
 export const getUserInfo = (token: string): Promise<User> => {
-  return strapiAPI
-    .get("users/me?populate=*", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .json();
+  return request<User>("users/me?populate=*");
 };
 
 export const loginUser = (data: {
   username: string;
   password: string;
 }): Promise<any> => {
-  return strapiAPI.post("auth/local", { json: data }).json();
+  return request("auth/local", { method: "post", json: data });
 };
 
 export const RegUser = (data: {
@@ -33,189 +39,115 @@ export const RegUser = (data: {
   email: string;
   password: string;
 }): Promise<any> => {
-  return strapiAPI.post("auth/local/register", { json: data }).json();
+  return request("auth/local/register", { method: "post", json: data });
 };
 
 export const getData = (): Promise<any> => {
-  return strapiAPI.get("data?populate=deep").json();
+  return request("data?populate=deep");
 };
 
 export const getUsers = (): Promise<any> => {
-  return strapiAPI.get("users").json();
+  return request("users");
 };
 
 export const changeData = (data: any): Promise<any> => {
-  return strapiAPI
-    .put("stand-up?populate=deep", {
-      json: {
-        data: {
-          Products: data,
-        },
-      },
-    })
-    .json();
+  return request("stand-up?populate=deep", {
+    method: "put",
+    json: { data: { Products: data } },
+  });
 };
 
-export const changeUserInfo = async (data: User, id: number): Promise<any> => {
-  return await strapiAPI
-    .put(`users/${id}`, {
-      json: data,
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
+export const changeUserInfo = (data: User, id: number): Promise<any> => {
+  return request(`users/${id}`, { method: "put", json: data });
 };
 
-export const uploadImage = async (data: FormData): Promise<any> => {
-  return await strapiAPI
-    .post("upload", {
-      body: data,
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
+export const uploadImage = (data: FormData): Promise<any> => {
+  return request("upload", { method: "post", body: data });
 };
 
-export const getQuestions = async (): Promise<Question[]> => {
-  return strapiAPI
-    .get("questions?populate=*", {
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
+export const getQuestions = (): Promise<Question[]> => {
+  return request("questions?populate=*");
 };
 
-export const getCategories = async (): Promise<any> => {
-  return strapiAPI
-    .get("question-categories", {
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
+export const getCategories = (): Promise<any> => {
+  return request("question-categories");
 };
 
-export const updateCategories = async (data: any[]): Promise<any> => {
+export const updateCategories = (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
     if (!item.id) {
-      return strapiAPI.post(`question-categories`, {
-        json: {
-          data: {
-            category_name: item.category_name,
-          },
-        },
-        headers: {
-          Authorization: `Bearer ${Cookie.get("key")}`,
-        },
+      return request("question-categories", {
+        method: "post",
+        json: { data: { category_name: item.category_name } },
       });
     } else {
-      return strapiAPI.put(`question-categories/${item.id}`, {
-        json: {
-          data: {
-            ...item,
-          },
-        },
-        headers: {
-          Authorization: `Bearer ${Cookie.get("key")}`,
-        },
+      return request(`question-categories/${item.id}`, {
+        method: "put",
+        json: { data: item },
       });
     }
   });
 
-  // Wait for all requests to finish
-  return Promise.all(requests).then((responses) => {
-    return responses.map((response) => response.json());
+  return Promise.all(requests).then((responses) =>
+    responses.map((response) => response.json())
+  );
+};
+
+export const GetloginUser = (
+  token: any,
+  data: string,
+  id: number
+): Promise<any> => {
+  return request(`users/${id}`, {
+    method: "put",
+    headers: { Authorization: `Bearer ${token}` },
+    json: { about: data },
   });
 };
 
-export const GetloginUser = (token: any, data: string, id: number) => {
-  return strapiAPI
-    .put(`users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      json: {
-        about: data,
-      },
-    })
-    .json();
+export const getCategory = (category_name: string): Promise<any> => {
+  return request(
+    `question-categories?filters[category_name][$eq]=${category_name}`
+  );
 };
 
-export const getCategory = async (cateogory_name: string) => {
-  return await strapiAPI
-    .get(`question-categories?filters[category_name][$eq]=${cateogory_name}`, {
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
-};
-
-export const updateQuestions = async (data: any[]): Promise<any> => {
+export const updateQuestions = (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
     if (typeof item.id === "string") {
       if (!item.edit) {
         if (!item.category_id) {
-          getCategory(item.category).then((resp) => {
-            return strapiAPI.post(`questions`, {
-              json: {
-                data: {
-                  title: item.title,
-                  category: resp.data[0].id,
-                },
-              },
-              headers: {
-                Authorization: `Bearer ${Cookie.get("key")}`,
-              },
+          return getCategory(item.category).then((resp) => {
+            return request("questions", {
+              method: "post",
+              json: { data: { title: item.title, category: resp.data[0].id } },
             });
           });
         } else {
-          return strapiAPI.post(`questions`, {
-            json: {
-              data: {
-                title: item.title,
-                category: item.category_id,
-              },
-            },
-            headers: {
-              Authorization: `Bearer ${Cookie.get("key")}`,
-            },
+          return request("questions", {
+            method: "post",
+            json: { data: { title: item.title, category: item.category_id } },
           });
         }
       }
     } else {
-      return strapiAPI.put(`questions/${item.id}`, {
-        json: {
-          data: {
-            title: item.title,
-          },
-        },
-        headers: {
-          Authorization: `Bearer ${Cookie.get("key")}`,
-        },
+      return request(`questions/${item.id}`, {
+        method: "put",
+        json: { data: { title: item.title } },
       });
     }
   });
 
-  // Wait for all requests to finish
-  return Promise.all(requests).then((responses) => {
-    return responses.map((response) => response.json());
-  });
+  return Promise.all(requests).then((responses) =>
+    responses.map((response) => response.json())
+  );
 };
 
 export const removeQuestions = (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
-    return strapiAPI.delete(`questions/${item.id}`, {
-      headers: {
-        Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    });
+    return request(`questions/${item.id}`, { method: "delete" });
   });
 
-  return Promise.all(requests).then((responses) => {
-    return responses.map((response) => response.json());
-  });
+  return Promise.all(requests).then((responses) =>
+    responses.map((response) => response.json())
+  );
 };
