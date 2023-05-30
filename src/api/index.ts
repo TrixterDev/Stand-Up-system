@@ -1,33 +1,50 @@
-import ky from "ky";
 import Cookie from "js-cookie";
+import ky from "ky";
+
 export const strapiAPI = ky.create({
   prefixUrl: "http://localhost:1337/api",
 });
 
-export const getUserInfo = (token: any) => {
+export interface User {
+  // Типы данных для пользователя
+}
+
+export interface Question {
+  // Типы данных для вопроса
+}
+
+export const getUserInfo = (token: string): Promise<User> => {
   return strapiAPI
-    .get("users/me?populate=role", {
+    .get("users/me?populate=*", {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
 };
 
-export const loginUser = (data: any) => {
+export const loginUser = (data: {
+  username: string;
+  password: string;
+}): Promise<any> => {
   return strapiAPI.post("auth/local", { json: data }).json();
 };
 
-export const RegUser = (data: any) => {
+export const RegUser = (data: {
+  username: string;
+  email: string;
+  password: string;
+}): Promise<any> => {
   return strapiAPI.post("auth/local/register", { json: data }).json();
 };
 
-export const getUsers = () => {
+export const getData = (): Promise<any> => {
+  return strapiAPI.get("data?populate=deep").json();
+};
+
+export const getUsers = (): Promise<any> => {
   return strapiAPI.get("users").json();
 };
 
-export const getData = () => {
-  return strapiAPI.get("data?populate=deep").json();
-};
-export const changeData = (data: any, id: number) => {
+export const changeData = (data: any): Promise<any> => {
   return strapiAPI
     .put("stand-up?populate=deep", {
       json: {
@@ -39,25 +56,12 @@ export const changeData = (data: any, id: number) => {
     .json();
 };
 
-export const changeUserInfo = async (data: User, id: number) => {
+export const changeUserInfo = async (data: User, id: number): Promise<any> => {
   return await strapiAPI
     .put(`users/${id}`, {
       json: data,
       headers: {
         Authorization: `Bearer ${Cookie.get("key")}`,
-      },
-    })
-    .json();
-};
-
-export const GetloginUser = (token: any, data: string, id: number) => {
-  return strapiAPI
-    .put(`users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      json: {
-        about: data,
       },
     })
     .json();
@@ -201,12 +205,4 @@ export const removeQuestions = (data: any[]): Promise<any> => {
   return Promise.all(requests).then((responses) => {
     return responses.map((response) => response.json());
   });
-};
-
-export const findAnswer = () => {
-  return strapiAPI.get("otveties").json();
-};
-
-export const findQuestionCategory = () => {
-  return strapiAPI.get("question-categories").json();
 };
