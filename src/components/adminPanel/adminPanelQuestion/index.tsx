@@ -10,7 +10,6 @@ import {
   getCategories,
   getQuestions,
   removeQuestions,
-  strapiAPI,
   updateCategories,
   updateQuestions,
 } from "../../../api";
@@ -62,7 +61,8 @@ const PanelQuestion = () => {
         setQuestions(questionsData);
         setActiveCategory({
           category_name:
-            questionsData[0]?.attributes.category.data.attributes.category_name,
+            categoriesData[0]?.attributes.category.data.attributes
+              .category_name,
           category_id: questionsData[0]?.attributes.category.data.id,
         });
       } catch (error) {
