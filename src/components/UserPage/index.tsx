@@ -49,36 +49,53 @@ export const UserPage = () => {
     usernameValid: false,
   });
 
-  // * //
+  const [emailEx, setEmailEx] = useState<boolean>(false);
 
-  const checkEmailExists = async (updatedUserInfo) => {
+  const [phoneEx, setPhoneEx] = useState<boolean>(false);
+
+  const [usernameEx, setUsernameEx] = useState<boolean>(false);
+
+  const checkEmailExists = async (userEmail: any) => {
     try {
-      const res = await getUsers();
-      const usersEmail = res.data.email;
-      return usersEmail.length > 0;
+      const data = await getUsers();
+      const usersEmail = data.map((user) => user.email);
+      const emailExists = usersEmail.includes(userEmail);
+      console.log(emailExists);
+
+      return emailExists;
     } catch (error) {
       console.error(error);
       return false;
     }
   };
 
-  // Пример использования
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const checkPhoneExists = async (userPhone: any) => {
+    try {
+      const data = await getUsers();
+      const usersPhone = data.map((user) => user.phone);
+      const phoneExists = usersPhone.includes(userPhone);
+      console.log(phoneExists);
 
-    const email = event.target.email.value;
-    const emailExists = await checkEmailExists(email);
-
-    if (emailExists) {
-      console.log("Пользователь с таким email уже существует!");
-      // Дополнительная логика, если email уже существует
-    } else {
-      console.log("Email доступен для регистрации!");
-      // Дополнительная логика, если email доступен для регистрации
+      return phoneExists;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   };
 
-  // * //
+  const checkUsernameExists = async (username: any) => {
+    try {
+      const data = await getUsers();
+      const usernames = data.map((user) => user.username);
+      const usernameExists = usernames.includes(username);
+      console.log(usernameExists);
+
+      return usernameExists;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
   if (!user) {
     return <h2>Loading</h2>;
@@ -88,18 +105,39 @@ export const UserPage = () => {
     navigate("/");
   }
 
-  const saveUserInfo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const saveUserInfo = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const email = e.target.email.value;
-    const emailExists = await checkEmailExists(email);
+    const isEmailExists = await checkEmailExists(updatedUserInfo.email);
 
-    if (emailExists) {
-      console.log("Пользователь с таким email уже существует!");
-      // Дополнительная логика, если email уже существует
+    const isPhoneExists = await checkPhoneExists(updatedUserInfo.phone);
+
+    const isUsernameExists = await checkUsernameExists(
+      updatedUserInfo.username
+    );
+
+    if (isEmailExists) {
+      setEmailEx(true);
+      console.log("Пользователь с таким email уже существует");
     } else {
-      console.log("Email доступен для регистрации!");
-      // Дополнительная логика, если email доступен для регистрации
+      setEmailEx(false);
+      console.log("Email изменён");
+    }
+
+    if (isPhoneExists) {
+      setPhoneEx(true);
+      console.log("Пользователь с таким номером телефона уже существует");
+    } else {
+      setPhoneEx(false);
+      console.log("Номер телефона изменён");
+    }
+
+    if (isUsernameExists) {
+      setUsernameEx(true);
+      console.log("Пользователь с таким именем пользователя уже существует");
+    } else {
+      setUsernameEx(false);
+      console.log("Имя пользователя изменено");
     }
 
     if (avatar !== "") {
@@ -176,7 +214,7 @@ export const UserPage = () => {
       <Modal isVisible={showEditModal} setIsVisible={setShowEditModal}>
         <form onSubmit={saveUserInfo}>
           <div className={styles.form}>
-            <label className={styles.firstnameLabel}>
+            <label className={styles.avatarLabel}>
               Аватарка
               {avatar !== "" && (
                 <img
@@ -212,32 +250,53 @@ export const UserPage = () => {
             </label>
 
             <label className={styles.usernameLabel}>
-              Имя пользователя
+              {usernameEx ? (
+                <label htmlFor="username" className={styles.err}>
+                  Имя пользователя не доступно
+                </label>
+              ) : (
+                "Имя пользователя"
+              )}
               <Input
                 name="username"
                 secondClass={styles.input}
                 pHText={user.username}
                 onChange={handleChange}
+                idElem="username"
               />
             </label>
 
             <label className={styles.emailLabel}>
-              E-mail
+              {emailEx ? (
+                <label htmlFor="email" className={styles.err}>
+                  E-mail не доступен
+                </label>
+              ) : (
+                "E-mail"
+              )}
               <Input
                 name="email"
                 secondClass={styles.input}
                 pHText={user.email}
                 onChange={handleChange}
+                idElem="email"
               />
             </label>
 
             <label className={styles.phoneLabel}>
-              Номер телефона
+              {phoneEx ? (
+                <label htmlFor="phone" className={styles.err}>
+                  Номер телефона не доступен
+                </label>
+              ) : (
+                "Номер телефона"
+              )}
               <Input
                 name="phone"
                 secondClass={styles.input}
                 pHText={user.phone}
                 onChange={handleChange}
+                idElem="phone"
               />
             </label>
           </div>

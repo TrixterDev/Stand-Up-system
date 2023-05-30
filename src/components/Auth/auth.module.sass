@@ -1,26 +1,18 @@
 .auth
   &__wrap
     height: 100vh
-    width: 100%
-    position: fixed
-    top: 0
-    left: 0
-    background: url(./bg.svg) no-repeat
+    background: url(./bg.svg) no-repeat center
     background-size: cover
-    background-position: center center
-    overflow-y: scroll
     display: flex
     align-items: center
+    justify-content: center
     padding: 25px
-    justify-content: centerv
     > div
-      width: 38.125rem
-      height: 25rem
+      width: max-content
+      height: max-content
       margin: auto
-      position: relative
   &__content
-    position: absolute
-    background: #85701F
+    background: #33333399
     border-radius: 2rem
     padding: 3.4375rem
     width: 100%
@@ -29,17 +21,13 @@
     gap: 20px
     align-items: center
     justify-content: center
-    > hr
-      border: none
-      width: 100%
-      height: .125rem
-      background: #ffff
+    margin-top: -70px
   &__title
-    width: max-content
-    margin: auto
-    font-size: 2.375rem
-    text-align: center
+    display: flex
+    flex-direction: column
+    align-items: center
     color: #fff
+    max-height: 150px
   &__input
     width: 100%
     margin-top: 2.625rem
@@ -81,21 +69,105 @@
         color: #fff
         left: 0
 
-@media screen and (max-width: 370px)
-  .auth
-    &__wrap
-      > div
-        height: 460px
-    &__title
-      > h1
-        font-size: 2rem
-    &__btn
-      flex-direction: column
-      > button
-        width: 100%
 .span
   color: white
   text-align: center
-  > a
-    color: #fc0
+  & a
     text-decoration: underline
+    color: #ffcc00
+
+.err
+  color: tomato
+  min-height: 20px
+  margin-top: 30px
+
+.title
+  color: white
+  font-size: 3.3125rem
+  margin: 0
+
+hr
+  background: white
+  width: 80%
+  min-height: 0.25rem
+  margin-top: 0.625rem
+
+.authTitle
+  color: white
+  font-size: 2.625rem
+  margin: 0.3125rem 0 0 0
+
+.form
+  display: grid
+  gap: 1.625rem
+  max-width: 31.25rem
+  width: 100%
+
+label.eyeLabel
+  width: 50px
+  height: 100%
+  position: absolute
+  left: 78%
+  top: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  background-color: #fff
+  border-radius: 50%
+
+.eye
+  width: 32px
+  height: 32px
+  background: url(./eye.svg) no-repeat center
+  color: #333333
+  cursor: pointer
+
+.checkbox
+  display: none
+
+.checkbox:checked + .eye
+  background: url(./eye-blocked.svg) no-repeat center
+
+.passInput
+  padding-right: 55px
+
+  /* Media */
+
+@media (max-width: 540px)
+  .auth__content
+    padding: 20px
+
+  .title
+    font-size: 44px
+
+  .authTitle
+    font-size: 38px
+
+@media (max-width: 450px)
+  .auth__title
+    max-height: 100px
+
+  .title
+    font-size: 38px
+
+  .authTitle
+    font-size: 34px
+
+  .form
+    gap: 0
+
+  .auth__wrap
+    padding: 0 20px
+
+  .auth__btn
+    display: grid
+
+@media (max-width: 330px)
+  .title
+    font-size: 32px
+
+  .authTitle
+    font-size: 30px
+
+  .auth__input
+    margin-top: 1.25rem
