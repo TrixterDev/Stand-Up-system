@@ -4,7 +4,8 @@
   "info": {
     "singularName": "question-category",
     "pluralName": "question-categories",
-    "displayName": "Категории вопросов"
+    "displayName": "Категории вопросов",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true

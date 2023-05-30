@@ -1,4 +1,5 @@
 import ky from "ky";
+import Cookie from "js-cookie";
 export const strapiAPI = ky.create({
   prefixUrl: "http://localhost:1337/api",
 });

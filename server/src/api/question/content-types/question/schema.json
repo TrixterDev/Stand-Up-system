@@ -17,8 +17,15 @@
     },
     "answer": {
       "type": "text",
-    "title": {
-      "type": "text"
+      "title": {
+        "type": "text"
+      },
+      "category": {
+        "type": "relation",
+        "relation": "manyToOne",
+        "target": "api::question-category.question-category",
+        "inversedBy": "questions"
+      }
     },
     "category": {
       "type": "relation",
@@ -27,5 +34,4 @@
       "inversedBy": "questions"
     }
   }
-}
 }
