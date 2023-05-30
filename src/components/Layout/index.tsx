@@ -52,7 +52,8 @@ const Layout: React.FC<props> = ({ children }) => {
             </NavLink>
           </div>
           <NavLink
-            to="/question"
+            to="/"
+            onClick={exit}
             className={({ isActive }) => (isActive ? st.isActive : "")}
           >
             <ImExit />

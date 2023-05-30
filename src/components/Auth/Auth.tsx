@@ -37,15 +37,7 @@ const Auth = () => {
     } else {
       navigate("/");
     }
-    loginUser(form)
-      .then((resp: any) => {
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-        Cookies.set("key", resp.jwt, { expires: expirationDate });
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
+
   }, []);
 
   const handleInput = (event: any) => {
