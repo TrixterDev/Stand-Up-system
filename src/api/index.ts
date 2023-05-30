@@ -16,7 +16,7 @@ const strapiAPI = ky.create({
 const request = <T>(
   url: string,
   options?: Record<string, any>
-): ResponsePromise<T> => {
+): Promise<any> => {
   const token = Cookie.get("key");
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
