@@ -43,24 +43,27 @@ export const RegUser = (data: {
 };
 
 export const getData = (): Promise<any> => {
-  return request("questions?populate=*",{
+  return request("questions?populate=*", {
     method: "get",
   });
-
 };
 
 export const getUsers = (): Promise<any> => {
-  return request("users");
+  return request("users?populate=*", {
+    method: "get",
+  });
 };
 
 export const changeData = (data: any): Promise<any> => {
   return request("answers?populate=deep", {
     method: "post",
-    json: { data: {
-      answer: data.answer,
-      category: data.category_id,
-      question: data.id
-    } },
+    json: {
+      data: {
+        answer: data.answer,
+        category: data.category_id,
+        question: data.id,
+      },
+    },
   });
 };
 

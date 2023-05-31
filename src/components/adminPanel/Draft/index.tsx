@@ -14,6 +14,7 @@ const Draft = () => {
   const [answers, setAnswers] = useState<any>([]);
   useEffect(() => {
     getUsers().then((res: any) => {
+      console.log(res);
       setUsers(res);
     });
   }, []);
@@ -41,7 +42,7 @@ const Draft = () => {
           <div className={st.card}>
             {ans ? (
               <DraftCard
-                answers="ahahahahhahaha"
+                answers=""
                 question="xz"
                 username="sd"
                 avatar="/img/base-avatar.png"
