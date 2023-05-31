@@ -60,10 +60,8 @@ const PanelQuestion = () => {
         }));
         setQuestions(questionsData);
         setActiveCategory({
-          category_name:
-            categoriesData[0]?.attributes.category.data.attributes
-              .category_name,
-          category_id: questionsData[0]?.attributes.category.data.id,
+          category_name: categoriesData[0].attributes.category_name,
+          id: categoriesData[0].id,
         });
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -170,7 +168,7 @@ const PanelQuestion = () => {
   const addCategory = () => {
     setCategories((prev) => [
       ...prev,
-      { category_name: "", edit: true, id: uuidv4() },
+      { category_name: "", edit: true, id: null },
     ]);
   };
 
