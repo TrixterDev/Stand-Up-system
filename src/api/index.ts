@@ -27,11 +27,18 @@ export const getUserInfo = (token: string): Promise<User> => {
   return request<User>("users/me?populate=*");
 };
 
+// export const loginUser = (data: {
+//   username: string;
+//   password: string;
+// }): Promise<any> => {
+//   return request("auth/local", { method: "post", json: data });
+// };
+
 export const loginUser = (data: {
-  username: string;
+  identifier: string;
   password: string;
 }): Promise<any> => {
-  return request("auth/local", { method: "post", json: data });
+  return strapiAPI.post("auth/local", { json: data });
 };
 
 export const RegUser = (data: {
@@ -43,10 +50,9 @@ export const RegUser = (data: {
 };
 
 export const getData = (): Promise<any> => {
-  return request("questions?populate=*",{
+  return request("questions?populate=*", {
     method: "get",
   });
-
 };
 
 export const getUsers = (): Promise<any> => {
@@ -56,11 +62,13 @@ export const getUsers = (): Promise<any> => {
 export const changeData = (data: any): Promise<any> => {
   return request("answers?populate=deep", {
     method: "post",
-    json: { data: {
-      answer: data.answer,
-      category: data.category_id,
-      question: data.id
-    } },
+    json: {
+      data: {
+        answer: data.answer,
+        category: data.category_id,
+        question: data.id,
+      },
+    },
   });
 };
 
