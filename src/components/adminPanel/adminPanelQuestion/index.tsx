@@ -114,10 +114,7 @@ const PanelQuestion = () => {
     try {
       await updateCategories(categories);
 
-      const updateQuestionsPromises = questions.map((question) =>
-        updateQuestions(question)
-      );
-      await Promise.all(updateQuestionsPromises);
+      await updateQuestions(questions);
 
       if (questionsBasket.length > 0) {
         await removeQuestions(questionsBasket);

@@ -74,6 +74,7 @@ export const getCategories = (): Promise<any> => {
 };
 
 export const updateCategories = (data: any[]): Promise<any> => {
+  console.log("Update working");
   const requests = data.map((item) => {
     if (!item.id) {
       return request("question-categories", {
@@ -88,9 +89,7 @@ export const updateCategories = (data: any[]): Promise<any> => {
     }
   });
 
-  return Promise.all(requests).then((responses) =>
-    responses.map((response) => response.json())
-  );
+  return Promise.all(requests);
 };
 
 export const GetloginUser = (
@@ -112,6 +111,7 @@ export const getCategory = (category_name: string): Promise<any> => {
 };
 
 export const updateQuestions = (data: any[]): Promise<any> => {
+  console.log("Update working");
   const requests = data.map((item) => {
     if (typeof item.id === "string") {
       if (!item.edit) {
@@ -137,17 +137,14 @@ export const updateQuestions = (data: any[]): Promise<any> => {
     }
   });
 
-  return Promise.all(requests).then((responses) =>
-    responses.map((response) => response.json())
-  );
+  return Promise.all(requests);
 };
 
 export const removeQuestions = (data: any[]): Promise<any> => {
+  console.log("Remove working");
   const requests = data.map((item) => {
     return request(`questions/${item.id}`, { method: "delete" });
   });
 
-  return Promise.all(requests).then((responses) =>
-    responses.map((response) => response.json())
-  );
+  return Promise.all(requests);
 };
