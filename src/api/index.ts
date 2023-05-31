@@ -27,11 +27,18 @@ export const getUserInfo = (token: string): Promise<User> => {
   return request<User>("users/me?populate=*");
 };
 
+// export const loginUser = (data: {
+//   username: string;
+//   password: string;
+// }): Promise<any> => {
+//   return request("auth/local", { method: "post", json: data });
+// };
+
 export const loginUser = (data: {
-  username: string;
+  identifier: string;
   password: string;
 }): Promise<any> => {
-  return request("auth/local", { method: "post", json: data });
+  return strapiAPI.post("auth/local?populate=*", { json: data }).json();
 };
 
 export const RegUser = (data: {

@@ -37,7 +37,6 @@ const Auth = () => {
     } else {
       navigate("/");
     }
-
   }, []);
 
   const handleInput = (event: any) => {
@@ -50,7 +49,7 @@ const Auth = () => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     loginUser(form)
-      .then((resp: any) => {
+      .then((resp: { jwt: string; user: any }) => {
         console.log(resp);
         Cookies.set("key", resp.jwt, { expires: 7 });
         if (resp.user.admin) {
