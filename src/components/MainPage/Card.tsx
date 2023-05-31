@@ -6,31 +6,34 @@ import { changeData } from "../../api";
 interface props {
   id: number;
   productInfo: questionItem;
+  category_id: number;
 }
 
 interface itemKeys {
+  title: string;
   answer: string;
-  question: string;
+  category_id: number;
   id: number;
 }
-const Card: React.FC<props> = ({ productInfo, id }) => {
+const Card: React.FC<props> = ({ productInfo, id, category_id }) => {
   const [item, setItem] = useState<itemKeys>({
-    answer: productInfo.answer,
-    question: productInfo.question,
+    title: productInfo.title,
+    answer: "",
     id: id,
+    category_id: category_id,
   });
 
   const [submitted, setSubmitted] = useState<boolean>(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(item.answer);
-    changeData(item.answer, id);
+    console.log(item.title);
+    changeData(item, item.id);
     setSubmitted(true);
   };
 
   return (
     <div key={item?.id} className={st.grid_item}>
-      {item.question}
+      {item.title}
       <form onSubmit={handleSubmit}>
         {submitted ? (
           <div>

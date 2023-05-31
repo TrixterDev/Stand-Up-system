@@ -43,7 +43,10 @@ export const RegUser = (data: {
 };
 
 export const getData = (): Promise<any> => {
-  return request("data?populate=deep");
+  return request("questions?populate=*",{
+    method: "get",
+  });
+
 };
 
 export const getUsers = (): Promise<any> => {
@@ -51,9 +54,13 @@ export const getUsers = (): Promise<any> => {
 };
 
 export const changeData = (data: any): Promise<any> => {
-  return request("stand-up?populate=deep", {
-    method: "put",
-    json: { data: { Products: data } },
+  return request("answers?populate=deep", {
+    method: "post",
+    json: { data: {
+      answer: data.answer,
+      category: data.category_id,
+      question: data.id
+    } },
   });
 };
 

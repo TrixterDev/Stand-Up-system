@@ -13,6 +13,7 @@ export interface questionItem {
   answer: string;
   question: string;
   id: number;
+  title: string;
 }
 interface formKeys {
   about: string;
@@ -42,6 +43,7 @@ const MainPage = () => {
 
     getData().then((res: any) => {
       setData(res.data);
+      console.log(res.data);
     });
   }, []);
 
@@ -117,7 +119,12 @@ const MainPage = () => {
               index: number
             ) => {
               return (
-                <Card key={el.id} productInfo={el.attributes} id={el.id} />
+                <Card
+                  key={el.id}
+                  productInfo={el.attributes}
+                  id={el.id}
+                  category_id={el.attributes.category.data.id}
+                />
               );
             }
           )}
