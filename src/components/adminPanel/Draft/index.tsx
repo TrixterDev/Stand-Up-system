@@ -14,7 +14,7 @@ const Draft = () => {
   const [answers, setAnswers] = useState<any>([]);
   useEffect(() => {
     getUsers().then((res: any) => {
-      console.log(res);
+      console.log(res.data);
       setUsers(res);
     });
   }, []);
