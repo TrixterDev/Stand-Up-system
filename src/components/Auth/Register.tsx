@@ -28,7 +28,7 @@ const Register = () => {
     password: "",
     confirmPass: "",
   });
-  const [passwordsMatch, setPasswordsMatch] = useState<boolean>();
+  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
   const [validation, setValidation] = useState({
     confirmPass: "",
     lenghtPass: "Пароль",

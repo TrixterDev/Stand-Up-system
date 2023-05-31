@@ -49,53 +49,7 @@ export const UserPage = () => {
     usernameValid: false,
   });
 
-  const [emailEx, setEmailEx] = useState<boolean>(false);
-
-  const [phoneEx, setPhoneEx] = useState<boolean>(false);
-
   const [usernameEx, setUsernameEx] = useState<boolean>(false);
-
-  const checkEmailExists = async (userEmail: any) => {
-    try {
-      const data = await getUsers();
-      const usersEmail = data.map((user) => user.email);
-      const emailExists = usersEmail.includes(userEmail);
-      console.log(emailExists);
-
-      return emailExists;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
-  const checkPhoneExists = async (userPhone: any) => {
-    try {
-      const data = await getUsers();
-      const usersPhone = data.map((user) => user.phone);
-      const phoneExists = usersPhone.includes(userPhone);
-      console.log(phoneExists);
-
-      return phoneExists;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
-  const checkUsernameExists = async (username: any) => {
-    try {
-      const data = await getUsers();
-      const usernames = data.map((user) => user.username);
-      const usernameExists = usernames.includes(username);
-      console.log(usernameExists);
-
-      return usernameExists;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
 
   if (!user) {
     return <h2>Loading</h2>;
@@ -107,51 +61,25 @@ export const UserPage = () => {
 
   const saveUserInfo = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const isEmailExists = await checkEmailExists(updatedUserInfo.email);
-
-    const isPhoneExists = await checkPhoneExists(updatedUserInfo.phone);
-
-    const isUsernameExists = await checkUsernameExists(
-      updatedUserInfo.username
-    );
-
-    if (isEmailExists) {
-      setEmailEx(true);
-      console.log("Пользователь с таким email уже существует");
-    } else {
-      setEmailEx(false);
-      console.log("Email изменён");
-    }
-
-    if (isPhoneExists) {
-      setPhoneEx(true);
-      console.log("Пользователь с таким номером телефона уже существует");
-    } else {
-      setPhoneEx(false);
-      console.log("Номер телефона изменён");
-    }
-
-    if (isUsernameExists) {
-      setUsernameEx(true);
-      console.log("Пользователь с таким именем пользователя уже существует");
-    } else {
-      setUsernameEx(false);
-      console.log("Имя пользователя изменено");
-    }
-
-    if (avatar !== "") {
-      const image = new FormData();
-      image.append("files", avatar);
-      await uploadImage(image).then((resp) => {
-        setUpdatedUserInfo((prev: any) => {
-          return { ...prev, avatar: resp[0] };
+    try {
+      if (avatar !== "") {
+        const image = new FormData();
+        image.append("files", avatar);
+        await uploadImage(image).then((resp) => {
+          setUpdatedUserInfo((prev: any) => {
+            return { ...prev, avatarka: resp[0] };
+          });
         });
+      }
+
+      await changeUserInfo(updatedUserInfo, user.id).then((resp) => {
+        setShowEditModal(false);
       });
+    } catch (error) {
+      alert("Произошла ошибка");
+    } finally {
+      // location.reload();
     }
-    changeUserInfo(updatedUserInfo, user.id).then((resp) => {
-      setShowEditModal(false);
-    });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,13 +178,7 @@ export const UserPage = () => {
             </label>
 
             <label className={styles.usernameLabel}>
-              {usernameEx ? (
-                <label htmlFor="username" className={styles.err}>
-                  Имя пользователя не доступно
-                </label>
-              ) : (
-                "Имя пользователя"
-              )}
+              Имя пользователя
               <Input
                 name="username"
                 secondClass={styles.input}
@@ -267,13 +189,7 @@ export const UserPage = () => {
             </label>
 
             <label className={styles.emailLabel}>
-              {emailEx ? (
-                <label htmlFor="email" className={styles.err}>
-                  E-mail не доступен
-                </label>
-              ) : (
-                "E-mail"
-              )}
+              Email
               <Input
                 name="email"
                 secondClass={styles.input}
@@ -284,13 +200,7 @@ export const UserPage = () => {
             </label>
 
             <label className={styles.phoneLabel}>
-              {phoneEx ? (
-                <label htmlFor="phone" className={styles.err}>
-                  Номер телефона не доступен
-                </label>
-              ) : (
-                "Номер телефона"
-              )}
+              Номер телефона
               <Input
                 name="phone"
                 secondClass={styles.input}
