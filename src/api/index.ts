@@ -54,7 +54,7 @@ export const getUsers = (): Promise<any> => {
   });
 };
 
-export const changeData = (data: any): Promise<any> => {
+export const changeData = (data: any, idUsers: number): Promise<any> => {
   return request("answers?populate=deep", {
     method: "post",
     json: {
@@ -62,6 +62,7 @@ export const changeData = (data: any): Promise<any> => {
         answer: data.answer,
         category: data.category_id,
         question: data.id,
+        users: idUsers,
       },
     },
   });
@@ -157,4 +158,8 @@ export const removeQuestions = (data: any[]): Promise<any> => {
   });
 
   return Promise.all(requests);
+};
+
+export const getAnswers = () => {
+  return strapiAPI.get("answers?populate=deep").json();
 };

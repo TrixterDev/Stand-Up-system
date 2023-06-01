@@ -37,7 +37,6 @@ const Auth = () => {
     } else {
       navigate("/");
     }
-
   }, []);
 
   const handleInput = (event: any) => {
@@ -49,6 +48,7 @@ const Auth = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+
     loginUser(form)
       .then((resp: any) => {
         console.log(resp);

@@ -7,6 +7,7 @@ interface props {
   id: number;
   productInfo: questionItem;
   category_id: number;
+  userId: number;
 }
 
 interface itemKeys {
@@ -14,20 +15,22 @@ interface itemKeys {
   answer: string;
   category_id: number;
   id: number;
+  userId: number;
 }
-const Card: React.FC<props> = ({ productInfo, id, category_id }) => {
+const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
   const [item, setItem] = useState<itemKeys>({
     title: productInfo.title,
     answer: "",
     id: id,
     category_id: category_id,
+    userId: userId,
   });
 
   const [submitted, setSubmitted] = useState<boolean>(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(item.title);
-    changeData(item, item.id);
+    changeData(item, userId);
     setSubmitted(true);
   };
 
