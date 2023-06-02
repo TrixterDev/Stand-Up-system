@@ -14,6 +14,7 @@ export interface questionItem {
   question: string;
   id: number;
   title: string;
+  category?: any;
 }
 interface formKeys {
   about: string;
@@ -32,7 +33,7 @@ const MainPage = () => {
   useEffect(() => {
     const key = Cookies.get("key");
     if (key !== undefined) {
-      getUserInfo(key).then((response: any) => {
+      getUserInfo().then((response: any) => {
         setDataUser(response);
 
         if (response.about === "" || response.about === null) {

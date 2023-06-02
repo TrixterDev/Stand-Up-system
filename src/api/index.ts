@@ -23,7 +23,7 @@ const request = <T>(
   return strapiAPI(url, { ...options, headers }).json();
 };
 
-export const getUserInfo = (token: string): Promise<User> => {
+export const getUserInfo = (): Promise<User> => {
   return request<User>("users/me?populate=*");
 };
 
