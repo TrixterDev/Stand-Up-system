@@ -3,15 +3,17 @@ import { getUsers } from "../../../api";
 import Btn from "../../ui/Btn/Btn";
 import DraftCard from "./DraftCard";
 import st from "./style.module.sass";
+import clsx from "clsx";
 const Draft = () => {
   const [users, setUsers] = useState<any>({
     username: "",
     avatar: "",
   });
-  const [ans, setAns] = useState<boolean>(false);
-  const [que, setQue] = useState<boolean>(false);
   const [question, setQuestion] = useState<any>([]);
   const [answers, setAnswers] = useState<any>([]);
+  const [activeTab, setActiveTab] = useState<"answers" | "questions">(
+    "answers"
+  );
   useEffect(() => {
     getUsers().then((res: any) => {
       console.log(res.data);
@@ -21,82 +23,44 @@ const Draft = () => {
   return (
     <section className={st.container}>
       <h2 className={st.text}>Архив ответов и вопросов</h2>
-      <div className={st.wrapper}>
-        <div className={st.wrapper__cards}>
-          <span className={st.text && st.span}>Ответы:</span>
-          {/* ЗДЕСЬ ДОЛЖЕН БЫТЬ ИНПУТ С ФИЛЬТРОМ ПОИСК ПО ИМЕНИ И ПО Id */}
-          <div className={st.changeCategory}>
-            <Btn
-              dC={st.btn}
-              onClick={() => setAns(true)}
-              type="button"
-              textBtn="Измененные"
-            />
-            <Btn
-              dC={st.btn}
-              onClick={() => setAns(false)}
-              type="button"
-              textBtn="Удаленные"
-            />
-          </div>
-          <div className={st.card}>
-            {ans ? (
-              <DraftCard
-                answers=""
-                question="xz"
-                username="sd"
-                avatar="/img/base-avatar.png"
-                date="12.04.2004"
-              />
-            ) : (
-              <DraftCard
-                answers="dddsadusaho9fyh"
-                question="isdhgiuhsduifhsdiufhioh"
-                username="sd"
-                avatar="/img/base-avatar.png"
-                date="12.04.2004"
-              />
-            )}
-          </div>
-        </div>
-        <div className={st.wrapper__cards}>
-          <span className={st.text && st.span}>Вопросы:</span>
-          {/* ЗДЕСЬ ДОЛЖЕН БЫТЬ ИНПУТ С ФИЛЬТРОМ ПОИСК ПО ИМЕНИ И ПО Id */}
-          <div className={st.changeCategory}>
-            <Btn
-              dC={st.btn}
-              onClick={() => setQue(true)}
-              type="button"
-              textBtn="Измененные"
-            />
-            <Btn
-              dC={st.btn}
-              onClick={() => setQue(false)}
-              type="button"
-              textBtn="Удаленные"
-            />
-          </div>
-          <div className={st.card}>
-            {que ? (
-              <DraftCard
-                answers="ahahahahhahaha"
-                question="xz"
-                username="sd"
-                avatar="/img/base-avatar.png"
-                date="12.04.2004"
-              />
-            ) : (
-              <DraftCard
-                answers="dddsadusaho9fyh"
-                question="isdhgiuhsduifhsdiufhioh"
-                username="sd"
-                avatar="/img/base-avatar.png"
-                date="12.04.2004"
-              />
-            )}
-          </div>
+      <div className={st.header}>
+        <div className="tabs">
+          <button
+            className={clsx("tab", activeTab === "answers" && "active")}
+            onClick={() => setActiveTab("answers")}
+          >
+            Ответы
+          </button>
+          <button
+            className={clsx("tab", activeTab === "questions" && "active")}
+            onClick={() => setActiveTab("questions")}
+          >
+            Вопросы
+          </button>
         </div>
       </div>
+
+      {activeTab === "answers" ? (
+        <div className={st["draft-content"]}>
+          <div className={st["filters"]}>
+            <div className={st["filter-tabs"]}>
+              <button>Все</button>
+              <button>Удалённые</button>
+              <button>Изменённые</button>
+            </div>
+
+            <div className={st["search-wrap"]}>
+              <label>
+                <input type="text" placeholder="Поиск ответа" />
+              </label>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={st["draft-content"]}>
+          <h4>Архив вопросов</h4>
+        </div>
+      )}
     </section>
   );
 };

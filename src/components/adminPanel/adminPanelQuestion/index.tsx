@@ -13,6 +13,8 @@ import {
   updateCategories,
   updateQuestions,
 } from "../../../api";
+import { format, parseISO } from "date-fns";
+import { ru } from "date-fns/locale";
 
 interface Category {
   id: string;
@@ -28,6 +30,7 @@ interface Question {
   deleted?: boolean;
   category: string;
   category_id: string;
+  createdAt: string;
 }
 
 const PanelQuestion = () => {
@@ -101,6 +104,7 @@ const PanelQuestion = () => {
         edit: true,
         category: activeCategory.category_name,
         category_id: activeCategory.id,
+        createdAt: new Date(),
       };
       setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
     }
@@ -245,16 +249,16 @@ const PanelQuestion = () => {
         })}
       </div>
 
-      <div className={st.tabs}>
+      <div className="tabs">
         {categories.map((item: Category, index: number) => {
           if (!item.edit) {
             return (
               <button
                 className={clsx(
-                  st.tab,
+                  "tab",
                   activeCategory &&
                     activeCategory.category_name === item.category_name &&
-                    st.active
+                    "active"
                 )}
                 onClick={() =>
                   setActiveCategory({
@@ -271,8 +275,8 @@ const PanelQuestion = () => {
             return (
               <div
                 className={clsx(
-                  st.tab,
-                  activeCategory === item.category_name && st.active
+                  "tab",
+                  activeCategory === item.category_name && "active"
                 )}
                 key={item.id}
               >
@@ -343,6 +347,18 @@ const PanelQuestion = () => {
                     <div className={st["question-controls"]}>
                       <FaEdit onClick={() => changeEditStatus(item.id, true)} />
                       <FaTrashAlt onClick={() => removeQuestion(item.id)} />
+                    </div>
+
+                    <div className={st["question-info"]}>
+                      {format(
+                        typeof item.createdAt === "string"
+                          ? parseISO(item.createdAt)
+                          : item.createdAt,
+                        "dd MMM, yyyy",
+                        {
+                          locale: ru,
+                        }
+                      )}
                     </div>
                   </div>
                 )}

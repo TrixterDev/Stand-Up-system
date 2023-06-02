@@ -7,18 +7,7 @@
   justify-content: center
   align-items: center
   gap: 25px
-  width: 100%
-.wrapper
-  display: grid
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr))
-  justify-content: space-between
-  gap: 150px
-  width: 100%
-  &__cards
-    display: flex
-    flex-direction: column
-    gap: 25px
-    text-align: center
+
 .card
   flex-wrap: wrap
   display: flex
@@ -40,6 +29,10 @@
   justify-content: space-between
   flex-direction: row
   gap: 20px
+
+.filters
+  display: flex
+  width: 100%
 
 @media screen and (max-width: 1120px)
   .wrapper
