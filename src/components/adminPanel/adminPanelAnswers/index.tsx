@@ -35,9 +35,10 @@ const PanelAnswer = () => {
       <div className={styles.answers__title}>
         <h2>Ответы от пользователей</h2>
       </div>
-      <div>
+      <div className={styles.answers__cont}>
         <h2>Вы можете найти ответ по пользователю</h2>
         <input
+          className={styles.input}
           type="text"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUsername(e.target.value)
