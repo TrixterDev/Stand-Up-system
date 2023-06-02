@@ -1,0 +1,21 @@
+.answers
+  margin: 20px auto
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 25px
+  width: 100%
+  &__title
+    padding: 30px
+  &__cards
+    width: 80%
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
+    gap: 30px
+  &__card
+    padding: 25px
+    background: #fc0
+    border-radius: 12px
+    > *
+      color: #fff

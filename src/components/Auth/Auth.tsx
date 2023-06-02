@@ -48,6 +48,7 @@ const Auth = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+
     loginUser(form)
       .then((resp: { jwt: string; user: any }) => {
         console.log(resp);

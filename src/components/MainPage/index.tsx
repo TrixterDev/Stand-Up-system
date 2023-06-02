@@ -123,6 +123,7 @@ const MainPage = () => {
                   key={el.id}
                   productInfo={el.attributes}
                   id={el.id}
+                  userId={dataUser.id}
                   category_id={el.attributes.category.data.id}
                 />
               );
