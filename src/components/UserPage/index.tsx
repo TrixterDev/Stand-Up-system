@@ -96,7 +96,7 @@ export const UserPage = () => {
   };
 
   return (
-    <>
+    <div className={styles.userPage}>
       <div className={styles.container}>
         <Btn
           textBtn="Назад"
@@ -212,9 +212,9 @@ export const UserPage = () => {
               />
             </label>
           </div>
-          <Btn textBtn="Сохранить" dC={styles.saveBtn} disabled={true} />
+          <Btn textBtn="Сохранить" dC={styles.saveBtn} />
         </form>
       </Modal>
-    </>
+    </div>
   );
 };
