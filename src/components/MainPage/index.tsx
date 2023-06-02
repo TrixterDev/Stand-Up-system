@@ -44,7 +44,6 @@ const MainPage = () => {
 
     getData().then((res: any) => {
       setData(res.data);
-      console.log(res.data);
     });
   }, []);
 

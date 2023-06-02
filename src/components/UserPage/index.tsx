@@ -25,7 +25,6 @@ export const UserPage = () => {
 
   useEffect(() => {
     getUserInfo(Cookie.get("key")).then((resp) => {
-      console.log(resp);
       setUser((prevUser) => (resp as User) || prevUser);
     });
   }, []);
