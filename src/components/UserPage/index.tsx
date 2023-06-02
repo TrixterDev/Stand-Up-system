@@ -15,13 +15,14 @@ export interface User {
   lastname?: string;
   position?: string;
   phone?: string;
-  avatar?: any;
+  avatarka?: any;
 }
 
 export const UserPage = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     getUserInfo(Cookie.get("key")).then((resp) => {
       console.log(resp);
@@ -49,37 +50,6 @@ export const UserPage = () => {
     usernameValid: false,
   });
 
-  // * //
-
-  const checkEmailExists = async (updatedUserInfo) => {
-    try {
-      const res = await getUsers();
-      const usersEmail = res.data.email;
-      return usersEmail.length > 0;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
-  // Пример использования
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const email = event.target.email.value;
-    const emailExists = await checkEmailExists(email);
-
-    if (emailExists) {
-      console.log("Пользователь с таким email уже существует!");
-      // Дополнительная логика, если email уже существует
-    } else {
-      console.log("Email доступен для регистрации!");
-      // Дополнительная логика, если email доступен для регистрации
-    }
-  };
-
-  // * //
-
   if (!user) {
     return <h2>Loading</h2>;
   }
@@ -88,32 +58,27 @@ export const UserPage = () => {
     navigate("/");
   }
 
-  const saveUserInfo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const saveUserInfo = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const email = e.target.email.value;
-    const emailExists = await checkEmailExists(email);
-
-    if (emailExists) {
-      console.log("Пользователь с таким email уже существует!");
-      // Дополнительная логика, если email уже существует
-    } else {
-      console.log("Email доступен для регистрации!");
-      // Дополнительная логика, если email доступен для регистрации
-    }
-
-    if (avatar !== "") {
-      const image = new FormData();
-      image.append("files", avatar);
-      await uploadImage(image).then((resp) => {
-        setUpdatedUserInfo((prev: any) => {
-          return { ...prev, avatar: resp[0] };
+    try {
+      if (avatar !== "") {
+        const image = new FormData();
+        image.append("files", avatar);
+        await uploadImage(image).then((resp) => {
+          setUpdatedUserInfo((prev: any) => {
+            return { ...prev, avatarka: resp[0] };
+          });
         });
+      }
+
+      await changeUserInfo(updatedUserInfo, user.id).then((resp) => {
+        setShowEditModal(false);
       });
+    } catch (error) {
+      alert("Произошла ошибка");
+    } finally {
+      // location.reload();
     }
-    changeUserInfo(updatedUserInfo, user.id).then((resp) => {
-      setShowEditModal(false);
-    });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +105,7 @@ export const UserPage = () => {
         />
         <div className={styles["user-card"]}>
           <img
-            src={user.avatar ? user.avatar.url : "/img/base-avatar.png"}
+            src={user.avatarka ? user.avatarka.url : "/img/base-avatar.png"}
             alt={`Аватарка пользователя ${user.username}`}
             className={styles.avatar}
           />
@@ -163,8 +128,11 @@ export const UserPage = () => {
             </div>
           </div>
           <div className={styles.buttons}>
-            <button className={styles.btn}>
-              <FaEdit onClick={() => setShowEditModal(true)} />
+            <button
+              className={styles.btn}
+              onClick={() => setShowEditModal(true)}
+            >
+              <FaEdit />
             </button>
             <button className={styles.btn}>
               <FaShareAlt />
@@ -176,7 +144,7 @@ export const UserPage = () => {
       <Modal isVisible={showEditModal} setIsVisible={setShowEditModal}>
         <form onSubmit={saveUserInfo}>
           <div className={styles.form}>
-            <label className={styles.firstnameLabel}>
+            <label className={styles.avatarLabel}>
               Аватарка
               {avatar !== "" && (
                 <img
@@ -218,16 +186,18 @@ export const UserPage = () => {
                 secondClass={styles.input}
                 pHText={user.username}
                 onChange={handleChange}
+                idElem="username"
               />
             </label>
 
             <label className={styles.emailLabel}>
-              E-mail
+              Email
               <Input
                 name="email"
                 secondClass={styles.input}
                 pHText={user.email}
                 onChange={handleChange}
+                idElem="email"
               />
             </label>
 
@@ -238,10 +208,11 @@ export const UserPage = () => {
                 secondClass={styles.input}
                 pHText={user.phone}
                 onChange={handleChange}
+                idElem="phone"
               />
             </label>
           </div>
-          <Btn textBtn="Сохранить" dC={styles.saveBtn} />
+          <Btn textBtn="Сохранить" dC={styles.saveBtn} disabled={true} />
         </form>
       </Modal>
     </>

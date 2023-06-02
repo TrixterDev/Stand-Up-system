@@ -1,50 +1,150 @@
 import Input from "../ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
-import styles from "./Register.module.sass";
+import styles from "./register.module.sass";
 import { useState } from "react";
-import { RegUser } from "../../api";
-import Cookies from "js-cookie";
+import { RegUser, getUserInfo, getUsers } from "../../api";
+import Cookie from "js-cookie";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 
 interface userKeys {
+  firstname: string;
+  lastname: string;
   username: string;
   phone: string;
   email: string;
   password: string;
   confirmPass: string;
-  lastname: string;
 }
 
 const Register = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<userKeys>({
+    firstname: "",
+    lastname: "",
     username: "",
     phone: "",
     email: "",
     password: "",
     confirmPass: "",
-    lastname: "",
+  });
+  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
+  const [validation, setValidation] = useState({
+    confirmPass: "",
+    lenghtPass: "Пароль",
   });
 
-  const handleChange = (event: any) => {
+  const [regInfo] = useState({
+    token: Cookie.get("key") || null,
+    isConfirmed: false,
+  });
+
+  const [isShowPassword, setIsShowPassword] = useState(false);
+
+  const [emailEx, setEmailEx] = useState<boolean>(false);
+
+  const [usernameEx, setUsernameEx] = useState<boolean>(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser((prevUser) => ({
       ...prevUser,
       [event.target.name]: event.target.value,
     }));
   };
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    RegUser(user).then((resp: any) => {
-      Cookies.set("key", resp.jwt, { expires: 7 });
-      navigate("/");
-    });
-    if (user.password === user.confirmPass) {
+
+    if (user.password == user.confirmPass) {
       console.log("Пароль успешно подтвержден");
+      setPasswordsMatch(true);
+      RegUser(user).then((resp) => {
+        Cookie.set("key", resp.jwt, { expires: 7 });
+        navigate("/");
+      });
     } else {
       console.log("Пароль и его подтверждение не совпадают");
+      setPasswordsMatch(false);
     }
-    setUser((prevUser) => ({ ...prevUser, pass: "", confirmPass: "" }));
+
+    if (user.password.length < 8) {
+      setValidation((validation) => {
+        return {
+          ...validation,
+          lenghtPass: "Пароль должен содержать 8 символов",
+        };
+      });
+    } else {
+      setValidation((validation) => {
+        return {
+          ...validation,
+          lenghtPass: "Пароль",
+        };
+      });
+    }
+
+    const isEmailExists = await checkEmailExists(user.email);
+
+    const isUsernameExists = await checkUsernameExists(user.username);
+
+    if (isEmailExists) {
+      setEmailEx(true);
+      console.log("Пользователь с таким email уже существует");
+    } else {
+      setEmailEx(false);
+      console.log("Email доступен");
+    }
+
+    if (isUsernameExists) {
+      setUsernameEx(true);
+      console.log("Пользователь с таким именем пользователя уже существует");
+    } else {
+      setUsernameEx(false);
+      console.log("Имя пользователя доступно");
+    }
+  };
+
+  if (regInfo.token) {
+    getUserInfo(regInfo.token).then((resp) => {
+      if (resp.role.type === "Authenticated") {
+        regInfo.isConfirmed = true;
+      }
+    });
+  }
+
+  const checkEmailExists = async (userEmail: any) => {
+    try {
+      const data = await getUsers();
+      const usersEmail = data.map((user) => user.email);
+      const emailExists = usersEmail.includes(userEmail);
+      console.log(usersEmail);
+
+      console.log(emailExists);
+
+      return emailExists;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  const checkUsernameExists = async (username: any) => {
+    try {
+      const data = await getUsers();
+      const usernames = data.map((user) => user.username);
+      const usernameExists = usernames.includes(username);
+      console.log(usernames);
+
+      console.log(usernameExists);
+
+      return usernameExists;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  const showPassword = () => {
+    setIsShowPassword((prev) => !prev);
   };
 
   return (
@@ -57,79 +157,129 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.nameUser}>
+          <div className={styles.nameWrap}>
             <div className={styles.customInput}>
               <Input
+                idElem="firstname"
+                name="firstname"
                 onChange={handleChange}
-                name="username"
-                idElem="username"
-                typeElem="text"
                 required
               />
-              <label htmlFor="username">Имя</label>
+              <label htmlFor="firstname">Имя</label>
             </div>
+
             <div className={styles.customInput}>
               <Input
-                onChange={handleChange}
-                name="lastname"
                 idElem="lastname"
-                typeElem="text"
+                name="lastname"
+                onChange={handleChange}
                 required
               />
               <label htmlFor="lastname">Фамилия</label>
             </div>
           </div>
+
           <div className={styles.customInput}>
             <Input
+              idElem="username"
+              name="username"
               onChange={handleChange}
+              required
+            />
+            <label htmlFor="username">
+              {usernameEx ? (
+                <label htmlFor="username" className={styles.err}>
+                  Имя пользователя занято
+                </label>
+              ) : (
+                "Имя пользователя"
+              )}
+            </label>
+          </div>
+
+          <div className={styles.customInput}>
+            <Input
               name="phone"
+              onChange={handleChange}
+              value={user.phone}
               idElem="phone"
-              typeElem="number"
               required
             />
-            <label htmlFor="phone">Телефон</label>
+            <label htmlFor="phone">Номер телефона</label>
           </div>
 
           <div className={styles.customInput}>
             <Input
-              onChange={handleChange}
               name="email"
+              onChange={handleChange}
+              value={user.email}
               idElem="email"
-              typeElem="email"
               required
             />
-            <label htmlFor="email">E-mail</label>
+            <label htmlFor="email">
+              {emailEx ? (
+                <label htmlFor="email" className={styles.err}>
+                  E-mail занят
+                </label>
+              ) : (
+                "E-mail"
+              )}
+            </label>
           </div>
 
           <div className={styles.customInput}>
             <Input
-              onChange={handleChange}
               name="password"
+              onChange={handleChange}
+              typeElem={isShowPassword ? "text" : "password"}
               idElem="password"
-              typeElem="password"
+              secondClass={styles.passInput}
               required
             />
-            <label htmlFor="password">Пароль</label>
+            <label
+              htmlFor="password"
+              className={validation.lenghtPass.length > 8 && styles.err}
+            >
+              {validation.lenghtPass}
+            </label>
+
+            <label className={styles.eyeLabel}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                onClick={showPassword}
+              />
+              <div className={styles.eye}></div>
+            </label>
           </div>
 
           <div className={styles.confPassWrap}>
             <div className={styles.customInput}>
               <Input
-                onChange={handleChange}
                 name="confirmPass"
-                idElem="confirmPass"
-                typeElem="password"
+                idElem="confPass"
+                onChange={handleChange}
+                typeElem={isShowPassword ? "text" : "password"}
                 required
               />
-              <label htmlFor="confirmPass">Подтвердите пароль</label>
+              <label htmlFor="confPass">
+                {passwordsMatch ? (
+                  "Подтвердите пароль"
+                ) : (
+                  <label htmlFor="confPass" className={styles.err}>
+                    Пароль не совпадает
+                  </label>
+                )}
+              </label>
             </div>
+
             <Btn type="submit" textBtn={"Зарегистрироваться"} />
           </div>
-          <span className={styles.span}>
-            Если у вас нет аккаунта то <NavLink to={"/"}>авторазуйтесь</NavLink>
-          </span>
-          <h3 className={styles.registerTitle}>Registration</h3>
         </form>
+
+        <span className={styles.auth}>
+          Если у вас есть аккаунт то <NavLink to={"/"}>авторизуйтесь</NavLink>
+        </span>
       </div>
     </div>
   );
