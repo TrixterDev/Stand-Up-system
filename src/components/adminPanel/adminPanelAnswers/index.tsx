@@ -5,10 +5,30 @@ import styles from "./style.module.sass";
 
 const PanelAnswer = () => {
   const [answers, setAnswers] = useState<any>();
+  const [username, setUsername] = useState<string>("");
+  const [filteredAnswers, setFilteredAnswers] = useState<any>();
 
   useEffect(() => {
-    getAnswers().then((res: any) => setAnswers(res.data));
+    getAnswers().then((res: any) => {
+      setAnswers(res.data);
+      setFilteredAnswers(res.data);
+    });
   }, []);
+
+  useEffect(() => {
+    if (username) {
+      const filtered = answers.filter(
+        (data: any) =>
+          data.attributes.users &&
+          data.attributes.users.data.attributes.username
+            .toLowerCase()
+            .includes(username.toLowerCase())
+      );
+      setFilteredAnswers(filtered);
+    } else {
+      setFilteredAnswers(answers);
+    }
+  }, [username, answers]);
 
   return (
     <section className={styles.answers}>
@@ -17,11 +37,16 @@ const PanelAnswer = () => {
       </div>
       <div>
         <h2>Вы можете найти ответ по пользователю</h2>
-        <input type="text" />
+        <input
+          type="text"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setUsername(e.target.value)
+          }
+        />
       </div>
       <div className={styles.answers__cards}>
-        {answers &&
-          answers.map((data: any, index: number) => {
+        {filteredAnswers &&
+          filteredAnswers.map((data: any, index: number) => {
             console.log(data.attributes);
 
             return (

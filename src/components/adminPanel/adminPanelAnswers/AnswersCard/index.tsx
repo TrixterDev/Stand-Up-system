@@ -1,11 +1,13 @@
+import { format, formatISO, parseISO } from "date-fns";
 import st from "./style.module.sass";
+import { ru } from "date-fns/locale";
 
 interface Props {
   question: string;
   answers: string;
   username: string;
   avatar: string;
-  date: string | number;
+  date: number | Date;
 }
 const DraftCard: React.FC<Props> = ({
   question,
@@ -35,7 +37,9 @@ const DraftCard: React.FC<Props> = ({
         </div>
       </div>
       <div className={st.card__footer}>
-        <h3 className={st.text}>{date}</h3>
+        <h3 className={st.text}>
+          {format(parseISO(date), "d MMM, yyyy", { locale: ru })}
+        </h3>
       </div>
     </div>
   );
