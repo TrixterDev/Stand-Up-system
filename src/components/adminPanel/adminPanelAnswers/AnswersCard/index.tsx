@@ -8,6 +8,7 @@ interface Props {
   username: string;
   avatar: string;
   date: number | Date;
+  category: string;
 }
 const DraftCard: React.FC<Props> = ({
   question,
@@ -15,6 +16,7 @@ const DraftCard: React.FC<Props> = ({
   username,
   avatar,
   date,
+  category,
 }) => {
   return (
     <div className={st.card}>
@@ -23,6 +25,10 @@ const DraftCard: React.FC<Props> = ({
         <h2 className={st.text}>{username}</h2>
       </div>
       <div className={st.card__body}>
+        <div className={st.card__body__task}>
+          <h2 className={st.text}>Категория:</h2>
+          <p className={st.text && st.parag}>{category}</p>
+        </div>
         <div className={st.card__body__task}>
           <h2 className={st.text}>Вопрос:</h2>
           <p className={st.text && st.parag}>{question}</p>

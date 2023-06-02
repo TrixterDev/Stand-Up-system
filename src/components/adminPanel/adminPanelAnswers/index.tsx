@@ -48,7 +48,7 @@ const PanelAnswer = () => {
       <div className={styles.answers__cards}>
         {filteredAnswers &&
           filteredAnswers.map((data: any, index: number) => {
-            console.log(data.attributes);
+            console.log(data.attributes.category.data.attributes.category_name);
 
             return (
               <DraftCard
@@ -64,6 +64,9 @@ const PanelAnswer = () => {
                     data.attributes.users.data.attributes.avatarka?.data
                       ?.attributes?.url) ||
                   "/img/base-avatar.png"
+                }
+                category={
+                  data.attributes.category.data.attributes.category_name
                 }
                 question={data.attributes.question.data.attributes.title}
               />
