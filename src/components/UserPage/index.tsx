@@ -15,13 +15,14 @@ export interface User {
   lastname?: string;
   position?: string;
   phone?: string;
-  avatar?: any;
+  avatarka?: any;
 }
 
 export const UserPage = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     getUserInfo(Cookie.get("key")).then((resp) => {
       console.log(resp);
@@ -48,8 +49,6 @@ export const UserPage = () => {
     phoneValid: false,
     usernameValid: false,
   });
-
-  const [usernameEx, setUsernameEx] = useState<boolean>(false);
 
   if (!user) {
     return <h2>Loading</h2>;
@@ -106,7 +105,7 @@ export const UserPage = () => {
         />
         <div className={styles["user-card"]}>
           <img
-            src={user.avatar ? user.avatar.url : "/img/base-avatar.png"}
+            src={user.avatarka ? user.avatarka.url : "/img/base-avatar.png"}
             alt={`Аватарка пользователя ${user.username}`}
             className={styles.avatar}
           />
@@ -129,8 +128,11 @@ export const UserPage = () => {
             </div>
           </div>
           <div className={styles.buttons}>
-            <button className={styles.btn}>
-              <FaEdit onClick={() => setShowEditModal(true)} />
+            <button
+              className={styles.btn}
+              onClick={() => setShowEditModal(true)}
+            >
+              <FaEdit />
             </button>
             <button className={styles.btn}>
               <FaShareAlt />
@@ -210,7 +212,7 @@ export const UserPage = () => {
               />
             </label>
           </div>
-          <Btn textBtn="Сохранить" dC={styles.saveBtn} />
+          <Btn textBtn="Сохранить" dC={styles.saveBtn} disabled={true} />
         </form>
       </Modal>
     </>
