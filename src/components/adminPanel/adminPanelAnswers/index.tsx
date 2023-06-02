@@ -59,9 +59,10 @@ const PanelAnswer = () => {
                 }
                 answers={data.attributes.answer}
                 avatar={
-                  data.attributes.users &&
-                  data.attributes.users.data.attributes.avatarka.data.attributes
-                    .url
+                  (data.attributes.users &&
+                    data.attributes.users.data.attributes.avatarka?.data
+                      ?.attributes?.url) ||
+                  "/img/base-avatar.png"
                 }
                 question={data.attributes.question.data.attributes.title}
               />
