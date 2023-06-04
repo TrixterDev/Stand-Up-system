@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import st from "./style.module.sass";
 import Btn from "../../ui/Btn/Btn";
 import Input from "../../ui/Input/Input";
-import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash, FaTrashAlt } from "react-icons/fa";
 import clsx from "clsx";
 import { Loader } from "../../ui/Loader";
 import {
@@ -33,12 +33,19 @@ interface Question {
   createdAt: string;
 }
 
+interface ActiveCategory {
+  category_name: string;
+  id: number;
+}
+
 const PanelQuestion = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsBasket, setQuestionsBasket] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+  const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
+    null
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -62,8 +69,9 @@ const PanelQuestion = () => {
           category_id: item.attributes.category.data.id,
         }));
         setQuestions(questionsData);
+        console.log(categoriesData);
         setActiveCategory({
-          category_name: categoriesData[0].attributes.category_name,
+          category_name: categoriesData[0].category_name,
           id: categoriesData[0].id,
         });
       } catch (error) {
@@ -253,23 +261,33 @@ const PanelQuestion = () => {
         {categories.map((item: Category, index: number) => {
           if (!item.edit) {
             return (
-              <button
-                className={clsx(
-                  "tab",
-                  activeCategory &&
-                    activeCategory.category_name === item.category_name &&
-                    "active"
-                )}
-                onClick={() =>
-                  setActiveCategory({
-                    category_name: item.category_name,
-                    id: item.id,
-                  })
-                }
-                key={item.id}
-              >
-                {item.category_name}
-              </button>
+              <div className={st["category"]}>
+                <div className={st["category-tools"]}>
+                  <button onClick={() => changeCategoryStatus(item.id, true)}>
+                    <FaEdit />
+                  </button>
+                  <button>
+                    <FaTrash />
+                  </button>
+                </div>
+                <button
+                  className={clsx(
+                    "tab",
+                    activeCategory &&
+                      activeCategory.category_name === item.category_name &&
+                      "active"
+                  )}
+                  onClick={() =>
+                    setActiveCategory({
+                      category_name: item.category_name,
+                      id: item.id,
+                    })
+                  }
+                  key={item.id}
+                >
+                  {item.category_name}
+                </button>
+              </div>
             );
           } else {
             return (
@@ -285,6 +303,7 @@ const PanelQuestion = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     changeCategory(e, item.id)
                   }
+                  value={categories[index].category_name}
                   name="category_name"
                   autoFocus
                 />
