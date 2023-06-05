@@ -1,8 +1,10 @@
 import st from "./MainPage.module.sass";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { questionItem } from ".";
 import Btn from "../ui/Btn/Btn";
-import { changeData } from "../../api";
+import { changeData, getUserInfo } from "../../api";
+import { it } from "date-fns/locale";
+import { Loader } from "../ui/Loader";
 interface props {
   id: number;
   productInfo: questionItem;
@@ -26,13 +28,46 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
     userId: userId,
   });
 
+  const [loader, setLoader] = useState<boolean>(true);
+
   const [submitted, setSubmitted] = useState<boolean>(false);
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    setLoader(true);
     console.log(item.title);
-    changeData(item, userId);
-    setSubmitted(true);
+    changeData(item, userId).then((el) => {
+      setLoader(false);
+      setSubmitted(true);
+    });
   };
+
+  useEffect(() => {
+    getUserInfo().then((resp: any) => {
+      console.log(resp);
+      setLoader(false);
+
+      resp.otveties.forEach((item: any) => {
+        if (id === item.question.id) {
+          setSubmitted(true);
+          setItem((prev) => {
+            return { ...prev, answer: item.answer };
+          });
+        }
+      });
+    });
+  }, []);
+
+  if (loader) {
+    return (
+      <div
+        className={st.grid_item}
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div key={item?.id} className={st.grid_item}>

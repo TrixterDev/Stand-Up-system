@@ -24,7 +24,7 @@ const request = <T>(
 };
 
 export const getUserInfo = (): Promise<User> => {
-  return request<User>("users/me?populate=*");
+  return request<User>("users/me?populate=deep");
 };
 
 // export const loginUser = (data: {
