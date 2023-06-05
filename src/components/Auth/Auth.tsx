@@ -62,7 +62,7 @@ const Auth = () => {
           navigate("/admin-page");
         } else {
           Cookie.set("role", "auth");
-          navigate("/home");
+          navigate("/home");  
         }
       })
       .catch((error: any) => {

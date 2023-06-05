@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./Page/Home";
 import "../src/App.sass";
 import Auth from "./components/Auth/Auth";
@@ -12,39 +12,41 @@ import Online from "./components/adminPanel/adminPanelStatistic/adminPanelStatis
 import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/offline";
 import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 import Layout from "./components/Layout";
-import Cookies from "js-cookie";
+import Cookie from "js-cookie";
 import Draft from "./components/adminPanel/Draft";
+import { useState, useEffect } from "react";
 function App() {
-  if (Cookies.get("role") === "admin") {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(navigate);
+  }, [navigate]);
+  if (Cookie.get("role") === "admin") {
     return (
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Auth />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/admin-page/statistic">
-              <Route index element={<PanelStatistic />} />
-              <Route path="online" element={<Online />} />
-              <Route path="offline" element={<Offline />} />
-              <Route path="all-users" element={<AllUsers />} />
-            </Route>
-            <Route path="/admin-page/answer" element={<PanelAnswer />} />
-            <Route path="/admin-page/question" element={<PanelQuestion />} />
-            <Route path="/admin-page/draft" element={<Draft />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin-page/statistic">
+            <Route index element={<PanelStatistic />} />
+            <Route path="online" element={<Online />} />
+            <Route path="offline" element={<Offline />} />
+            <Route path="all-users" element={<AllUsers />} />
+          </Route>
+          <Route path="/admin-page/answer" element={<PanelAnswer />} />
+          <Route path="/admin-page/question" element={<PanelQuestion />} />
+          <Route path="/admin-page/draft" element={<Draft />} />
+        </Routes>
+      </Layout>
     );
   } else {
     return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Auth />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/user-page" element={<UserPage />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Auth />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/user-page" element={<UserPage />} />
+      </Routes>
     );
   }
 }
