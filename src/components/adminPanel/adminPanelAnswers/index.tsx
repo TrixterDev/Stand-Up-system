@@ -48,8 +48,6 @@ const PanelAnswer = () => {
       <div className={styles.answers__cards}>
         {filteredAnswers &&
           filteredAnswers.map((data: any, index: number) => {
-            console.log(data.attributes.category.data.attributes.category_name);
-
             return (
               <DraftCard
                 key={index}
