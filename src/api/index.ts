@@ -167,6 +167,20 @@ export const removeQuestions = (data: any[]): Promise<any> => {
   return Promise.all(requests);
 };
 
-export const getAnswers = () => {
-  return strapiAPI.get("answers?populate=deep").json();
+export const getAnswers = async () => {
+  return await strapiAPI.get("answers?populate=deep").json();
+};
+
+export const getAnswersByUser = async (username: string) => {
+  return await strapiAPI
+    .get(`answers?populate=deep&filter[username]=${username}`)
+    .json();
+};
+
+export const getAnswersById = async (id: number) => {
+  return await strapiAPI
+    .get(
+      `answers?populate=deep&filter[users[data[attributes[username]]]]=${id}`
+    )
+    .json();
 };

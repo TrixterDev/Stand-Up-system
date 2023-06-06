@@ -13,8 +13,8 @@ import Offline from "./components/adminPanel/adminPanelStatistic/adminPanelStati
 import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStatisticCard/StatisticMore/AllUsers";
 import Layout from "./components/Layout";
 import Cookie from "js-cookie";
-import Draft from "./components/adminPanel/Draft";
 import { useState, useEffect } from "react";
+import ArchivePage from "./components/adminPanel/Draft";
 function App() {
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ function App() {
           </Route>
           <Route path="/admin-page/answer" element={<PanelAnswer />} />
           <Route path="/admin-page/question" element={<PanelQuestion />} />
-          <Route path="/admin-page/draft" element={<Draft />} />
+          <Route path="/admin-page/archive" element={<ArchivePage />} />
         </Routes>
       </Layout>
     );
