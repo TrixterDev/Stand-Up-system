@@ -14,12 +14,11 @@ import AllUsers from "./components/adminPanel/adminPanelStatistic/adminPanelStat
 import Layout from "./components/Layout";
 import Cookie from "js-cookie";
 import Draft from "./components/adminPanel/Draft";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(navigate);
   }, [navigate]);
   if (Cookie.get("role") === "admin") {
     return (

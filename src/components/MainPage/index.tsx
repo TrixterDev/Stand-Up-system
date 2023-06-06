@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { GetloginUser, getData, getUserInfo } from "../../api";
+import { GetloginUser, getCategories, getData, getUserInfo } from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
@@ -22,8 +22,11 @@ interface formKeys {
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
 
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [xz, setXz] = useState<any>();
   const [data, setData] = useState<any>();
   const [loginUser, setloginUser] = useState<any>();
   const [dataUser, setDataUser] = useState<any>();
@@ -45,6 +48,10 @@ const MainPage = () => {
     getData().then((res: any) => {
       setData(res.data);
     });
+
+    getCategories().then((xz: any) => {
+      setXz(xz.data);
+    });
   }, []);
 
   const handleSubmit = (e: any) => {
@@ -62,8 +69,33 @@ const MainPage = () => {
     });
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+  };
+
+  const filteredData = data
+    ? data.filter(
+        (el: any) =>
+          el.attributes.category.data.attributes.category_name ===
+          selectedCategory
+      )
+    : [];
+
   return (
     <div>
+      {xz &&
+        xz.map((el: any) => {
+          return (
+            <div key={el.id} className={st.mod}>
+              <button
+                className={st.btn}
+                onClick={() => handleCategoryClick(el.attributes.category_name)}
+              >
+                {el.attributes.category_name}
+              </button>
+            </div>
+          );
+        })}
       <Modal isVisible={showModal} setIsVisible={setShowModal}>
         <form onSubmit={handleSubmit} className={st.modal_text}>
           <span>tell me about you</span>
@@ -109,8 +141,8 @@ const MainPage = () => {
         </Select>
       </div>
       <div className={st.grid_container}>
-        {data &&
-          data.map(
+        {filteredData &&
+          filteredData.map(
             (
               el: {
                 id: number;
