@@ -15,11 +15,11 @@ import Layout from "./components/Layout";
 import Cookie from "js-cookie";
 import { useState, useEffect } from "react";
 import ArchivePage from "./components/adminPanel/Draft";
+
 function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(navigate);
   }, [navigate]);
   if (Cookie.get("role") === "admin") {
     return (
