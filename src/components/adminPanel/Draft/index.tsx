@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
-import { getUsers } from "../../../api";
+import { ChangeEvent, useEffect, useState } from "react";
+import {
+  getAnswers,
+  getAnswersById,
+  getAnswersByUser,
+  getUsers,
+} from "../../../api";
 import Btn from "../../ui/Btn/Btn";
-import DraftCard from "./DraftCard";
 import st from "./style.module.sass";
 import clsx from "clsx";
-const Draft = () => {
+import { DraftCard } from "./DraftCard";
+import { format, parseISO } from "date-fns";
+
+const ArchivePage = () => {
   const [users, setUsers] = useState<any>({
     username: "",
     avatar: "",
@@ -14,12 +21,83 @@ const Draft = () => {
   const [activeTab, setActiveTab] = useState<"answers" | "questions">(
     "answers"
   );
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState<
+    "id" | "name" | "user" | "date"
+  >();
+  const [autoCompleteData, setAutoCompleteData] = useState<string[]>([]);
+  const [time, setTime] = useState<string>();
+
   useEffect(() => {
-    getUsers().then((res: any) => {
-      console.log(res.data);
-      setUsers(res);
-    });
-  }, []);
+    const fetchData = async () => {
+      try {
+        let response;
+
+        if (selectedFilter === "id") {
+          response = await getAnswers();
+          setAutoCompleteData(() =>
+            response.data.map((item: { id: number }) => item.id.toString())
+          );
+        } else if (selectedFilter === "name") {
+          response = await getAnswers();
+          setAutoCompleteData(() =>
+            response.data
+              .filter(
+                (item: { attributes: { createdAt: string } }) =>
+                  format(parseISO(item.attributes.createdAt), "yyyy-MM-dd") ===
+                  time
+              )
+              .map(
+                (item: { attributes: { answer: string } }) =>
+                  item.attributes.answer
+              )
+          );
+        } else if (selectedFilter === "user") {
+          response = await getUsers();
+          setAutoCompleteData(() =>
+            response.map((item: { username: string }) => item.username)
+          );
+        } else if (selectedFilter === "date") {
+          // Use the appropriate API method for fetching answers by date
+          response = await getAnswersByDate(time);
+          setAutoCompleteData(() =>
+            response.data.map(
+              (item: { attributes: { answer: string } }) =>
+                item.attributes.answer
+            )
+          );
+        }
+
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [selectedFilter, time]);
+
+  const handleSearchQueryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedFilter(event.target.value as any);
+  };
+
+  const search = () => {
+    if (selectedFilter === "user") {
+      getAnswersByUser(searchQuery).then((resp) => {
+        setAnswers(resp.data);
+        console.log(resp.data);
+      });
+    } else if (selectedFilter === "id") {
+      getAnswersById(searchQuery).then((resp) => setAnswers(resp.data));
+    }
+  };
+
   return (
     <section className={st.container}>
       <h2 className={st.text}>Архив ответов и вопросов</h2>
@@ -43,17 +121,42 @@ const Draft = () => {
       {activeTab === "answers" ? (
         <div className={st["draft-content"]}>
           <div className={st["filters"]}>
-            <div className={st["filter-tabs"]}>
-              <button>Все</button>
-              <button>Удалённые</button>
-              <button>Изменённые</button>
-            </div>
-
             <div className={st["search-wrap"]}>
               <label>
-                <input type="text" placeholder="Поиск ответа" />
+                <input
+                  type="text"
+                  placeholder="Поиск ответа"
+                  value={searchQuery}
+                  onChange={handleSearchQueryChange}
+                  list="autoCompleteList"
+                />
               </label>
+              <datalist id="autoCompleteList">
+                {autoCompleteData.map((item, index) => (
+                  <option key={index} value={item} />
+                ))}
+              </datalist>
+              <select value={selectedFilter} onChange={handleFilterChange}>
+                <option value="id">По ID</option>
+                <option value="name">По названию</option>
+                <option value="user">По пользователю</option>
+                <option value="date">По дате</option>
+              </select>
+              <input
+                type="date"
+                name="date"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setTime(e.target.value)
+                }
+              />
+              <button onClick={search}>Поиск</button>
             </div>
+          </div>
+
+          <div className={st.cards}>
+            {answers.map((item: { attributes: { answer: string } }) => (
+              <DraftCard title={item.attributes.answer} key={item.id} />
+            ))}
           </div>
         </div>
       ) : (
@@ -65,4 +168,4 @@ const Draft = () => {
   );
 };
 
-export default Draft;
+export default ArchivePage;

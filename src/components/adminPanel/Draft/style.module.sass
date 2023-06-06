@@ -1,4 +1,5 @@
 .container
+  width: 100%
   margin: 20px auto
   display: flex
   flex-direction: column
@@ -8,13 +9,22 @@
   align-items: center
   gap: 25px
 
-.card
-  flex-wrap: wrap
-  display: flex
-  gap: 20px
-  overflow-y: scroll
-  max-height: 770px
+.draft-content
   width: 100%
+
+.cards
+  margin-top: 15px
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr))
+  gap: 15px
+  width: 100%
+  .card
+    display: flex
+    flex-direction: column
+    background: #ffcc00
+    padding: 15px
+    border-radius: 10px
+
 .text
   color: #333333
   text-align: center

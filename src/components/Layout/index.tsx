@@ -37,11 +37,11 @@ const Layout: React.FC<props> = ({ children }) => {
               <span>Ответы</span>
             </NavLink>
             <NavLink
-              to="/admin-page/draft"
+              to="/admin-page/archive"
               className={({ isActive }) => (isActive ? st.isActive : "")}
             >
               <BsFillClipboard2Fill />
-              <span>Черновик</span>
+              <span>Архив</span>
             </NavLink>
             <NavLink
               to="/admin-page/question"
