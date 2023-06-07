@@ -22,8 +22,9 @@ const AllUsers = () => {
           )
           .map((data: User) => (
             <StatisticMoreCard
+              answer={data.otveties}
               key={data.id}
-              avatarka={data.avatarka}
+              avatarka={data.avatarka.url}
               username={data.username}
               status={data.online}
             />

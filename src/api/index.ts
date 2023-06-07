@@ -23,8 +23,8 @@ const request = <T>(
   return strapiAPI(url, { ...options, headers }).json();
 };
 
-export const getUserInfo = (): Promise<User> => {
-  return request<User>("users/me?populate=deep");
+export const getUserInfo = async (): Promise<User> => {
+  return await request<User>("users/me?populate=deep");
 };
 
 // export const loginUser = (data: {
@@ -78,7 +78,9 @@ export const changeData = (data: any, idUsers: number): Promise<any> => {
 export const changeUserInfo = (data: User, id: number): Promise<any> => {
   return request(`users/${id}`, { method: "put", json: data });
 };
-
+export const changeUserOnline = (data: User, id: number): Promise<any> => {
+  return request(`users/${id}`, { method: "put", json: data });
+};
 export const uploadImage = (data: FormData): Promise<any> => {
   return request("upload", { method: "post", body: data });
 };

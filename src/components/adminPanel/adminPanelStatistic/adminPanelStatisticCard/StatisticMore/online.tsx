@@ -19,8 +19,9 @@ const Online = () => {
         {online.map((data: any) => {
           return (
             <StatisticMoreCard
+              answer={data.otveties}
               key={data.id}
-              avatarka={data.avatarka}
+              avatarka={data.avatarka.url}
               username={data.username}
               status={data.online}
             />

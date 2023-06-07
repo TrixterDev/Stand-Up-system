@@ -9,6 +9,7 @@ const Offline = () => {
   useEffect(() => {
     getUsers().then((res: any) => {
       const offlineUsers = res.filter((data: any) => !data.online);
+      console.log(res[0]);
 
       setOffline(offlineUsers);
     });
@@ -20,8 +21,9 @@ const Offline = () => {
         {offline.map((data: any) => {
           return (
             <StatisticMoreCard
+              answer={data.otveties}
               key={data.id}
-              avatarka={data.avatarka}
+              avatarka={data.avatarka.url}
               username={data.username}
               status={data.online}
             />

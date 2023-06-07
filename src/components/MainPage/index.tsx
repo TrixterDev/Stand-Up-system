@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { GetloginUser, getData, getUserInfo } from "../../api";
+import { GetloginUser, getData, getUserInfo, getUsers } from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
@@ -22,6 +22,10 @@ interface formKeys {
 
 const MainPage = () => {
   const navigate = useNavigate();
+
+  const [offline, setOffline] = useState<any>([]);
+  const [users, setUsers] = useState<any>([]);
+
   const [showModal, setShowModal] = useState(false);
 
   const [data, setData] = useState<any>();
@@ -44,6 +48,13 @@ const MainPage = () => {
 
     getData().then((res: any) => {
       setData(res.data);
+    });
+
+    getUsers().then((res: any) => {
+      setUsers(res);
+      const offlineUsers = res.filter((data: any) => !data.online);
+
+      setOffline(offlineUsers);
     });
   }, []);
 
