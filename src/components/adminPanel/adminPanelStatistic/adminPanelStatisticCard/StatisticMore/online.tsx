@@ -18,7 +18,12 @@ const Online = () => {
       <div className={st.wrapper__cards}>
         {online.map((data: any) => {
           return (
-            <StatisticMoreCard username={data.username} status={data.online} />
+            <StatisticMoreCard
+              key={data.id}
+              avatarka={data.avatarka}
+              username={data.username}
+              status={data.online}
+            />
           );
         })}
       </div>

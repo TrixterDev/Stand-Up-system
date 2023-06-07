@@ -4,6 +4,7 @@ import cn from "clsx";
 interface Props {
   username: string;
   status: string;
+  avatarka: string;
 }
 const StatisticMoreCard: React.FC<Props> = ({ username, status }) => {
   return (
@@ -14,7 +15,7 @@ const StatisticMoreCard: React.FC<Props> = ({ username, status }) => {
         <h4>
           Статус:
           <span className={cn(st.disabled, status && st.active)}>
-            {status ? "Онлайн" : "Офлайн"}
+            {status ? " Онлайн" : " Офлайн"}
           </span>
         </h4>
       </div>
