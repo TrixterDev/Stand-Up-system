@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../api";
+import { getUsers, User } from "../../../../../api";
 import StatisticMoreCard from "./StatisticMoreCard";
 import st from "./allusers.module.sass";
 
 const Online = () => {
-  const [online, setOnline] = useState<any>([]);
+  const [online, setOnline] = useState<User[]>([]);
 
   useEffect(() => {
     getUsers().then((res: any) => {
