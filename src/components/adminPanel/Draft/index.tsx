@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import {
   getAnswers,
   getAnswersById,
+  getAnswersByTitle,
   getAnswersByUser,
   getUsers,
 } from "../../../api";
@@ -40,17 +41,20 @@ const ArchivePage = () => {
           );
         } else if (selectedFilter === "name") {
           response = await getAnswers();
-          setAutoCompleteData(() =>
-            response.data
-              .filter(
-                (item: { attributes: { createdAt: string } }) =>
+          setAutoCompleteData(
+            response.data.reduce((acc, item) => {
+              if (time) {
+                if (
                   format(parseISO(item.attributes.createdAt), "yyyy-MM-dd") ===
                   time
-              )
-              .map(
-                (item: { attributes: { answer: string } }) =>
-                  item.attributes.answer
-              )
+                ) {
+                  acc.push(item.attributes.answer);
+                }
+              } else {
+                acc.push(item.attributes.answer);
+              }
+              return acc;
+            }, [])
           );
         } else if (selectedFilter === "user") {
           response = await getUsers();
@@ -95,6 +99,8 @@ const ArchivePage = () => {
       });
     } else if (selectedFilter === "id") {
       getAnswersById(searchQuery).then((resp) => setAnswers(resp.data));
+    } else if (selectedFilter === "name") {
+      getAnswersByTitle(searchQuery).then((resp) => setAnswers(resp.data));
     }
   };
 
