@@ -44,7 +44,6 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
 
   useEffect(() => {
     getUserInfo().then((resp: any) => {
-      console.log(resp);
       setLoader(false);
 
       resp.otveties.forEach((item: any) => {

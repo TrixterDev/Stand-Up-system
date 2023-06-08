@@ -20,6 +20,7 @@ interface Category {
   id: string;
   category_name: string;
   edit: boolean;
+  deleted?: boolean;
 }
 
 interface Question {
@@ -41,6 +42,7 @@ interface ActiveCategory {
 const PanelQuestion = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsBasket, setQuestionsBasket] = useState<Question[]>([]);
+  const [categoriesBasket, setCategoriesBasket] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
@@ -104,6 +106,26 @@ const PanelQuestion = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCategoriesBasket((prevBasket) => {
+        const updatedBasket = prevBasket.map((item) => {
+          if (item.deleteTimer === 0) {
+            return { ...item, deleted: true };
+          } else {
+            return { ...item, deleteTimer: item.deleteTimer - 1 };
+          }
+        });
+
+        return updatedBasket;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   const addQuestion = () => {
     if (activeCategory) {
       const newQuestion: Question = {
@@ -149,6 +171,16 @@ const PanelQuestion = () => {
     }
   };
 
+  const returnCategory = (id: string) => {
+    const returnedCategory = categoriesBasket.find((item) => item.id === id);
+    if (returnedCategory) {
+      setCategoriesBasket((prevBasket) =>
+        prevBasket.filter((item) => item.id !== id)
+      );
+      setCategories((prevCategories) => [...prevCategories, returnedCategory]);
+    }
+  };
+
   const returnQuestion = (id: string) => {
     const returnedQuestion = questionsBasket.find((item) => item.id === id);
     if (returnedQuestion) {
@@ -166,6 +198,17 @@ const PanelQuestion = () => {
       );
       return updatedQuestions;
     });
+  };
+
+  const removeCategory = (id: string) => {
+    const removedCategory = categories.find((item) => item.id === id);
+    if (removedCategory) {
+      setCategories((prev) => prev.filter((item) => item.id !== id));
+      setCategoriesBasket((prevBasket) => [
+        ...prevBasket,
+        { ...removedCategory, deleteTimer: 3 },
+      ]);
+    }
   };
 
   const changeCategoryStatus = (id: string, status: boolean) => {
@@ -255,18 +298,40 @@ const PanelQuestion = () => {
           }
           return null;
         })}
+
+        {categoriesBasket.map((item) => {
+          if (!item.deleted) {
+            return (
+              <div className={st["basket-card"]} key={item.id}>
+                <p>
+                  <strong>{item.category_name || "Пустая категория"}</strong>{" "}
+                  Удалится через {item.deleteTimer}
+                </p>
+                <button
+                  className={st["return-btn"]}
+                  onClick={() => returnCategory(item.id)}
+                >
+                  Вернуть
+                </button>
+              </div>
+            );
+          }
+          return null;
+        })}
       </div>
 
       <div className="tabs">
         {categories.map((item: Category, index: number) => {
           if (!item.edit) {
             return (
-              <div className={st["category"]}>
+              <div className={st["category"]} key={item.id}>
                 <div className={st["category-tools"]}>
                   <button onClick={() => changeCategoryStatus(item.id, true)}>
                     <FaEdit />
                   </button>
-                  <button>
+                  <button onClick={() => removeCategory(item.id)}>
+                    {" "}
+                    {/* Add onClick handler */}
                     <FaTrash />
                   </button>
                 </div>

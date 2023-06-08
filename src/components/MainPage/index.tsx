@@ -26,8 +26,11 @@ const MainPage = () => {
   const [offline, setOffline] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
-  const [showModal, setShowModal] = useState(false);
 
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [xz, setXz] = useState<any>();
   const [data, setData] = useState<any>();
   const [loginUser, setloginUser] = useState<any>();
   const [dataUser, setDataUser] = useState<any>();
@@ -55,6 +58,8 @@ const MainPage = () => {
       const offlineUsers = res.filter((data: any) => !data.online);
 
       setOffline(offlineUsers);
+    getCategories().then((xz: any) => {
+      setXz(xz.data);
     });
   }, []);
 
@@ -73,8 +78,33 @@ const MainPage = () => {
     });
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+  };
+
+  const filteredData = data
+    ? data.filter(
+        (el: any) =>
+          el.attributes.category.data.attributes.category_name ===
+          selectedCategory
+      )
+    : [];
+
   return (
     <div>
+      {xz &&
+        xz.map((el: any) => {
+          return (
+            <div key={el.id} className={st.mod}>
+              <button
+                className={st.btn}
+                onClick={() => handleCategoryClick(el.attributes.category_name)}
+              >
+                {el.attributes.category_name}
+              </button>
+            </div>
+          );
+        })}
       <Modal isVisible={showModal} setIsVisible={setShowModal}>
         <form onSubmit={handleSubmit} className={st.modal_text}>
           <span>tell me about you</span>
@@ -120,8 +150,8 @@ const MainPage = () => {
         </Select>
       </div>
       <div className={st.grid_container}>
-        {data &&
-          data.map(
+        {filteredData &&
+          filteredData.map(
             (
               el: {
                 id: number;
