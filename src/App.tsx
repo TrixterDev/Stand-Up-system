@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {  Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./Page/Home";
 import "../src/App.sass";
 import Auth from "./components/Auth/Auth";
@@ -19,8 +19,7 @@ import ArchivePage from "./components/adminPanel/Draft";
 function App() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-  }, [navigate]);
+  useEffect(() => {}, [navigate]);
   if (Cookie.get("role") === "admin") {
     return (
       <Layout>
