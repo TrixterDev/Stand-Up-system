@@ -24,11 +24,13 @@ const PanelAnswer = () => {
 
   useEffect(() => {
     if (username) {
-      const filtered = answers.filter((data: any) =>
-        data.attributes?.users?.data?.attributes?.username
-          ?.toLowerCase()
-          .includes(username.toLowerCase())
-      );
+      const filtered =
+        answers &&
+        answers.filter((data: any) =>
+          data.attributes?.users?.data?.attributes?.username
+            ?.toLowerCase()
+            .includes(username.toLowerCase())
+        );
       setFilteredAnswers(filtered);
     } else {
       setFilteredAnswers(answers);
