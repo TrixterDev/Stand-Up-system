@@ -19,6 +19,7 @@ import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
 
+
 interface QuestionItem {
   answer: string;
   question: string;
@@ -88,6 +89,7 @@ const MainPage: React.FC<props> = ({ id }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
       (el: any) => {
         setLoginUser(el);

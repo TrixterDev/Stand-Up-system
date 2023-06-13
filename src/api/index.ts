@@ -61,11 +61,16 @@ export const getUsers = (): Promise<any> => {
   });
 };
 
-export const changeData = (data: any, idUsers: number): Promise<any> => {
+export const changeData = (
+  data: any,
+  idUsers: number,
+  createdDate: string
+): Promise<any> => {
   return request("answers?populate=deep", {
     method: "post",
     json: {
       data: {
+        createdDate: createdDate,
         answer: data.answer,
         category: data.category_id,
         question: data.id,
