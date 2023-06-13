@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { GetloginUser, getData, getUserInfo, getUsers } from "../../api";
+import {
+  GetloginUser,
+  getData,
+  getUserInfo,
+  getUsers,
+  getCategories,
+} from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
@@ -9,14 +15,17 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
-export interface questionItem {
+import { format } from "date-fns";
+
+export interface QuestionItem {
   answer: string;
   question: string;
   id: number;
   title: string;
   category?: any;
 }
-interface formKeys {
+
+interface FormKeys {
   about: string;
 }
 
@@ -25,18 +34,17 @@ const MainPage = () => {
 
   const [offline, setOffline] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
-
-
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const [showModal, setShowModal] = useState(false);
-  const [xz, setXz] = useState<any>();
-  const [data, setData] = useState<any>();
-  const [loginUser, setloginUser] = useState<any>();
-  const [dataUser, setDataUser] = useState<any>();
-  const [form, setForm] = useState<formKeys>({
+  const [xz, setXz] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
+  const [loginUser, setLoginUser] = useState<any>(null);
+  const [dataUser, setDataUser] = useState<any>(null);
+  const [form, setForm] = useState<FormKeys>({
     about: "",
   });
+
   useEffect(() => {
     const key = Cookies.get("key");
     if (key !== undefined) {
@@ -58,6 +66,8 @@ const MainPage = () => {
       const offlineUsers = res.filter((data: any) => !data.online);
 
       setOffline(offlineUsers);
+    });
+
     getCategories().then((xz: any) => {
       setXz(xz.data);
     });
@@ -66,7 +76,7 @@ const MainPage = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     GetloginUser(Cookies.get("key"), form.about, dataUser.id).then((el) => {
-      setloginUser(el);
+      setLoginUser(el);
     });
     setShowModal(false);
   };
@@ -150,26 +160,23 @@ const MainPage = () => {
         </Select>
       </div>
       <div className={st.grid_container}>
-        {filteredData &&
-          filteredData.map(
-            (
-              el: {
-                id: number;
-                attributes: questionItem;
-              },
-              index: number
-            ) => {
-              return (
-                <Card
-                  key={el.id}
-                  productInfo={el.attributes}
-                  id={el.id}
-                  userId={dataUser.id}
-                  category_id={el.attributes.category.data.id}
-                />
-              );
-            }
-          )}
+        {filteredData.map(
+          (
+            el: {
+              id: number;
+              attributes: QuestionItem;
+            },
+            index: number
+          ) => (
+            <Card
+              key={el.id}
+              productInfo={el.attributes}
+              id={el.id}
+              userId={dataUser?.id}
+              category_id={el.attributes.category.data.id}
+            />
+          )
+        )}
       </div>
     </div>
   );

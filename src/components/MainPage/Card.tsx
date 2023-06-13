@@ -5,6 +5,8 @@ import Btn from "../ui/Btn/Btn";
 import { changeData, getUserInfo } from "../../api";
 import { it } from "date-fns/locale";
 import { Loader } from "../ui/Loader";
+import { format, parseISO } from "date-fns";
+
 interface props {
   id: number;
   productInfo: questionItem;
@@ -18,6 +20,7 @@ interface itemKeys {
   category_id: number;
   id: number;
   userId: number;
+  createdDate: string;
 }
 const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
   const [item, setItem] = useState<itemKeys>({
@@ -26,6 +29,7 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
     id: id,
     category_id: category_id,
     userId: userId,
+    createdDate: "",
   });
 
   const [loader, setLoader] = useState<boolean>(true);
@@ -36,7 +40,8 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
     e.preventDefault();
     setLoader(true);
     console.log(item.title);
-    changeData(item, userId).then((el) => {
+    const currentDate = format(new Date(), "yyyy-MM-dd");
+    changeData(item, userId, currentDate).then((el) => {
       setLoader(false);
       setSubmitted(true);
     });
