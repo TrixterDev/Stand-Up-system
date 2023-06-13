@@ -6,6 +6,8 @@ import Cookie from "js-cookie";
 import { getUsers, getUserInfo, loginUser, changeUserOnline } from "../../api";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
+import MainPage from "../MainPage";
+import Cookies from "js-cookie";
 
 interface adminInfoKeys {
   token: string | any;
@@ -23,6 +25,8 @@ const Auth = () => {
     token: Cookie.get("key"),
     isConfirmed: false,
   });
+
+  const [id, setId] = useState<number>(0);
 
   const [validation, setValidation] = useState<string>();
 
@@ -57,10 +61,10 @@ const Auth = () => {
       .then((resp: { jwt: string; user: any }) => {
         console.log(resp);
         Cookie.set("key", resp.jwt, { expires: 7 });
+        Cookie.set("idUser", resp.user.id, { expires: 7 });
         getUserInfo().then((resp) => {
           changeUserOnline({ online: true }, resp.id);
         });
-
         if (resp.user.admin) {
           Cookie.set("role", "admin");
           navigate("/admin-page");

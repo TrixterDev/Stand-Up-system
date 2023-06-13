@@ -1,7 +1,16 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { GetloginUser, getData, getUserInfo, getUsers } from "../../api";
+import {
+  GetloginUser,
+  changeUserInfo,
+  changeUserOnline,
+  exitUser,
+  getCategories,
+  getData,
+  getUserInfo,
+  getUsers,
+} from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
@@ -9,34 +18,46 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
-export interface questionItem {
+
+interface QuestionItem {
   answer: string;
   question: string;
   id: number;
   title: string;
   category?: any;
 }
-interface formKeys {
+
+interface FormKeys {
   about: string;
 }
 
-const MainPage = () => {
+interface props {
+  id: number;
+}
+
+const MainPage: React.FC<props> = ({ id }) => {
   const navigate = useNavigate();
 
   const [offline, setOffline] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [xz, setXz] = useState<any>();
   const [data, setData] = useState<any>();
-  const [loginUser, setloginUser] = useState<any>();
+  const [loginUser, setLoginUser] = useState<any>();
   const [dataUser, setDataUser] = useState<any>();
-  const [form, setForm] = useState<formKeys>({
+  const [form, setForm] = useState<FormKeys>({
     about: "",
   });
+
+  const status = {
+    online: false,
+  };
+
+  console.log(id);
+
   useEffect(() => {
     const key = Cookies.get("key");
     if (key !== undefined) {
@@ -58,20 +79,24 @@ const MainPage = () => {
       const offlineUsers = res.filter((data: any) => !data.online);
 
       setOffline(offlineUsers);
+    });
+
     getCategories().then((xz: any) => {
       setXz(xz.data);
     });
   }, []);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    GetloginUser(Cookies.get("key"), form.about, dataUser.id).then((el) => {
-      setloginUser(el);
-    });
+    GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
+      (el: any) => {
+        setLoginUser(el);
+      }
+    );
     setShowModal(false);
   };
 
-  const handleInput = (event: any) => {
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value,
@@ -140,6 +165,7 @@ const MainPage = () => {
               gap: "5px",
             }}
             onClick={() => {
+              changeUserOnline(status, Number(Cookies.get("idUser")));
               Cookies.remove("key");
               Cookies.remove("role");
               navigate("/");
@@ -155,7 +181,7 @@ const MainPage = () => {
             (
               el: {
                 id: number;
-                attributes: questionItem;
+                attributes: QuestionItem;
               },
               index: number
             ) => {
@@ -164,7 +190,7 @@ const MainPage = () => {
                   key={el.id}
                   productInfo={el.attributes}
                   id={el.id}
-                  userId={dataUser.id}
+                  userId={dataUser?.id}
                   category_id={el.attributes.category.data.id}
                 />
               );
