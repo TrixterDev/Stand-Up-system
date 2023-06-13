@@ -3,7 +3,7 @@ import Input from "../ui/Input/Input";
 import Btn from "../ui/Btn/Btn";
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
-import { getUsers, getUserInfo, loginUser } from "../../api";
+import { getUsers, getUserInfo, loginUser, changeUserOnline } from "../../api";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 
@@ -57,17 +57,21 @@ const Auth = () => {
       .then((resp: { jwt: string; user: any }) => {
         console.log(resp);
         Cookie.set("key", resp.jwt, { expires: 7 });
+        getUserInfo().then((resp) => {
+          changeUserOnline({ online: true }, resp.id);
+        });
+
         if (resp.user.admin) {
           Cookie.set("role", "admin");
           navigate("/admin-page");
         } else {
           Cookie.set("role", "auth");
-          navigate("/home");  
+          navigate("/home");
         }
       })
       .catch((error: any) => {
         if (error.response && error.response.status === 400) {
-          error.response.json().then((resp) => {
+          error.response.json().then((resp: any) => {
             setValidation("Неверный e-mail или пароль");
           });
         } else if (error.response && error.response.status === 500) {

@@ -15,7 +15,7 @@ export interface User {
   lastname?: string;
   position?: string;
   phone?: string;
-  avatarka?: any;
+  avatarka?: string;
 }
 
 export const UserPage = () => {

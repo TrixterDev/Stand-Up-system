@@ -31,21 +31,21 @@ const PanelStatistic = () => {
           count={users.length}
           title="Всего сотрудников"
         >
-          <HiUserGroup color="#f0f0f0" size={70} />
+          <HiUserGroup color="#f0f0f0" size={40} />
         </AdminPanelStatisticCard>
         <AdminPanelStatisticCard
           click={() => redirect("/admin-page/statistic/online")}
           count={online.length}
           title="Всего сотрудников онлайн"
         >
-          <HiUser color="#f0f0f0" size={70} />
+          <HiUser color="#f0f0f0" size={40} />
         </AdminPanelStatisticCard>
         <AdminPanelStatisticCard
           click={() => redirect("/admin-page/statistic/offline")}
           count={offline.length}
           title="Всего сотрудников оффлайн"
         >
-          <HiUserRemove color="#f0f0f0" size={70} />
+          <HiUserRemove color="#f0f0f0" size={40} />
         </AdminPanelStatisticCard>
       </div>
     </div>

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../../../api";
+import { getUsers, User } from "../../../../../api";
 import StatisticMoreCard from "./StatisticMoreCard";
 import st from "./allusers.module.sass";
 
 const Offline = () => {
-  const [offline, setOffline] = useState<any>([]);
+  const [offline, setOffline] = useState<User[]>([]);
 
   useEffect(() => {
     getUsers().then((res: any) => {
       const offlineUsers = res.filter((data: any) => !data.online);
+      console.log(res[0]);
 
       setOffline(offlineUsers);
     });
@@ -19,7 +20,13 @@ const Offline = () => {
       <div className={st.wrapper__cards}>
         {offline.map((data: any) => {
           return (
-            <StatisticMoreCard username={data.username} status={data.online} />
+            <StatisticMoreCard
+              answer={data.otveties}
+              key={data.id}
+              avatarka={data.avatarka.url}
+              username={data.username}
+              status={data.online}
+            />
           );
         })}
       </div>
