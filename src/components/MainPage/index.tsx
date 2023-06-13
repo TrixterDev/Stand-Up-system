@@ -3,10 +3,13 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import {
   GetloginUser,
+  changeUserInfo,
+  changeUserOnline,
+  exitUser,
+  getCategories,
   getData,
   getUserInfo,
   getUsers,
-  getCategories,
 } from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
@@ -15,9 +18,9 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
-import { format } from "date-fns";
 
-export interface QuestionItem {
+
+interface QuestionItem {
   answer: string;
   question: string;
   id: number;
@@ -29,21 +32,32 @@ interface FormKeys {
   about: string;
 }
 
-const MainPage = () => {
+interface props {
+  id: number;
+}
+
+const MainPage: React.FC<props> = ({ id }) => {
   const navigate = useNavigate();
 
   const [offline, setOffline] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const [showModal, setShowModal] = useState(false);
-  const [xz, setXz] = useState<any>([]);
-  const [data, setData] = useState<any>([]);
-  const [loginUser, setLoginUser] = useState<any>(null);
-  const [dataUser, setDataUser] = useState<any>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [xz, setXz] = useState<any>();
+  const [data, setData] = useState<any>();
+  const [loginUser, setLoginUser] = useState<any>();
+  const [dataUser, setDataUser] = useState<any>();
   const [form, setForm] = useState<FormKeys>({
     about: "",
   });
+
+  const status = {
+    online: false,
+  };
+
+  console.log(id);
 
   useEffect(() => {
     const key = Cookies.get("key");
@@ -73,15 +87,18 @@ const MainPage = () => {
     });
   }, []);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    GetloginUser(Cookies.get("key"), form.about, dataUser.id).then((el) => {
-      setLoginUser(el);
-    });
+
+    GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
+      (el: any) => {
+        setLoginUser(el);
+      }
+    );
     setShowModal(false);
   };
 
-  const handleInput = (event: any) => {
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value,
@@ -150,6 +167,7 @@ const MainPage = () => {
               gap: "5px",
             }}
             onClick={() => {
+              changeUserOnline(status, Number(Cookies.get("idUser")));
               Cookies.remove("key");
               Cookies.remove("role");
               navigate("/");
@@ -160,23 +178,26 @@ const MainPage = () => {
         </Select>
       </div>
       <div className={st.grid_container}>
-        {filteredData.map(
-          (
-            el: {
-              id: number;
-              attributes: QuestionItem;
-            },
-            index: number
-          ) => (
-            <Card
-              key={el.id}
-              productInfo={el.attributes}
-              id={el.id}
-              userId={dataUser?.id}
-              category_id={el.attributes.category.data.id}
-            />
-          )
-        )}
+        {filteredData &&
+          filteredData.map(
+            (
+              el: {
+                id: number;
+                attributes: QuestionItem;
+              },
+              index: number
+            ) => {
+              return (
+                <Card
+                  key={el.id}
+                  productInfo={el.attributes}
+                  id={el.id}
+                  userId={dataUser?.id}
+                  category_id={el.attributes.category.data.id}
+                />
+              );
+            }
+          )}
       </div>
     </div>
   );

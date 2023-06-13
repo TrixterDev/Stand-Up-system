@@ -7,7 +7,7 @@ import { BsFillClipboard2Fill, BsFillQuestionCircleFill } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
 import Cookies from "js-cookie";
 interface props {
-  children: any;
+  children: React.ReactNode;
 }
 
 const Layout: React.FC<props> = ({ children }) => {
