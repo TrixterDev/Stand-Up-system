@@ -128,7 +128,13 @@ export const getCategory = (category_name: string): Promise<any> => {
   );
 };
 
-export const updateQuestions = (data: any[]): Promise<any> => {
+interface dataItem {
+  title: string;
+  category: string;
+  edit: boolean;
+  category_id: number;
+}
+export const updateQuestions = (data: dataItem[]): Promise<any> => {
   console.log("Update working");
   const requests = data.map((item) => {
     if (typeof item.id === "string") {
@@ -153,6 +159,7 @@ export const updateQuestions = (data: any[]): Promise<any> => {
         json: { data: { title: item.title } },
       });
     }
+    World;
   });
 
   return Promise.all(requests);
@@ -171,9 +178,17 @@ export const getAnswers = async () => {
   return await strapiAPI.get("answers?populate=deep").json();
 };
 
-export const getAnswersByUser = async (username: string): Promise<any> => {
+export const getAnswersByUser = async (
+  username: string,
+  time: string | undefined
+): Promise<any> => {
   return await strapiAPI
-    .get(`answers?populate=deep&filters[username]=${username}`)
+    .get(
+      `answers?populate=deep&filters[createdDate][$eq]=${
+        time ? time : "*"
+      }&filters[[users][data][attributes][username]][$eq]=${username}
+      }`
+    )
     .json();
 };
 

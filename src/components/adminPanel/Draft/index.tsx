@@ -93,7 +93,7 @@ const ArchivePage = () => {
 
   const search = () => {
     if (selectedFilter === "user") {
-      getAnswersByUser(searchQuery).then((resp) => {
+      getAnswersByUser(searchQuery, time).then((resp) => {
         setAnswers(resp.data);
         console.log(resp.data);
       });
