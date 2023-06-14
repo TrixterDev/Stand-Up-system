@@ -2,8 +2,8 @@
   display: flex
   align-items: flex-start
   justify-content: space-between
-  gap: 20px
   width: 100%
+  position: relative
   &__content
     display: flex
     width: 250px !important
@@ -11,12 +11,15 @@
 .isActive
   color: #ffcc00 !important
   background: #fff
-
+.content
+  width: 100%
+  overflow-y: scroll
 .nav
   padding: 1.5625rem
   height: 100vh
-  position: fixed
   display: flex
+  overflow: scroll
+  position: fixed
   align-items: center
   justify-content: space-between
   flex-direction: column
@@ -53,6 +56,7 @@
     width: 100%
     bottom: 0
     z-index: 10
+    position: sticky
     a
       width: max-content
       > span
@@ -61,8 +65,7 @@
       align-items: center
       flex-direction: row
       img
-        width: 4.375rem
-        margin-bottom: 0 !important
+        display: none
 
 @media screen and (max-width: 29.375rem)
   .nav
@@ -75,4 +78,7 @@
 
 @media screen and (max-width: 920px)
   .wrap
-    display: block
+    flex-direction: column-reverse
+    height: 100vh
+    &__content
+      width: 100% !important

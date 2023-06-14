@@ -1,7 +1,16 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { getData, getUserInfo, getUsers, getCategories } from "../../api";
+
+import {
+  GetloginUser,
+  changeUserInfo,
+  changeUserOnline,
+  getCategories,
+  getData,
+  getUserInfo,
+  getUsers,
+} from "../../api";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal";
 import Card from "./Card";
@@ -9,9 +18,8 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
-import { format } from "date-fns";
 
-export interface QuestionItem {
+interface QuestionItem {
   answer: string;
   question: string;
   id: number;
@@ -23,7 +31,11 @@ interface FormKeys {
   about: string;
 }
 
-const MainPage = () => {
+interface props {
+  id: number;
+}
+
+const MainPage: React.FC<props> = ({ id }) => {
   const navigate = useNavigate();
 
   const [offline, setOffline] = useState<any>([]);
@@ -33,9 +45,16 @@ const MainPage = () => {
   const [data, setData] = useState<any>([]);
   const [loginUser, setLoginUser] = useState<any>(null);
   const [dataUser, setDataUser] = useState<any>(null);
+
   const [form, setForm] = useState<FormKeys>({
     about: "",
   });
+
+  const status = {
+    online: false,
+  };
+
+  console.log(id);
 
   useEffect(() => {
     const key = Cookies.get("key");
@@ -72,13 +91,20 @@ const MainPage = () => {
     });
   }, []);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+
+    GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
+      (el: any) => {
+        setLoginUser(el);
+      }
+    );
     setShowModal(false);
     // Rest of the code...
   };
 
-  const handleInput = (event: any) => {
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value,
@@ -122,6 +148,7 @@ const MainPage = () => {
               gap: "5px",
             }}
             onClick={() => {
+              changeUserOnline(status, Number(Cookies.get("idUser")));
               Cookies.remove("key");
               Cookies.remove("role");
               navigate("/");
@@ -147,6 +174,7 @@ const MainPage = () => {
             );
           }
         )}
+
       </div>
     </div>
   );
