@@ -193,7 +193,7 @@ export const getAnswersByUser = async (
     .get(
       `answers?populate=deep&filters[createdDate][$eq]=${
         time ? time : "*"
-      }&filters[[users][data][attributes][username]][$eq]=${username}
+      }&filters[[users][data][attributes][username]][$and]=${username}
       }`
     )
     .json();
@@ -209,7 +209,7 @@ export const getAnswersById = async (id: number): Promise<any> => {
 
 export const getAnswersByTitle = async (
   title: string,
-  date: string
+  // date: string
 ): Promise<any> => {
   return await strapiAPI
     .get(`answers?populate=deep&filters[answer]=${title}`)

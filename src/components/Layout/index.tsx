@@ -61,7 +61,7 @@ const Layout: React.FC<props> = ({ children }) => {
           </NavLink>
         </nav>
       </div>
-      {children}
+      <div className={st.content}>{children}</div>
     </div>
   );
 };

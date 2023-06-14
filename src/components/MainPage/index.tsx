@@ -5,7 +5,6 @@ import {
   GetloginUser,
   changeUserInfo,
   changeUserOnline,
-  exitUser,
   getCategories,
   getData,
   getUserInfo,
@@ -18,7 +17,6 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
-
 
 interface QuestionItem {
   answer: string;
