@@ -9,12 +9,14 @@ import { Loader } from "../../ui/Loader";
 import {
   getCategories,
   getQuestions,
+  removeCategories,
   removeQuestions,
   updateCategories,
   updateQuestions,
 } from "../../../api";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
+import { Modal } from "../../ui/Modal";
 
 interface Category {
   id: string;
@@ -48,6 +50,8 @@ const PanelQuestion = () => {
   const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
     null
   );
+
+  const [modalUsersmsetModalUsers] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -140,6 +144,13 @@ const PanelQuestion = () => {
     }
   };
 
+  const addUserToQuestion = (index: number) => {
+    setModalUsers({
+      active: true,
+      questionId: index,
+    });
+  };
+
   const save = async () => {
     setLoading(true);
 
@@ -150,6 +161,10 @@ const PanelQuestion = () => {
 
       if (questionsBasket.length > 0) {
         await removeQuestions(questionsBasket);
+      }
+
+      if (categoriesBasket.length > 0) {
+        await removeCategories(categoriesBasket);
       }
 
       console.log("Save successful");
@@ -326,10 +341,16 @@ const PanelQuestion = () => {
             return (
               <div className={st["category"]} key={item.id}>
                 <div className={st["category-tools"]}>
-                  <button onClick={() => changeCategoryStatus(item.id, true)}>
+                  <button
+                    onClick={() => changeCategoryStatus(item.id, true)}
+                    className={st["category-btn"]}
+                  >
                     <FaEdit />
                   </button>
-                  <button onClick={() => removeCategory(item.id)}>
+                  <button
+                    onClick={() => removeCategory(item.id)}
+                    className={st["category-btn"]}
+                  >
                     {" "}
                     {/* Add onClick handler */}
                     <FaTrash />
@@ -443,6 +464,31 @@ const PanelQuestion = () => {
                           locale: ru,
                         }
                       )}
+                    </div>
+
+                    <div className={st["user-view"]}>
+                      {item.access_users &&
+                        item.access_users.data.map((item, index) => {
+                          if (index < 3) {
+                            return (
+                              <img
+                                src={
+                                  item?.avatarka?.data?.attributes?.url ||
+                                  "/img/base-avatar.png"
+                                }
+                                alt={item.username}
+                                className={st.avatar}
+                                title={item.username}
+                              />
+                            );
+                          }
+                        })}
+                      <button
+                        className={st["add-circle-btn"]}
+                        title="Добавить нового пользователя"
+                      >
+                        <FaPlus />
+                      </button>
                     </div>
                   </div>
                 )}

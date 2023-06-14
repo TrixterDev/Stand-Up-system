@@ -19,6 +19,30 @@
 .category-tools
   display: flex
   z-index: 1
+  gap: 5px
+  background: #444
+  max-width: max-content
+  padding: 5px 10px
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  z-index: -1
+  transition: .2s transform
+
+.category-btn
+  width: 25px
+  height: 25px
+  background: unset
+  border: unset
+  display: flex
+  justify-content: center
+  align-items: center
+  color: #fff
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+
+  &:hover
+    cursor: pointer
+    background: #222
 
 .button
   width: 100%
@@ -168,3 +192,21 @@
   align-items: center
   background: rgba(0, 0, 0, 0.5)
   z-index: 99
+
+.user-view
+  margin-top: 15px
+  display: flex
+  align-items: center
+  gap: -10px
+
+  .avatar
+    width: 25px
+    height: 25px
+
+    &:first-child
+      width: 20px
+      height: 20px
+
+    &:last-child
+      width: 20px
+      height: 20px

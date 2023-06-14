@@ -84,7 +84,7 @@ export const uploadImage = (data: FormData): Promise<any> => {
 };
 
 export const getQuestions = (): Promise<Question[]> => {
-  return request("questions?populate=*");
+  return request("questions?populate=deep");
 };
 
 export const getCategories = (): Promise<any> => {
@@ -159,7 +159,6 @@ export const updateQuestions = (data: dataItem[]): Promise<any> => {
         json: { data: { title: item.title } },
       });
     }
-    World;
   });
 
   return Promise.all(requests);
@@ -169,6 +168,16 @@ export const removeQuestions = (data: any[]): Promise<any> => {
   console.log("Remove working");
   const requests = data.map((item) => {
     return request(`questions/${item.id}`, { method: "delete" });
+  });
+
+  return Promise.all(requests);
+};
+
+export const removeCategories = (data: any[]): Promise<any> => {
+  const requests = data.map((item) => {
+    if (item.deleted) {
+      return request(`question-categories/${item.id}`, { method: "delete" });
+    }
   });
 
   return Promise.all(requests);
