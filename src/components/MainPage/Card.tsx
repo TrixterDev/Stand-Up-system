@@ -52,7 +52,7 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
       setLoader(false);
 
       resp.otveties.forEach((item: any) => {
-        if (id === item.question.id) {
+        if (id === item.question?.id) {
           setSubmitted(true);
           setItem((prev) => {
             return { ...prev, answer: item.answer };
