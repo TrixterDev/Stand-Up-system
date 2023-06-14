@@ -1,0 +1,40 @@
+.dropDown
+  position: relative
+  &__title
+    display: flex
+    align-items: center
+    gap: .9375rem
+    cursor: pointer
+    padding: 20px
+  &__list
+    max-height: 0
+    width: 100%
+    position: absolute
+    padding: .9375rem
+    border-radius: .75rem
+    padding-top: 0
+    padding-bottom: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: .9375rem
+    flex-direction: column
+    transition: .6s all
+    overflow: hidden
+    background: #fc0
+    color: #fff
+    > *
+      cursor: pointer
+      padding: .9375rem
+      border-radius: .75rem
+      transition: .6s all
+      &:hover
+        background: #fff
+        color: #fc0
+.active
+  max-height: 1050px
+  padding: .9375rem
+
+
+.img
+  width: 50px

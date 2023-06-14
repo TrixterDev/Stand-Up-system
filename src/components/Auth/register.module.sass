@@ -1,0 +1,158 @@
+.customInput
+  position: relative
+  width: 100%
+  > label
+    position: absolute
+    left: 1.5625rem
+    top: 0.8125rem
+    width: 80%
+    transition: .2s all
+    white-space: nowrap
+    margin-top: 0
+  > input
+    width: 100%
+    color: #fff
+    &:focus
+      color: #000
+      + label
+        top: -22px
+        color: #fff
+        left: 0
+
+    &:valid
+      color: #000
+      + label
+        top: -1.375rem
+        color: #fff
+        width: 100%
+        left: 0
+        white-space: normal
+
+.register
+  background: url(./bg.svg) no-repeat center
+  background-size: cover
+  height: 100vh
+  display: flex
+  align-items: center
+  padding: 0 1.25rem
+
+.registerWrap
+  background: #33333399
+  border-radius: 0.9375rem
+  padding: 0.9375rem 3.125rem
+  max-width: max-content
+  margin: 0 auto
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.titleWrap
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.title
+  color: white
+  font-size: 3.125rem
+  margin: 0
+
+hr
+  background: white
+  width: 80%
+  height: 0.25rem
+  margin-top: 0.625rem
+
+.registerTitle
+  color: white
+  font-size: 2.5rem
+  margin: 0.3125rem 0 0 0
+
+.form
+  display: grid
+  gap: 1.5rem
+  margin-top: 1.875rem
+  max-width: 31.25rem
+  width: 100%
+
+.confPassWrap
+  display: flex
+  gap: 1rem
+  position: relative
+
+.auth
+  color: white
+  margin-top: 0.9375rem
+  text-align: center
+  & a
+    text-decoration: underline
+    color: #ffcc00
+
+label.err
+  color: tomato !important
+
+.nameWrap
+  display: flex
+  gap: 15px
+
+label.eyeLabel
+  width: 50px
+  height: 100%
+  position: absolute
+  left: 88%
+  top: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  background-color: #fff
+  border-radius: 50%
+
+.eye
+  width: 32px
+  height: 32px
+  background: url(./eye.svg) no-repeat center
+  color: #333333
+  cursor: pointer
+
+.checkbox
+  display: none
+
+.checkbox:checked + .eye
+  background: url(./eye-blocked.svg) no-repeat center
+
+.passInput
+  padding-right: 55px
+
+/* Media */
+
+@media (max-width: 540px)
+  .registerWrap
+    padding: 20px
+
+  .title
+    font-size: 44px
+
+  .registerTitle
+    font-size: 38px
+
+  .form
+    margin-top: 50px
+
+@media (max-width: 450px)
+  .title
+    font-size: 38px
+
+  .registerTitle
+    font-size: 34px
+
+  .form
+    margin-top: 30px
+
+  .confPassWrap
+    display: grid
+
+@media (max-width: 330px)
+  .title
+    font-size: 32px
+
+  .registerTitle
+    font-size: 30px

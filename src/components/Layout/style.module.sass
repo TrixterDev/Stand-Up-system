@@ -1,0 +1,84 @@
+.wrap
+  display: flex
+  align-items: flex-start
+  justify-content: space-between
+  width: 100%
+  position: relative
+  &__content
+    display: flex
+    width: 250px !important
+
+.isActive
+  color: #ffcc00 !important
+  background: #fff
+.content
+  width: 100%
+  overflow-y: scroll
+.nav
+  padding: 1.5625rem
+  height: 100vh
+  display: flex
+  overflow: scroll
+  position: fixed
+  align-items: center
+  justify-content: space-between
+  flex-direction: column
+  background: #ffcc00
+  a
+    display: flex
+    gap: .625rem
+    align-items: center
+    transition: .5s all
+    width: 100%
+    color: #fff
+    padding: 1.5625rem
+    border-radius: .75rem
+    &:hover
+      background: #fff
+      color: #ffcc00
+    > svg
+      font-size: 1.5rem
+  &__link
+    display: flex
+    gap: .9375rem
+    flex-direction: column
+    color: #fff
+    display: flex
+    align-items: flex-start
+    > img
+      margin-bottom: 2.1875rem !important
+
+@media screen and (max-width: 57.5rem)
+  .nav
+    flex-direction: row
+    align-items: center
+    height: max-content
+    width: 100%
+    bottom: 0
+    z-index: 10
+    position: sticky
+    a
+      width: max-content
+      > span
+        display: none
+    &__link
+      align-items: center
+      flex-direction: row
+      img
+        display: none
+
+@media screen and (max-width: 29.375rem)
+  .nav
+    a
+      padding: 5px
+    &__link
+      gap: 1.25rem
+      > img
+        display: none
+
+@media screen and (max-width: 920px)
+  .wrap
+    flex-direction: column-reverse
+    height: 100vh
+    &__content
+      width: 100% !important

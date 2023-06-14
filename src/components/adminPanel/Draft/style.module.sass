@@ -1,0 +1,60 @@
+.container
+  width: 100%
+  margin: 20px auto
+  display: flex
+  flex-direction: column
+  padding: 50px
+  padding-bottom: 0px
+  justify-content: center
+  align-items: center
+  gap: 25px
+
+.draft-content
+  width: 100%
+
+.cards
+  margin-top: 15px
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr))
+  gap: 15px
+  width: 100%
+  .card
+    display: flex
+    flex-direction: column
+    background: #ffcc00
+    padding: 15px
+    border-radius: 10px
+
+.text
+  color: #333333
+  text-align: center
+.span
+  font-size: 24px
+.btn
+  color: #f0f0f0
+  background-color: #ffcc00
+  font-size: 20px
+.changeCategory
+  display: flex
+  justify-content: space-between
+  flex-direction: row
+  gap: 20px
+
+.filters
+  display: flex
+  width: 100%
+
+@media screen and (max-width: 1120px)
+  .wrapper
+    gap: 20px
+  .btn
+    font-size: 16px
+@media screen and (max-width: 920px)
+  .container
+    justify-content: space-between
+  .changeCategory
+    flex-direction: column
+
+@media screen and (max-width: 620px)
+  .wrapper
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))
