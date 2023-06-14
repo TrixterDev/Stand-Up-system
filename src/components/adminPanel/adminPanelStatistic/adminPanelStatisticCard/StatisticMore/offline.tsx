@@ -23,7 +23,7 @@ const Offline = () => {
             <StatisticMoreCard
               answer={data.otveties}
               key={data.id}
-              avatarka={data.avatarka.url}
+              avatarka={data?.avatarka?.url || "/img/base-avatar.png"}
               username={data.username}
               status={data.online}
             />

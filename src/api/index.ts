@@ -217,11 +217,10 @@ export const getAnswersById = async (id: number): Promise<any> => {
 };
 
 export const getAnswersByTitle = async (
-  title: string,
+  title: string
   // date: string
 ): Promise<any> => {
   return await strapiAPI
     .get(`answers?populate=deep&filters[answer]=${title}`)
     .json();
 };
-

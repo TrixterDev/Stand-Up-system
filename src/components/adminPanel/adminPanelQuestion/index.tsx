@@ -9,6 +9,7 @@ import { Loader } from "../../ui/Loader";
 import {
   getCategories,
   getQuestions,
+  getUsers,
   removeCategories,
   removeQuestions,
   updateCategories,
@@ -51,7 +52,19 @@ const PanelQuestion = () => {
     null
   );
 
-  const [modalUsersmsetModalUsers] = useState<boolean>(false);
+  const [modalUsersVisible, setModalUsersVisible] = useState<boolean>(false);
+
+  const [modalUsers, setModalUsers] = useState<object>({
+    users: [],
+    questionId: null,
+  });
+
+  const [addingNewUserForm, setAddingNewUserForm] = useState({
+    userId: null,
+    error: null,
+  });
+
+  const [autoCompleteUsers, setAutoCompleteUsers] = useState<any>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -130,6 +143,10 @@ const PanelQuestion = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setAutoCompleteUsers(getUsers().then((resp) => console.log(resp)));
+  }, [addingNewUserForm]);
+
   const addQuestion = () => {
     if (activeCategory) {
       const newQuestion: Question = {
@@ -146,9 +163,10 @@ const PanelQuestion = () => {
 
   const addUserToQuestion = (index: number) => {
     setModalUsers({
-      active: true,
-      questionId: index,
+      users: questions[index].access_users.data,
     });
+
+    setModalUsersVisible(true);
   };
 
   const save = async () => {
@@ -414,7 +432,7 @@ const PanelQuestion = () => {
       />
 
       <div className={st.cards}>
-        {questions.map((item: Question) => {
+        {questions.map((item: Question, index: number) => {
           if (item.category === activeCategory?.category_name) {
             return (
               <article className={st.card} key={item.id}>
@@ -486,6 +504,7 @@ const PanelQuestion = () => {
                       <button
                         className={st["add-circle-btn"]}
                         title="Добавить нового пользователя"
+                        onClick={() => addUserToQuestion(index)}
                       >
                         <FaPlus />
                       </button>
@@ -497,6 +516,28 @@ const PanelQuestion = () => {
           }
           return null;
         })}
+
+        <Modal
+          isVisible={modalUsersVisible}
+          setIsVisible={setModalUsersVisible}
+        >
+          <h4>Отображение</h4>
+          <p>Этим пользователям будет отображаться этот вопрос:</p>
+          <ul className={st["users-list"]}>
+            {modalUsers.users.map((item) => {
+              return <li>{item.attributes.username}</li>;
+            })}
+          </ul>
+
+          <div className={st["users-adding-form"]}>
+            {addingNewUserForm.error && (
+              <span>Такого пользователя не сущетствует</span>
+            )}
+            <input type="text" placeholder="Введите email или username..." />
+            <button>Добавить</button>
+          </div>
+          {/* <button className={st["add-btn"]}>Добавить пользователя</button> */}
+        </Modal>
       </div>
     </section>
   );

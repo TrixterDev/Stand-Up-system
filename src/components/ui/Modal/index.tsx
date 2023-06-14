@@ -5,7 +5,7 @@ import { FaTimes } from "react-icons/fa";
 
 interface ModalProps {
   isVisible: boolean;
-  children: any;
+  children: React.ReactNode;
   setIsVisible: any;
 }
 
