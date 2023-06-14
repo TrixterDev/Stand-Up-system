@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+
 import {
   GetloginUser,
   changeUserInfo,
@@ -39,14 +40,12 @@ const MainPage: React.FC<props> = ({ id }) => {
 
   const [offline, setOffline] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [xz, setXz] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
+  const [loginUser, setLoginUser] = useState<any>(null);
+  const [dataUser, setDataUser] = useState<any>(null);
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [xz, setXz] = useState<any>();
-  const [data, setData] = useState<any>();
-  const [loginUser, setLoginUser] = useState<any>();
-  const [dataUser, setDataUser] = useState<any>();
   const [form, setForm] = useState<FormKeys>({
     about: "",
   });
@@ -62,6 +61,11 @@ const MainPage: React.FC<props> = ({ id }) => {
     if (key !== undefined) {
       getUserInfo().then((response: any) => {
         setDataUser(response);
+        setData(
+          response.access_questions.map((item) => {
+            return { ...item, category: item.category.id };
+          })
+        );
 
         if (response.about === "" || response.about === null) {
           setShowModal(true);
@@ -69,14 +73,16 @@ const MainPage: React.FC<props> = ({ id }) => {
       });
     }
 
-    getData().then((res: any) => {
-      setData(res.data);
-    });
+    // getData().then((res: any) => {
+    //   setData(res.data);
+    // });
 
     getUsers().then((res: any) => {
-      setUsers(res);
-      const offlineUsers = res.filter((data: any) => !data.online);
-
+      const filteredUsers = res.filter(
+        (user: any) => user.access_questions !== null
+      );
+      setUsers(filteredUsers);
+      const offlineUsers = filteredUsers.filter((user: any) => !user.online);
       setOffline(offlineUsers);
     });
 
@@ -88,12 +94,14 @@ const MainPage: React.FC<props> = ({ id }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+
     GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
       (el: any) => {
         setLoginUser(el);
       }
     );
     setShowModal(false);
+    // Rest of the code...
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,33 +111,8 @@ const MainPage: React.FC<props> = ({ id }) => {
     });
   };
 
-  const handleCategoryClick = (categoryName: string) => {
-    setSelectedCategory(categoryName);
-  };
-
-  const filteredData = data
-    ? data.filter(
-        (el: any) =>
-          el.attributes.category.data.attributes.category_name ===
-          selectedCategory
-      )
-    : [];
-
   return (
     <div>
-      {xz &&
-        xz.map((el: any) => {
-          return (
-            <div key={el.id} className={st.mod}>
-              <button
-                className={st.btn}
-                onClick={() => handleCategoryClick(el.attributes.category_name)}
-              >
-                {el.attributes.category_name}
-              </button>
-            </div>
-          );
-        })}
       <Modal isVisible={showModal} setIsVisible={setShowModal}>
         <form onSubmit={handleSubmit} className={st.modal_text}>
           <span>tell me about you</span>
@@ -176,26 +159,22 @@ const MainPage: React.FC<props> = ({ id }) => {
         </Select>
       </div>
       <div className={st.grid_container}>
-        {filteredData &&
-          filteredData.map(
-            (
-              el: {
-                id: number;
-                attributes: QuestionItem;
-              },
-              index: number
-            ) => {
-              return (
-                <Card
-                  key={el.id}
-                  productInfo={el.attributes}
-                  id={el.id}
-                  userId={dataUser?.id}
-                  category_id={el.attributes.category.data.id}
-                />
-              );
-            }
-          )}
+        {data.map(
+          (el: { id: number; attributes: QuestionItem }, index: number) => {
+            console.log(el);
+            const categoryID = el.category;
+            return (
+              <Card
+                key={el.id}
+                productInfo={el}
+                id={el.id}
+                userId={dataUser?.id}
+                category_id={categoryID}
+              />
+            );
+          }
+        )}
+
       </div>
     </div>
   );
