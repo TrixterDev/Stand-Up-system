@@ -12,6 +12,13 @@ const AllUsers = () => {
       setUsers(res);
     });
   }, []);
+
+  console.log(
+    users.sort((a: any, b: any) =>
+      a.online && !b.online ? -1 : b.online && !a.online ? 1 : 0
+    )
+  );
+
   return (
     <div className={st.wrapper}>
       <h2 className={st.wrapper__title}>Всего сотрудников</h2>
@@ -20,15 +27,21 @@ const AllUsers = () => {
           .sort((a: any, b: any) =>
             a.online && !b.online ? -1 : b.online && !a.online ? 1 : 0
           )
-          .map((data: User) => (
-            <StatisticMoreCard
-              answer={data.otveties}
-              key={data.id}
-              avatarka={data?.avatarka?.url || "/img/base-avatar.png"}
-              username={data.username}
-              status={data.online}
-            />
-          ))}
+          .map((data: User) => {
+            if (data.admin) {
+              null;
+            } else {
+              return (
+                <StatisticMoreCard
+                  answer={data.otveties}
+                  key={data.id}
+                  avatarka={data?.avatarka?.url || "/img/base-avatar.png"}
+                  username={data.username}
+                  status={data.online}
+                />
+              );
+            }
+          })}
       </div>
     </div>
   );

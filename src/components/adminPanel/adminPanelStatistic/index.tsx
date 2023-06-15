@@ -14,14 +14,18 @@ const PanelStatistic = () => {
 
   useEffect(() => {
     getUsers().then((res: any) => {
-      setUsers(res);
-      const onlineUsers = res.filter((data: any) => data.online);
-      const offlineUsers = res.filter((data: any) => !data.online);
+      setUsers(res.filter((data: any) => !data.admin));
+      const onlineUsers = res.filter((data: any) => data.online && !data.admin);
+      const offlineUsers = res.filter(
+        (data: any) => !data.online && !data.admin
+      );
 
       setOnline(onlineUsers);
       setOffline(offlineUsers);
     });
   }, []);
+
+  console.log(online);
 
   return (
     <div className={st.Panel}>

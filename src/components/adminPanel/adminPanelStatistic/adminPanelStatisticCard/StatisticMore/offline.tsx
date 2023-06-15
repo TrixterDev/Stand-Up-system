@@ -8,7 +8,9 @@ const Offline = () => {
 
   useEffect(() => {
     getUsers().then((res: any) => {
-      const offlineUsers = res.filter((data: any) => !data.online);
+      const offlineUsers = res.filter(
+        (data: any) => !data.online && !data.admin
+      );
       console.log(res[0]);
 
       setOffline(offlineUsers);
