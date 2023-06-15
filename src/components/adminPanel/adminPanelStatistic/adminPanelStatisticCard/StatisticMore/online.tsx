@@ -8,7 +8,7 @@ const Online = () => {
 
   useEffect(() => {
     getUsers().then((res: any) => {
-      const onlineUsers = res.filter((data: any) => data.online);
+      const onlineUsers = res.filter((data: any) => data.online && !data.admin);
       setOnline(onlineUsers);
     });
   }, []);
