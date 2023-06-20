@@ -3,21 +3,32 @@ import { v4 as uuidv4 } from "uuid";
 import st from "./style.module.sass";
 import Btn from "../../ui/Btn/Btn";
 import Input from "../../ui/Input/Input";
-import { FaEdit, FaPlus, FaTrash, FaTrashAlt } from "react-icons/fa";
+import {
+  FaCross,
+  FaEdit,
+  FaPlus,
+  FaTimes,
+  FaTrash,
+  FaTrashAlt,
+} from "react-icons/fa";
 import clsx from "clsx";
 import { Loader } from "../../ui/Loader";
 import {
   getCategories,
+  getQuestionById,
   getQuestions,
+  getUserInfo,
   getUsers,
   removeCategories,
   removeQuestions,
   updateCategories,
+  updateQuestionById,
   updateQuestions,
 } from "../../../api";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Modal } from "../../ui/Modal";
+import { useNavigate } from "react-router";
 
 interface Category {
   id: string;
@@ -64,7 +75,13 @@ const PanelQuestion = () => {
     error: null,
   });
 
-  const [autoCompleteUsers, setAutoCompleteUsers] = useState<any>([]);
+  const [autoCompleteUsers, setAutoCompleteUsers] = useState<any[] | null>(
+    null
+  );
+
+  const [addUserField, setAddUserField] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -143,10 +160,6 @@ const PanelQuestion = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setAutoCompleteUsers(getUsers().then((resp) => console.log(resp)));
-  }, [addingNewUserForm]);
-
   const addQuestion = () => {
     if (activeCategory) {
       const newQuestion: Question = {
@@ -164,9 +177,62 @@ const PanelQuestion = () => {
   const addUserToQuestion = (index: number) => {
     setModalUsers({
       users: questions[index].access_users.data,
+      question: questions[index],
     });
 
     setModalUsersVisible(true);
+  };
+
+  const addUserToQuestionFunc = () => {
+    setLoading(true);
+    // console.log(questions.filter((item) => item.id === modalUsers.questionId));
+
+    const fetchData = async () => {
+      try {
+        let userId = null;
+        getUserInfo(addUserField).then((resp) => {
+          userId = resp.id;
+        });
+
+        getQuestionById(modalUsers.question.id)
+          .then((resp) => {
+            return {
+              ...resp.data.attributes,
+              access_users: {
+                disconnect: [],
+                connect: [{ id: userId }],
+              },
+            };
+          })
+          .then((resp) => {
+            console.log(resp);
+            updateQuestionById(resp, modalUsers.modalUsers.question.id);
+
+            setQuestions((prev) => {
+              const questions = [...prev];
+              const index = questions.findIndex(
+                (item) => item.id === modalUsers.question.id
+              );
+              console.log(index);
+              questions.splice(index, 1, {
+                ...resp,
+                id: resp.id,
+                edit: false,
+                category: resp.category.data.attributes.category_name,
+                category_id: resp.category.data.id,
+              });
+              console.log(questions);
+              return [...prev];
+            });
+          });
+      } catch (error) {
+        console.log("Error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   };
 
   const save = async () => {
@@ -182,7 +248,7 @@ const PanelQuestion = () => {
       }
 
       if (categoriesBasket.length > 0) {
-        await removeCategories(categoriesBasket);
+        await removeCategories(categoriesBasket, questions);
       }
 
       console.log("Save successful");
@@ -524,8 +590,64 @@ const PanelQuestion = () => {
           <h4>Отображение</h4>
           <p>Этим пользователям будет отображаться этот вопрос:</p>
           <ul className={st["users-list"]}>
-            {modalUsers.users.map((item) => {
-              return <li>{item.attributes.username}</li>;
+            {modalUsers.users.map((item, index) => {
+              return (
+                <li className={st["users-list-item"]}>
+                  <img
+                    src={
+                      item.attributes.avatarka.data?.attributes?.url ||
+                      "/img/base-avatar.png"
+                    }
+                    style={{ width: 25, height: 25, borderRadius: "50%" }}
+                  />
+                  <span onClick={() => navigate("/")}>
+                    {item.attributes.username}
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      setLoading(true);
+
+                      const fetchData = async () => {
+                        try {
+                          let userId = item.id;
+
+                          getQuestionById(modalUsers.question.id)
+                            .then((resp) => {
+                              return {
+                                ...resp.data.attributes,
+                                access_users: {
+                                  disconnect: [{ id: userId }],
+                                  connect: [],
+                                },
+                              };
+                            })
+                            .then((resp) => {
+                              console.log(resp);
+                              updateQuestionById(resp, modalUsers.question.id);
+                            });
+                          setModalUsers(() => {
+                            const users = [...modalUsers.users];
+                            users.splice(index, 1);
+                            return {
+                              ...modalUsers,
+                              users: users,
+                            };
+                          });
+                        } catch (error) {
+                          console.log(error);
+                        } finally {
+                          setLoading(false);
+                        }
+                      };
+
+                      fetchData();
+                    }}
+                  >
+                    <FaTimes />
+                  </button>
+                </li>
+              );
             })}
           </ul>
 
@@ -533,8 +655,28 @@ const PanelQuestion = () => {
             {addingNewUserForm.error && (
               <span>Такого пользователя не сущетствует</span>
             )}
-            <input type="text" placeholder="Введите email или username..." />
-            <button>Добавить</button>
+            <input
+              type="text"
+              name="users"
+              placeholder="Введите username пользователя"
+              list="usersList"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (!autoCompleteUsers) {
+                  getUsers().then((resp) => setAutoCompleteUsers(resp));
+                }
+                setAddUserField(e.target.value);
+              }}
+            />
+
+            <datalist id="usersList">
+              {autoCompleteUsers &&
+                Array.isArray(autoCompleteUsers) &&
+                autoCompleteUsers.map((item, index: number) => (
+                  <option key={index} value={item.username} />
+                ))}
+            </datalist>
+
+            <button onClick={addUserToQuestionFunc}>Добавить</button>
           </div>
           {/* <button className={st["add-btn"]}>Добавить пользователя</button> */}
         </Modal>

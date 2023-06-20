@@ -35,6 +35,7 @@ function App() {
           <Route path="/admin-page/answer" element={<PanelAnswer />} />
           <Route path="/admin-page/question" element={<PanelQuestion />} />
           <Route path="/admin-page/archive" element={<ArchivePage />} />
+          {/* <Route path="/user-page" element={<UserPage />} /> */}
         </Routes>
       </Layout>
     );

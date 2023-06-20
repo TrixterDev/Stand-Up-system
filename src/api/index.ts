@@ -1,3 +1,4 @@
+import { Question } from "./index";
 import Cookie from "js-cookie";
 import ky, { ResponsePromise } from "ky";
 
@@ -180,10 +181,19 @@ export const removeQuestions = (data: any[]): Promise<any> => {
   return Promise.all(requests);
 };
 
-export const removeCategories = (data: any[]): Promise<any> => {
+export const removeCategories = (
+  data: any[],
+  questions: Question[]
+): Promise<any> => {
   const requests = data.map((item) => {
     if (item.deleted) {
-      return request(`question-categories/${item.id}`, { method: "delete" });
+      questions.map((elem) => {
+        if (elem.category === item.category_name) {
+          console.log("ok");
+          console.log(item, elem);
+        }
+      });
+      request(`question-categories/${item.id}`, { method: "delete" });
     }
   });
 
@@ -223,4 +233,24 @@ export const getAnswersByTitle = async (
   return await strapiAPI
     .get(`answers?populate=deep&filters[answer]=${title}`)
     .json();
+};
+
+export const updateQuestionById = async (
+  questionData: Question,
+  id: number
+): Promise<any> => {
+  return request(`questions/${id}`, {
+    method: "put",
+    json: {
+      data: questionData,
+    },
+  });
+};
+
+export const getQuestionById = async (id: number): Promise<any> => {
+  return await strapiAPI.get(`questions/${id}?populate=deep`).json();
+};
+
+export const getUserByUsername = async (username: string): Promise<any> => {
+  return await strapiAPI.get(`users?filters[username][$eq]=${username}`).json();
 };
