@@ -12,46 +12,76 @@
 .draft-content
   width: 100%
 
+.filters
+  display: flex
+  width: 100%
+
+input[type="text"],
+input[type="date"],
+select
+  padding: 10px
+  border-radius: 5px
+  border: 1px solid #ccc
+  outline: none
+  font-size: 16px
+
 .cards
   margin-top: 15px
   display: grid
   grid-template-columns: repeat(auto-fill, minmax(30%, 1fr))
   gap: 15px
   width: 100%
-  .card
-    display: flex
-    flex-direction: column
-    background: #ffcc00
-    padding: 15px
-    border-radius: 10px
+
+.loader
+  position: fixed
+  top: 0
+  z-index: 99
+  left: 0
+  background: #00000071
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100vh
+  display: flex
+
+.card
+  display: flex
+  flex-direction: column
+  background: #ffcc00
+  padding: 15px
+  border-radius: 10px
 
 .text
   color: #333333
   text-align: center
+
 .span
   font-size: 24px
+
 .btn
   color: #f0f0f0
   background-color: #ffcc00
   font-size: 20px
+  padding: .75rem 1.5rem
+
 .changeCategory
   display: flex
   justify-content: space-between
   flex-direction: row
   gap: 20px
 
-.filters
-  display: flex
-  width: 100%
-
 @media screen and (max-width: 1120px)
   .wrapper
     gap: 20px
+
   .btn
     font-size: 16px
+
 @media screen and (max-width: 920px)
   .container
     justify-content: space-between
+
   .changeCategory
     flex-direction: column
 

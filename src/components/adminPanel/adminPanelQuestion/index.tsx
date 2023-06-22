@@ -206,7 +206,7 @@ const PanelQuestion = () => {
           })
           .then((resp) => {
             console.log(resp);
-            updateQuestionById(resp, modalUsers.modalUsers.question.id);
+            updateQuestionById(resp, modalUsers.question.id);
 
             setQuestions((prev) => {
               const questions = [...prev];
