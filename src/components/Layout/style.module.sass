@@ -18,13 +18,11 @@
   padding: 1.5625rem
   height: 100vh
   display: flex
-  overflow: scroll
   position: fixed
   align-items: center
   justify-content: space-between
   flex-direction: column
   background: #ffcc00
-  overflow: hidden
   a
     display: flex
     gap: .625rem
@@ -83,3 +81,7 @@
     height: 100vh
     &__content
       width: 100% !important
+
+@media screen and (max-width: 1615px)
+  .nav
+    overflow: scroll

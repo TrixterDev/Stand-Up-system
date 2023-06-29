@@ -8,7 +8,21 @@
   justify-content: center
   align-items: center
   gap: 25px
-
+input[type="date"]
+  position: relative
+input[type="date"]::-webkit-calendar-picker-indicator
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: auto
+  height: auto
+  color: transparent
+  background: transparent
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button
+  z-index: 1
 .draft-content
   width: 100%
 
@@ -45,6 +59,12 @@ select
   height: 100vh
   display: flex
 
+.search-wrap
+  display: flex
+  align-items: center
+  gap: 1.25rem
+  flex-wrap: wrap
+
 .card
   display: flex
   flex-direction: column
@@ -63,7 +83,12 @@ select
   color: #f0f0f0
   background-color: #ffcc00
   font-size: 20px
+  border: 2px solid #fc0
+  transition: .5s all
   padding: .75rem 1.5rem
+  &:hover
+    background: none
+    color: #fc0
 
 .changeCategory
   display: flex

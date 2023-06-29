@@ -39,7 +39,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (Cookie.get("role") === "admin") {
-      navigate("/admin-page");
+      navigate("/admin-page/statistic");
     } else if (Cookie.get("role") === "auth") {
       navigate("/home");
     } else {
@@ -67,7 +67,7 @@ const Auth = () => {
         });
         if (resp.user.admin) {
           Cookie.set("role", "admin");
-          navigate("/admin-page");
+          navigate("/admin-page/statistic");
         } else {
           Cookie.set("role", "auth");
           navigate("/home");

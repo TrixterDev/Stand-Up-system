@@ -210,15 +210,22 @@ export const getAnswersByUser = async (
 ): Promise<any> => {
   return await strapiAPI
     .get(
-      `answers?populate=deep,3&filters[users][username]=${username}${time !== undefined && `&filters[createdDate]=${time}` }`
+      `answers?populate=deep,3&filters[users][username]=${username}${
+        time ? `&filters[createdDate]=${time}` : ``
+      }`
     )
     .json();
 };
 
-export const getAnswersById = async (id: number | string, time: string | undefined): Promise<any> => {
+export const getAnswersById = async (
+  id: number | string,
+  time: string | undefined
+): Promise<any> => {
   return await strapiAPI
     .get(
-      `answers?populate=deep,3&filters[id]=${id}${time !== undefined && `&filters[createdDate]=${time}` }`
+      `answers?populate=deep,3&filters[id]=${id}${
+        time ? `&filters[createdDate]=${time}` : ``
+      }`
     )
     .json();
 };
@@ -228,7 +235,11 @@ export const getAnswersByTitle = async (
   date: string
 ): Promise<any> => {
   return await strapiAPI
-    .get(`answers?populate=deep&filters[answer]=${title}${date ? `&filters[createdDate]=${date}` : `*`}`)
+    .get(
+      `answers?populate=deep&filters[answer]=${title}${
+        date ? `&filters[createdDate]=${date}` : ``
+      }`
+    )
     .json();
 };
 

@@ -124,23 +124,7 @@ const ArchivePage = () => {
           <Loader />
         </div>
       )} */}
-      <h2 className={st.text}>Архив ответов и вопр осов</h2>
-      <div className={st.header}>
-        <div className="tabs">
-          <button
-            className={clsx("tab", activeTab === "answers" && "active")}
-            onClick={() => setActiveTab("answers")}
-          >
-            Ответы
-          </button>
-          <button
-            className={clsx("tab", activeTab === "questions" && "active")}
-            onClick={() => setActiveTab("questions")}
-          >
-            Вопросы
-          </button>
-        </div>
-      </div>
+      <h2 className={st.text}>Архив ответов</h2>
       {activeTab === "answers" ? (
         <div className={st["draft-content"]}>
           <div className={st["filters"]}>
@@ -160,6 +144,9 @@ const ArchivePage = () => {
                 ))}
               </datalist>
               <select value={selectedFilter} onChange={handleFilterChange}>
+                <option value="" selected disabled>
+                  Выбирите тип
+                </option>
                 <option value="id">По ID</option>
                 <option value="name">По названию</option>
                 <option value="user">По пользователю</option>
@@ -171,8 +158,7 @@ const ArchivePage = () => {
                   setTime(e.target.value)
                 }
               />
-              {/* <Btn dC={st.btn}  textBtn="Поиск"onClick={search} textBtn="Поиск" /> */}
-              <button onClick={search}>Поиск</button>
+              <Btn dC={st.btn} textBtn="Поиск" onClick={search} />
             </div>
           </div>
           <div className={st.cards}>
