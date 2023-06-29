@@ -676,7 +676,11 @@ const PanelQuestion = () => {
                 ))}
             </datalist>
 
-            <button onClick={addUserToQuestionFunc}>Добавить</button>
+            <Btn
+              onClick={addUserToQuestionFunc}
+              dC={st.button}
+              textBtn="Добавить"
+            />
           </div>
           {/* <button className={st["add-btn"]}>Добавить пользователя</button> */}
         </Modal>
