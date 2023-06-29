@@ -92,6 +92,10 @@ export const uploadImage = (data: FormData): Promise<any> => {
   return request("upload", { method: "post", body: data });
 };
 
+export const changeImage = (data: FormData, id: number): Promise<any> => {
+  return request(`upload?id=${id}`, { method: "post", body: data });
+};
+
 export const getQuestions = (): Promise<Question[]> => {
   return request("questions?populate=deep");
 };

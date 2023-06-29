@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { changeUserInfo, getUserInfo, getUsers, uploadImage } from "../../api";
+import {
+  changeImage,
+  changeUserInfo,
+  getUserInfo,
+  getUsers,
+  uploadImage,
+} from "../../api";
 import Cookie from "js-cookie";
 import styles from "./UserPage.module.sass";
 import Btn from "../ui/Btn/Btn";
@@ -59,25 +65,44 @@ export const UserPage = () => {
 
   const saveUserInfo = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      if (avatar !== "") {
+    const fetchData = async () => {
+      try {
         const image = new FormData();
         image.append("files", avatar);
-        await uploadImage(image).then((resp) => {
-          setUpdatedUserInfo((prev: any) => {
-            return { ...prev, avatarka: resp[0] };
-          });
-        });
-      }
+        const setAvatar = async (file) => {
+          if (user.avatarka) {
+            await changeImage(file, user.avatarka.id).then((resp) => {
+              setUpdatedUserInfo((prev: any) => {
+                return { ...prev, avatarka: resp[0] };
+              });
+            });
+          } else {
+            await uploadImage(file).then((resp) => {
+              setUpdatedUserInfo((prev: any) => {
+                return { ...prev, avatarka: resp[0] };
+              });
+            });
+          }
+        };
 
-      await changeUserInfo(updatedUserInfo, user.id).then((resp) => {
-        setShowEditModal(false);
-      });
-    } catch (error) {
-      alert("Произошла ошибка");
-    } finally {
-      // location.reload();
-    }
+        await setAvatar(image);
+
+        await changeUserInfo(updatedUserInfo, user.id).then((resp) => {
+          setShowEditModal(false);
+
+          if (updatedUserInfo.avatarka) {
+            setUser((prev) => {
+              return { ...prev, ...resp.avatarka };
+            });
+          }
+        });
+      } catch (error) {
+        alert("Произошла ошибка");
+      } finally {
+        // location.reload();
+      }
+    };
+    fetchData();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
