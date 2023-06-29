@@ -1,6 +1,8 @@
 import Cookie from "js-cookie";
 import ky, { ResponsePromise } from "ky";
 
+// dsdsd
+
 export interface User {
   // Типы данных для пользователя
 }
