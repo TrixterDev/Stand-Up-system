@@ -234,18 +234,30 @@
   padding: .625rem
   display: flex
   width: 100%
-  border-radius: .75rem
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
   align-items: center
   justify-content: space-between
-  border: .0625rem solid #5555
+  background: #f2f2f2
+  border-bottom: 2px solid #ccc
+
   > button
     font-size: 1.25rem
     padding: 0
     display: flex
     align-items: center
     justify-content: center
+
 .users-adding-form
   margin-top: 10px
-  > input
-    width: 100%
-    margin-bottom: 1.25rem
+  display: flex
+  flex-direction: column
+
+.user-info-card
+  display: flex
+  flex-direction: row
+  gap: 10px
+  align-items: flex-start
+
+  h5
+    font-size: 1.125rem
