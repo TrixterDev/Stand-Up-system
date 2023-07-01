@@ -15,6 +15,7 @@ import Layout from "./components/Layout";
 import Cookie from "js-cookie";
 import { useState, useEffect } from "react";
 import ArchivePage from "./components/adminPanel/Draft";
+import { UserLayout } from "./components/Layout/UserLayout";
 
 function App() {
   const navigate = useNavigate();
@@ -41,12 +42,14 @@ function App() {
     );
   } else {
     return (
-      <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/user-page" element={<UserPage />} />
-      </Routes>
+      <UserLayout>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/user-page" element={<UserPage />} />
+        </Routes>
+      </UserLayout>
     );
   }
 }

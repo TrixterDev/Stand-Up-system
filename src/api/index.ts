@@ -28,6 +28,13 @@ export const getUserInfo = async (): Promise<User> => {
   return await request<User>("users/me?populate=deep");
 };
 
+export const getUserInfoByUsername = async (
+  username: string
+): Promise<User> => {
+  return await request<User>(
+    `users?filters[username]=${username}&populate=deep`
+  );
+};
 // export const loginUser = (data: {
 //   username: string;
 //   password: string;
@@ -89,6 +96,10 @@ export const changeUserOnline = (data: User, id: number): Promise<any> => {
 };
 export const uploadImage = (data: FormData): Promise<any> => {
   return request("upload", { method: "post", body: data });
+};
+
+export const changeImage = (data: FormData, id: number): Promise<any> => {
+  return request(`upload?id=${id}`, { method: "post", body: data });
 };
 
 export const getQuestions = (): Promise<Question[]> => {
@@ -247,7 +258,7 @@ export const updateQuestionById = async (
   questionData: Question,
   id: number
 ): Promise<any> => {
-  return request(`questions/${id}`, {
+  return request(`questions/${id}?populate=deep`, {
     method: "put",
     json: {
       data: questionData,
