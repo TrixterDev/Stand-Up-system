@@ -7,13 +7,11 @@
     cursor: pointer
     padding: 20px
   &__list
-    max-height: 0
-    width: 100%
-    position: absolute
     padding: .9375rem
     border-radius: .75rem
-    padding-top: 0
-    padding-bottom: 0
+    position: fixed
+    right: -300px
+    margin-top: 50px
     display: flex
     align-items: center
     justify-content: center
@@ -21,6 +19,8 @@
     flex-direction: column
     transition: .6s all
     overflow: hidden
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
     background: #fc0
     color: #fff
     > *
@@ -32,9 +32,7 @@
         background: #fff
         color: #fc0
 .active
-  max-height: 1050px
-  padding: .9375rem
-
+  right: 0
 
 .img
   width: 50px

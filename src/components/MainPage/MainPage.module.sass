@@ -1,21 +1,24 @@
 .grid_container
-    display: grid
-    grid-template-columns: repeat(3, 1fr)
-    grid-gap: 10px
-    width: 1000px
-    margin: 0 auto
-    margin-top: 30px
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  grid-gap: 10px
+  width: 1000px
+  margin: 0 auto
+  margin-top: 30px
 
 .grid_item
-    background-color: #ffcc00
-    border-radius: 12px
-    color: black
-    padding: 20px
-    display: flex
-    gap: 10px
-    flex-direction: column
-    text-align: center
+  background-color: #ffcc00
+  border-radius: 12px
+  color: black
+  padding: 20px
+  display: flex
+  gap: 10px
+  flex-direction: column
+  text-align: center
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
 
 .mod
   display: flex
@@ -23,26 +26,30 @@
   gap: 20px
 
 .btn
-  padding: 15px 22px
-  background: #ffcc00
-  border: none
-  border-radius: .75rem
-  padding: .9375rem 1.5625rem
-  cursor: pointer
+  background: #ffffff !important
+  color: #fc0 !important
+  margin-top: 1.25rem !important
+  &:hover
+    background: #333 !important
 
   &:disabled
     background: #ccc
-
+.doneAns
+  background: #fc0 !important
+  padding: 15px !important
+  &__title,
+  &__desc
+    padding: 0 !important
+    color: #fff !important
+  &__desc
+    margin-top: 1.25rem !important
 .auth
   position: absolute
   top: 25px
   right: 25px
-  background: #ffcc00
-  height: 75px
   border-radius: 12px
   display: flex
   align-items: center
-
 
 .ava
   width: 60px
@@ -99,24 +106,31 @@
   background-position: left .7em top 50%, 0 0
   padding: .6em .8em .5em 1.4em
 
-\:root
+:root
   &:lang(ar) .select-css, &:lang(iw) .select-css
     background-position: left .7em top 50%, 0 0
     padding: .6em .8em .5em 1.4em
 
 .input_style
   border: none
-  outline: none
+  outline: #fff !important
+  color: #fff !important
+  border-color: #fff !important
+
   border-radius: .75rem
   padding: .9375rem 1.5625rem
 
+  &:hover
+    border: none
 
 .input_And_btn
   display: flex
   flex-direction: column
   gap: 10px
 
-
 h4
   color: black
 
+.card
+  background: #fc0 !important
+  color: #fff !important

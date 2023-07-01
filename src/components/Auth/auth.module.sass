@@ -28,53 +28,20 @@
     align-items: center
     color: #fff
     max-height: 150px
-  &__input
-    width: 100%
-    margin-top: 2.625rem
-  &__btn
-    margin-top: 1.875rem
-    display: flex
-    align-items: center
-    gap: 1.25rem
-    width: 100%
-    > input
-      width: 100%
-    > button
-      border-radius: .75rem
-
-.customInput
-  position: relative
-  width: 100%
-  > label
-    position: absolute
-    left: 1.5625rem
-    top: .9375rem
-    width: 80%
-    transition: .3s all
-    margin-top: 0
-  > input
-    width: 100%
-    color: #fff
-    &:focus
-      color: #000
-      + label
-        top: -1.5625rem
-        color: #fff
-        left: 0
-
-    &:valid
-      color: #000
-      + label
-        top: -1.5625rem
-        color: #fff
-        left: 0
-
-.span
-  color: white
-  text-align: center
-  & a
-    text-decoration: underline
-    color: #ffcc00
+  &__pass
+    position: relative
+  &__hint
+    color: white
+    text-align: center
+    a
+      text-decoration: underline
+      color: #fc0
+  &__showPassword
+    color: #fff !important
+    position: absolute !important
+    top: .3125rem
+    right: .9375rem
+    z-index: 2
 
 .err
   color: tomato
