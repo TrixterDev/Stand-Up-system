@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   GetloginUser,
   changeUserInfo,
@@ -18,6 +22,17 @@ import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
 import { BiExit } from "react-icons/bi";
 import { CgOptions } from "react-icons/cg";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
 interface QuestionItem {
   answer: string;
@@ -91,9 +106,10 @@ const MainPage: React.FC<props> = ({ id }) => {
     });
   }, []);
 
+  console.log(dataUser);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
 
     GetloginUser(Cookies.get("key"), form.about, dataUser?.id).then(
       (el: any) => {
@@ -110,9 +126,17 @@ const MainPage: React.FC<props> = ({ id }) => {
       [event.target.name]: event.target.value,
     });
   };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <div>
+    <div className={st.wrap}>
       <Modal isVisible={showModal} setIsVisible={setShowModal}>
         <form onSubmit={handleSubmit} className={st.modal_text}>
           <span>tell me about you</span>
@@ -122,7 +146,7 @@ const MainPage: React.FC<props> = ({ id }) => {
         <button onClick={() => setShowModal(false)}>skip</button>
       </Modal>
       <div className={st.auth}>
-        <Select
+        {/* <Select
           title={dataUser?.username}
           src="./img/base-avatar.png"
           top={"70px"}
@@ -156,7 +180,98 @@ const MainPage: React.FC<props> = ({ id }) => {
           >
             <BiExit size={"30px"} /> Выход
           </h4>
-        </Select>
+        </Select> */}
+        <Box
+          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+        >
+          <Tooltip title={dataUser && dataUser.username}>
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <img
+                src={
+                  dataUser || dataUser?.avatarka
+                    ? dataUser.avatarka.url
+                    : "./img/base-avatar.png"
+                }
+                style={{ width: "65px", height: "65px", borderRadius: "100%" }}
+                alt=""
+              />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          <MenuItem
+            onClick={() => {
+              navigate("/user-page");
+            }}
+          >
+            <img
+              src={
+                dataUser?.avatarka
+                  ? dataUser.avatarka.url
+                  : "./img/base-avatar.png"
+              }
+              style={{ width: "25px", height: "25px", borderRadius: "100%" }}
+              alt=""
+            />{" "}
+            <p>{dataUser && dataUser.username}</p>
+          </MenuItem>
+          <Divider />
+          <MenuItem
+            // onClick={handleClose}
+            onClick={() => {
+              changeUserOnline(status, Number(Cookies.get("idUser")));
+              Cookies.remove("key");
+              Cookies.remove("role");
+              navigate("/");
+            }}
+          >
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
       </div>
       <div className={st.grid_container}>
         {data.map(
@@ -174,7 +289,6 @@ const MainPage: React.FC<props> = ({ id }) => {
             );
           }
         )}
-
       </div>
     </div>
   );
