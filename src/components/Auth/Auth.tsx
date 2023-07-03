@@ -8,6 +8,15 @@ import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import MainPage from "../MainPage";
 import Cookies from "js-cookie";
+import {
+  FormControl,
+  IconButton,
+  Link,
+  TextField,
+  styled,
+} from "@mui/material";
+import { CssTextField } from "../ui";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface adminInfoKeys {
   token: string | any;
@@ -21,11 +30,18 @@ interface formKeys {
 
 const Auth = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   const [adminInfo] = useState<adminInfoKeys>({
     token: Cookie.get("key"),
     isConfirmed: false,
   });
-
   const [id, setId] = useState<number>(0);
 
   const [validation, setValidation] = useState<string>();
@@ -89,9 +105,9 @@ const Auth = () => {
       });
   };
 
-  const showPassword = () => {
-    setIsShowPassword((prev) => !prev);
-  };
+  // const showPassword = () => {
+  //   setIsShowPassword((prev) => !prev);
+  // };
 
   return (
     <div className={st.auth__wrap}>
@@ -103,42 +119,39 @@ const Auth = () => {
           <p className={st.err}>{validation}</p>
         </div>
         <form className={st.form} onSubmit={handleSubmit}>
-          <div className={`${st.customInput} ${st.auth__input}`}>
-            <Input
-              name="identifier"
-              idElem="email"
-              onChange={handleInput}
+          <CssTextField
+            required
+            type="email"
+            name="identifier"
+            onChange={handleInput}
+            fullWidth
+            variant="outlined"
+            label="E-mail"
+          />
+          <div className={st.auth__pass}>
+            <CssTextField
               required
+              type={showPassword ? "text" : "password"}
+              name="password"
+              onChange={handleInput}
+              fullWidth
+              label="Пароль"
             />
-            <label htmlFor="email">E-mail</label>
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              onMouseDown={handleMouseDownPassword}
+              className={st.auth__showPassword}
+              edge="end"
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
           </div>
-
-          <div className={st.auth__btn}>
-            <div className={st.customInput}>
-              <Input
-                onChange={handleInput}
-                name="password"
-                idElem="password"
-                secondClass={st.passInput}
-                typeElem={isShowPassword ? "text" : "password"}
-                required
-              />
-              <label htmlFor="password">Пароль</label>
-              <label className={st.eyeLabel}>
-                <input
-                  type="checkbox"
-                  className={st.checkbox}
-                  onClick={showPassword}
-                />
-                <div className={st.eye}></div>
-              </label>
-            </div>
-            <Btn textBtn="Войти" />
-          </div>
+          <Btn textBtn="Войти" />
         </form>
-        <span className={st.span}>
+        <span className={st.auth__hint}>
           Если у вас нет аккаунта то{" "}
-          <NavLink to={"/register"}>зарегистрируйтесь</NavLink>
+          <Link href="/register">зарегистрируйтесь</Link>
         </span>
       </div>
     </div>
