@@ -18,7 +18,6 @@
     width: 100%
     display: flex
     flex-direction: column
-    gap: 20px
     align-items: center
     justify-content: center
     margin-top: -70px
@@ -28,9 +27,23 @@
     align-items: center
     color: #fff
     max-height: 150px
+    > h3
+      color: white
+      font-size: 3.3125rem
+      margin: 0
+    > hr
+      background: white
+      width: 100%
+      min-height: 0.25rem
+      margin-top: 0.625rem
+    > h4
+      color: white
+      font-size: 2.625rem
+      margin: 0.3125rem 0 0 0
   &__pass
     position: relative
   &__hint
+    margin-top: 1.5625rem
     color: white
     text-align: center
     a
@@ -42,99 +55,16 @@
     top: .3125rem
     right: .9375rem
     z-index: 2
-
-.err
-  color: tomato
-  min-height: 20px
-  margin-top: 30px
-
-.title
-  color: white
-  font-size: 3.3125rem
-  margin: 0
-
-hr
-  background: white
-  width: 80%
-  min-height: 0.25rem
-  margin-top: 0.625rem
-
-.authTitle
-  color: white
-  font-size: 2.625rem
-  margin: 0.3125rem 0 0 0
-
-.form
-  display: grid
-  gap: 1.625rem
-  max-width: 31.25rem
-  width: 100%
-
-label.eyeLabel
-  width: 50px
-  height: 100%
-  position: absolute
-  left: 78%
-  top: 0
-  display: flex
-  align-items: center
-  justify-content: center
-  background-color: #fff
-  border-radius: 50%
-
-.eye
-  width: 32px
-  height: 32px
-  background: url(./eye.svg) no-repeat center
-  color: #333333
-  cursor: pointer
-
-.checkbox
-  display: none
-
-.checkbox:checked + .eye
-  background: url(./eye-blocked.svg) no-repeat center
-
-.passInput
-  padding-right: 55px
-
-  /* Media */
-
-@media (max-width: 540px)
-  .auth__content
-    padding: 20px
-
-  .title
-    font-size: 44px
-
-  .authTitle
-    font-size: 38px
-
-@media (max-width: 450px)
-  .auth__title
-    max-height: 100px
-
-  .title
-    font-size: 38px
-
-  .authTitle
-    font-size: 34px
-
-  .form
-    gap: 0
-
-  .auth__wrap
-    padding: 0 20px
-
-  .auth__btn
+  &__form
     display: grid
-
-@media (max-width: 330px)
-  .title
-    font-size: 32px
-
-  .authTitle
-    font-size: 30px
-
-  .auth__input
-    margin-top: 1.25rem
+    gap: 1.625rem
+    max-width: 31.25rem
+    width: 100%
+    margin-top: 3.4375rem
+    > button
+      background: #fff !important
+      color: #000
+      &:hover
+        background: #333 !important
+        color: #fc0 !important
+  /* Media */

@@ -6,6 +6,8 @@ import { RegUser, getUserInfo, getUsers } from "../../api";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { CssTextField } from "../ui";
 
 interface userKeys {
   firstname: string;
@@ -138,10 +140,21 @@ const Register = () => {
 
       return usernameExists;
     } catch (error) {
+      // enqueueSnackbar(error, {
+      //   variant: "error",
+      //   className: "snackBar",
+      // });
       console.error(error);
       return false;
     }
   };
+
+  if (usernameEx) {
+    enqueueSnackbar("Такое имя пользователя занято", {
+      variant: "error",
+      className: "snackBar",
+    });
+  }
 
   const showPassword = () => {
     setIsShowPassword((prev) => !prev);
@@ -158,25 +171,37 @@ const Register = () => {
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.nameWrap}>
-            <div className={styles.customInput}>
-              <Input
+            {/* <div className={styles.customInput}> */}
+            {/* <Input
                 idElem="firstname"
                 name="firstname"
                 onChange={handleChange}
                 required
-              />
-              <label htmlFor="firstname">Имя</label>
-            </div>
+              /> */}
+            <CssTextField
+              name="firstname"
+              onChange={handleChange}
+              label="Имя"
+              required
+            />
+            {/* <label htmlFor="firstname">Имя</label> */}
+            {/* </div> */}
 
-            <div className={styles.customInput}>
-              <Input
-                idElem="lastname"
-                name="lastname"
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="lastname">Фамилия</label>
-            </div>
+            {/* <div className={styles.customInput}> */}
+            {/* <Input
+              idElem="lastname"
+              name="lastname"
+              onChange={handleChange}
+              required
+            /> */}
+            <CssTextField
+              name="lastname"
+              onChange={handleChange}
+              label="Фамилия"
+              required
+            />
+            {/* <label htmlFor="lastname">Фамилия</label> */}
+            {/* </div> */}
           </div>
 
           <div className={styles.customInput}>
@@ -186,7 +211,7 @@ const Register = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="username">
+            {/* <label htmlFor="username">
               {usernameEx ? (
                 <label htmlFor="username" className={styles.err}>
                   Имя пользователя занято
@@ -194,7 +219,7 @@ const Register = () => {
               ) : (
                 "Имя пользователя"
               )}
-            </label>
+            </label> */}
           </div>
 
           <div className={styles.customInput}>
@@ -216,7 +241,7 @@ const Register = () => {
               idElem="email"
               required
             />
-            <label htmlFor="email">
+            {/* <label htmlFor="email">
               {emailEx ? (
                 <label htmlFor="email" className={styles.err}>
                   E-mail занят
@@ -224,7 +249,7 @@ const Register = () => {
               ) : (
                 "E-mail"
               )}
-            </label>
+            </label> */}
           </div>
 
           <div className={styles.customInput}>

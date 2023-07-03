@@ -1,29 +1,18 @@
 import st from "./auth.module.sass";
-import Input from "../ui/Input/Input";
-import Btn from "../ui/Btn/Btn";
 import { useEffect, useState } from "react";
-import Cookie from "js-cookie";
-import { getUsers, getUserInfo, loginUser, changeUserOnline } from "../../api";
 import { useNavigate } from "react-router";
-import { NavLink } from "react-router-dom";
-import MainPage from "../MainPage";
-import Cookies from "js-cookie";
-import {
-  FormControl,
-  IconButton,
-  Link,
-  TextField,
-  styled,
-} from "@mui/material";
-import { CssTextField } from "../ui";
+import { loginUser, changeUserOnline } from "../../api";
+import { enqueueSnackbar } from "notistack";
+import Cookie from "js-cookie";
+
+import { getUserInfo } from "../../api";
+
+import { Button, IconButton, Link } from "@mui/material";
+
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { CssTextField } from "../ui";
 
-interface adminInfoKeys {
-  token: string | any;
-  isConfirmed: boolean;
-}
-
-interface formKeys {
+interface FormKeys {
   identifier: string;
   password: string;
 }
@@ -31,94 +20,83 @@ interface formKeys {
 const Auth = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [form, setForm] = useState<FormKeys>({
+    identifier: "",
+    password: "",
+  });
+
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
 
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
   };
-  const [adminInfo] = useState<adminInfoKeys>({
-    token: Cookie.get("key"),
-    isConfirmed: false,
-  });
-  const [id, setId] = useState<number>(0);
-
-  const [validation, setValidation] = useState<string>();
-
-  const [form, setForm] = useState<formKeys>({
-    identifier: "",
-    password: "",
-  });
-
-  const [isShowPassword, setIsShowPassword] = useState(false);
 
   useEffect(() => {
-    if (Cookie.get("role") === "admin") {
+    const role = Cookie.get("role");
+    if (role === "admin") {
       navigate("/admin-page/statistic");
-    } else if (Cookie.get("role") === "auth") {
+    } else if (role === "auth") {
       navigate("/home");
     } else {
       navigate("/");
     }
   }, []);
 
-  const handleInput = (event: any) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     loginUser(form)
       .then((resp: { jwt: string; user: any }) => {
-        console.log(resp);
-        Cookie.set("key", resp.jwt, { expires: 7 });
-        Cookie.set("idUser", resp.user.id, { expires: 7 });
+        const { jwt, user } = resp;
+        Cookie.set("key", jwt, { expires: 7 });
+        Cookie.set("idUser", user.id, { expires: 7 });
+
         getUserInfo().then((resp) => {
           changeUserOnline({ online: true }, resp.id);
         });
-        if (resp.user.admin) {
-          Cookie.set("role", "admin");
-          navigate("/admin-page/statistic");
-        } else {
-          Cookie.set("role", "auth");
-          navigate("/home");
-        }
+
+        const role = user.admin ? "admin" : "auth";
+        Cookie.set("role", role);
+        navigate(role === "admin" ? "/admin-page/statistic" : "/home");
       })
       .catch((error: any) => {
-        if (error.response && error.response.status === 400) {
-          error.response.json().then((resp: any) => {
-            setValidation("Неверный e-mail или пароль");
-          });
-        } else if (error.response && error.response.status === 500) {
-          setValidation("Сервер недоступен");
-          console.log(error.response.status);
-        } else {
-          console.log(error.response);
-          setValidation("Что то не пашет");
+        let errorMessage = "Что-то не пашет";
+        if (error.response) {
+          if (error.response.status === 400) {
+            errorMessage = "Неверный e-mail или пароль";
+          } else if (error.response.status === 500) {
+            errorMessage = "Сервер недоступен";
+          }
         }
+        enqueueSnackbar(errorMessage, {
+          variant: "error",
+          className: "snackBar",
+        });
         console.error(error);
       });
   };
-
-  // const showPassword = () => {
-  //   setIsShowPassword((prev) => !prev);
-  // };
 
   return (
     <div className={st.auth__wrap}>
       <div className={st.auth__content}>
         <div className={st.auth__title}>
-          <h2 className={st.title}>Stand Up</h2>
+          <h3>Stand Up</h3>
           <hr />
-          <h3 className={st.authTitle}>Авторизация</h3>
-          <p className={st.err}>{validation}</p>
+          <h4>Авторизация</h4>
         </div>
-        <form className={st.form} onSubmit={handleSubmit}>
+        <form className={st.auth__form} onSubmit={handleSubmit}>
           <CssTextField
             required
             type="email"
@@ -147,10 +125,12 @@ const Auth = () => {
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </div>
-          <Btn textBtn="Войти" />
+          <Button type="submit" variant="contained">
+            Войти
+          </Button>
         </form>
         <span className={st.auth__hint}>
-          Если у вас нет аккаунта то{" "}
+          Если у вас нет аккаунта, то{" "}
           <Link href="/register">зарегистрируйтесь</Link>
         </span>
       </div>

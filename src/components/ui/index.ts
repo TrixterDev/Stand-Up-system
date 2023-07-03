@@ -3,7 +3,7 @@ import { TextField, styled } from "@mui/material";
 export const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
     color: "#fc0",
-    zIndex: "999999999",
+    zIndex: "9",
   },
   'input[type="text"]': {
     border: "none",
