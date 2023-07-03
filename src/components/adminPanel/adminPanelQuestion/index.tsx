@@ -710,6 +710,19 @@ const PanelQuestion = () => {
                                   });
                                 });
                               });
+                            const questionsResponse = await getQuestions();
+                            const questionsData = questionsResponse.data.map(
+                              (item: any) => ({
+                                ...item.attributes,
+                                id: item.id,
+                                edit: false,
+                                category:
+                                  item.attributes.category.data.attributes
+                                    .category_name,
+                                category_id: item.attributes.category.data.id,
+                              })
+                            );
+                            setQuestions(questionsData);
 
                             enqueueSnackbar(
                               "Пользователь был успешно отвзязан",
@@ -744,7 +757,6 @@ const PanelQuestion = () => {
               sx={{ width: 300 }}
               style={{ width: "100%", marginTop: 20 }}
               options={autoCompleteUsers}
-              freeSolo
               getOptionLabel={(option) => option.username}
               renderOption={(props, option) => (
                 <Box
