@@ -47,7 +47,7 @@ export const RegisterPage = () => {
     setLoading(true);
     RegUser(userData)
       .then((resp) => {
-        Cookie.set("auth_token", resp.jwt);
+        Cookie.set("key", resp.jwt);
         navigate("/home");
       })
       .catch((err) => {
