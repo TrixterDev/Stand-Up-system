@@ -143,7 +143,11 @@ export const UserPage = () => {
         </Tooltip>
         <div className={styles["user-card"]}>
           <img
-            src={user.avatarka ? user.avatarka.url : "/img/base-avatar.png"}
+            src={
+              user.avatarka
+                ? user.avatarka.data.attributes.url
+                : "/img/base-avatar.png"
+            }
             alt={`Аватарка пользователя ${user.username}`}
             className={styles.avatar}
           />

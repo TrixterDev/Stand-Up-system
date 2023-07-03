@@ -46,7 +46,7 @@ export const loginUser = (data: {
   identifier: string;
   password: string;
 }): Promise<any> => {
-  return strapiAPI.post("auth/local?populate=*", { json: data }).json();
+  return strapiAPI.post("auth/local", { json: data }).json();
 };
 
 export const RegUser = (data: {

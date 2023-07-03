@@ -2,17 +2,14 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import st from "./MainPage.module.sass";
 import React, { useEffect, useState } from "react";
 import { changeData, getUserInfo } from "../../api";
 import { Loader } from "../ui/Loader";
 import { format } from "date-fns";
 import { Button, CardActions, TextField } from "@mui/material";
-import { Palette } from "@mui/icons-material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import SendIcon from "@mui/icons-material/Send";
 
 interface props {
   id: number;
@@ -95,7 +92,6 @@ const CardUi: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
         ) : (
           <Accordion className={st.card}>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >

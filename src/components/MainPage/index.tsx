@@ -1,11 +1,7 @@
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {
   GetloginUser,
   changeUserInfo,
@@ -20,8 +16,6 @@ import { Modal } from "../ui/Modal";
 import Card from "./Card";
 import st from "./MainPage.module.sass";
 import Select from "../ui/Select";
-import { BiExit } from "react-icons/bi";
-import { CgOptions } from "react-icons/cg";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -30,9 +24,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
+import { Skeleton } from "@mui/material";
 
 interface QuestionItem {
   answer: string;
@@ -60,6 +52,7 @@ const MainPage: React.FC<props> = ({ id }) => {
   const [data, setData] = useState<any>([]);
   const [loginUser, setLoginUser] = useState<any>(null);
   const [dataUser, setDataUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [form, setForm] = useState<FormKeys>({
     about: "",
@@ -85,6 +78,9 @@ const MainPage: React.FC<props> = ({ id }) => {
         if (response.about === "" || response.about === null) {
           setShowModal(true);
         }
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       });
     }
 
@@ -137,74 +133,91 @@ const MainPage: React.FC<props> = ({ id }) => {
 
   return (
     <div className={st.wrap}>
-      <Modal isVisible={showModal} setIsVisible={setShowModal}>
-        <form onSubmit={handleSubmit} className={st.modal_text}>
-          <span>tell me about you</span>
-          <Input name="about" idElem="about" onChange={handleInput} required />
-          <button>send</button>
-        </form>
-        <button onClick={() => setShowModal(false)}>skip</button>
-      </Modal>
       <div className={st.auth}>
         {/* <Select
-          title={dataUser?.username}
-          src="./img/base-avatar.png"
-          top={"70px"}
-        >
-          <h4
-            style={{
-              display: "flex",
-              alignItems: "center",
-              border: "1px solid white",
-            }}
-            onClick={() => {
-              navigate("/user-page");
-            }}
+            title={dataUser?.username}
+            src="./img/base-avatar.png"
+            top={"70px"}
           >
-            <CgOptions size={"30px"} /> Настройки
-          </h4>
-          <h4
-            style={{
-              display: "flex",
-              alignItems: "center",
-              border: "1px solid white",
-              width: "135px",
-              gap: "5px",
-            }}
-            onClick={() => {
-              changeUserOnline(status, Number(Cookies.get("idUser")));
-              Cookies.remove("key");
-              Cookies.remove("role");
-              navigate("/");
-            }}
-          >
-            <BiExit size={"30px"} /> Выход
-          </h4>
-        </Select> */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
-        >
-          <Tooltip title={dataUser && dataUser.username}>
-            <IconButton
-              onClick={handleClick}
-              size="small"
-              sx={{ ml: 2 }}
-              aria-controls={open ? "account-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+            <h4
+              style={{
+                display: "flex",
+                alignItems: "center",
+                border: "1px solid white",
+              }}
+              onClick={() => {
+                navigate("/user-page");
+              }}
             >
-              <img
-                src={
-                  dataUser || dataUser?.avatarka
-                    ? dataUser.avatarka.url
-                    : "./img/base-avatar.png"
-                }
-                style={{ width: "65px", height: "65px", borderRadius: "100%" }}
-                alt=""
-              />
-            </IconButton>
-          </Tooltip>
-        </Box>
+              <CgOptions size={"30px"} /> Настройки
+            </h4>
+            <h4
+              style={{
+                display: "flex",
+                alignItems: "center",
+                border: "1px solid white",
+                width: "135px",
+                gap: "5px",
+              }}
+              onClick={() => {
+                changeUserOnline(status, Number(Cookies.get("idUser")));
+                Cookies.remove("key");
+                Cookies.remove("role");
+                navigate("/");
+              }}
+            >
+              <BiExit size={"30px"} /> Выход
+            </h4>
+          </Select> */}
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Skeleton
+              animation="wave"
+              variant="circular"
+              width={65}
+              height={65}
+            />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Tooltip title={dataUser && dataUser.username}>
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <img
+                  src={
+                    dataUser?.avatarka
+                      ? dataUser?.avatarka.url
+                      : "./img/base-avatar.png"
+                  }
+                  style={{
+                    width: "65px",
+                    height: "65px",
+                    borderRadius: "100%",
+                  }}
+                  alt=""
+                />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
         <Menu
           anchorEl={anchorEl}
           id="account-menu"
@@ -244,16 +257,17 @@ const MainPage: React.FC<props> = ({ id }) => {
             onClick={() => {
               navigate("/user-page");
             }}
+            style={{ gap: 10 }}
           >
             <img
               src={
                 dataUser?.avatarka
-                  ? dataUser.avatarka.url
+                  ? dataUser?.avatarka.url
                   : "./img/base-avatar.png"
               }
               style={{ width: "25px", height: "25px", borderRadius: "100%" }}
               alt=""
-            />{" "}
+            />
             <p>{dataUser && dataUser.username}</p>
           </MenuItem>
           <Divider />
@@ -266,28 +280,51 @@ const MainPage: React.FC<props> = ({ id }) => {
               navigate("/");
             }}
           >
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
+            <ListItemIcon>{/* <Logout fontSize="small" /> */}</ListItemIcon>
             Logout
           </MenuItem>
         </Menu>
       </div>
       <div className={st.grid_container}>
-        {data.map(
-          (el: { id: number; attributes: QuestionItem }, index: number) => {
-            console.log(el);
-            const categoryID = el.category;
-            return (
-              <Card
-                key={el.id}
-                productInfo={el}
-                id={el.id}
-                userId={dataUser?.id}
-                category_id={categoryID}
-              />
-            );
-          }
+        {loading ? (
+          <>
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width={210}
+              height={100}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width={210}
+              height={100}
+            />
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width={210}
+              height={100}
+            />
+          </>
+        ) : data.length === 0 ? (
+          <h2>Пока вопросов нету</h2>
+        ) : (
+          data.map(
+            (el: { id: number; attributes: QuestionItem }, index: number) => {
+              console.log(el);
+              const categoryID = el.category;
+              return (
+                <Card
+                  key={el.id}
+                  productInfo={el}
+                  id={el.id}
+                  userId={dataUser?.id}
+                  category_id={categoryID}
+                />
+              );
+            }
+          )
         )}
       </div>
     </div>

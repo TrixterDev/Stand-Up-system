@@ -1,8 +1,12 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import Home from "./Page/Home";
 import "../src/App.sass";
-import Auth from "./components/Auth/Auth";
-import Register from "./components/Auth/Register";
 import { UserPage } from "./components/UserPage";
 import AdminPage from "./Page/AdminPage";
 import PanelStatistic from "./components/adminPanel/adminPanelStatistic";
@@ -16,17 +20,20 @@ import Cookie from "js-cookie";
 import { useState, useEffect } from "react";
 import ArchivePage from "./components/adminPanel/Draft";
 import { UserLayout } from "./components/Layout/UserLayout";
+import { Login } from "./components/Auth/Login";
+import { RegisterPage } from "./components/Auth/Register";
 
 function App() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-  useEffect(() => {}, [navigate]);
-  if (Cookie.get("role") === "admin") {
+  useEffect(() => {}, [navigate, pathname]);
+  if (Cookie.get("role") === "Admin") {
     return (
       <Layout>
         <Routes>
-          <Route path="/" element={<Auth />} />
-          <Route path="/register" element={<Register />} />
+          {/* <Route path="/" element={<Login />} /> */}
+          {/* <Route path="/register" element={<RegisterPage />} /> */}
           <Route path="/admin-page/statistic">
             <Route index element={<PanelStatistic />} />
             <Route path="online" element={<Online />} />
@@ -44,9 +51,9 @@ function App() {
     return (
       <UserLayout>
         <Routes>
-          <Route path="/" element={<Auth />} />
+          <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/user-page" element={<UserPage />} />
         </Routes>
       </UserLayout>
