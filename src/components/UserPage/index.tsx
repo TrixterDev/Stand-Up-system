@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import {
   changeImage,
   changeUserInfo,
   getUserInfo,
-  getUsers,
   uploadImage,
 } from "../../api";
+
 import Cookie from "js-cookie";
 import styles from "./UserPage.module.sass";
 import Btn from "../ui/Btn/Btn";
@@ -13,15 +13,12 @@ import { FaEdit, FaEnvelope, FaPhone, FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Modal } from "../ui/Modal";
 import Input from "../ui/Input/Input";
-import {
-  Button,
-  IconButton,
-  Slide,
-  SlideProps,
-  Snackbar,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Slide from "@mui/material/Slide";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+
 import { useSnackbar } from "notistack";
 
 export interface User {
@@ -40,17 +37,9 @@ export const UserPage = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUserInfo(Cookie.get("key")).then((resp) => {
-      setUser((prevUser) => (resp as User) || prevUser);
-    });
-  }, []);
-
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [avatar, setAvatar] = useState<string>("");
-
   const [userInfo, setUserInfo] = useState<User>({
     firstname: "",
     lastname: "",
@@ -58,14 +47,17 @@ export const UserPage = () => {
     email: "",
     phone: "",
   });
-
   const [updatedUserInfo, setUpdatedUserInfo] = useState<User>({});
-
   const [modalValidation, setModalValidation] = useState({
     emailValid: false,
     phoneValid: false,
     usernameValid: false,
   });
+  useEffect(() => {
+    getUserInfo(Cookie.get("key")).then((resp) => {
+      setUser((prevUser) => (resp as User) || prevUser);
+    });
+  }, []);
 
   type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -209,7 +201,7 @@ export const UserPage = () => {
               />
             </label>
 
-            {/* <label className={styles.firstnameLabel}>
+            <label className={styles.firstnameLabel}>
               Имя
               <Input
                 name="firstname"
@@ -217,7 +209,7 @@ export const UserPage = () => {
                 pHText={user.firstname}
                 onChange={handleChange}
               />
-            </label> */}
+            </label>
 
             <TextField
               id="outlined-basic"

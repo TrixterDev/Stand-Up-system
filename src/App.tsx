@@ -1,14 +1,7 @@
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Home from "./Page/Home";
 import "../src/App.sass";
 import { UserPage } from "./components/UserPage";
-import AdminPage from "./Page/AdminPage";
 import PanelStatistic from "./components/adminPanel/adminPanelStatistic";
 import PanelAnswer from "./components/adminPanel/adminPanelAnswers";
 import PanelQuestion from "./components/adminPanel/adminPanelQuestion";
