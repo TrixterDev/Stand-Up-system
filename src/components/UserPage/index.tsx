@@ -3,25 +3,15 @@ import {
   changeImage,
   changeUserInfo,
   getUserInfo,
-  getUsers,
   uploadImage,
 } from "../../api";
 import Cookie from "js-cookie";
 import styles from "./UserPage.module.sass";
-import Btn from "../ui/Btn/Btn";
 import { FaEdit, FaEnvelope, FaPhone, FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Modal } from "../ui/Modal";
 import Input from "../ui/Input/Input";
-import {
-  Button,
-  IconButton,
-  Slide,
-  SlideProps,
-  Snackbar,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Button, IconButton, Slide, SlideProps, Tooltip } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 export interface User {
@@ -31,7 +21,7 @@ export interface User {
   lastname?: string;
   position?: string;
   phone?: string;
-  avatarka?: string;
+  avatarka?: any;
 }
 
 export const UserPage = () => {
@@ -49,7 +39,7 @@ export const UserPage = () => {
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [open, setOpen] = React.useState(false);
-  const [avatar, setAvatar] = useState<string>("");
+  const [avatar, setAvatar] = useState<File | null>(null);
 
   const [userInfo, setUserInfo] = useState<User>({
     firstname: "",
@@ -102,7 +92,7 @@ export const UserPage = () => {
           });
         }
 
-        if (Object.keys(userInfo).length > 0) {
+        if (userInfo) {
           await changeUserInfo(userInfo, user.id).then((resp) => {
             setShowEditModal(false);
           });
@@ -126,7 +116,11 @@ export const UserPage = () => {
   };
 
   const addAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAvatar(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setAvatar(e.target.files[0]);
+    } else {
+      addAvatar(null);
+    }
   };
 
   return (
@@ -143,11 +137,7 @@ export const UserPage = () => {
         </Tooltip>
         <div className={styles["user-card"]}>
           <img
-            src={
-              user.avatarka
-                ? user.avatarka.data.attributes.url
-                : "/img/base-avatar.png"
-            }
+            src={user.avatarka ? user.avatarka.url : "/img/base-avatar.png"}
             alt={`Аватарка пользователя ${user.username}`}
             className={styles.avatar}
           />
@@ -196,7 +186,7 @@ export const UserPage = () => {
           <div className={styles.form}>
             <label className={styles.avatarLabel}>
               Аватарка
-              {avatar !== "" && (
+              {avatar && (
                 <img
                   src={URL.createObjectURL(avatar)}
                   className={styles.image}
@@ -209,7 +199,7 @@ export const UserPage = () => {
               />
             </label>
 
-            {/* <label className={styles.firstnameLabel}>
+            <label className={styles.firstnameLabel}>
               Имя
               <Input
                 name="firstname"
@@ -217,15 +207,7 @@ export const UserPage = () => {
                 pHText={user.firstname}
                 onChange={handleChange}
               />
-            </label> */}
-
-            <TextField
-              id="outlined-basic"
-              label="Outlined"
-              variant="outlined"
-              name="firstname"
-              onChange={handleChange}
-            />
+            </label>
 
             <label className={styles.lastnameLabel}>
               Фамилия
@@ -270,7 +252,9 @@ export const UserPage = () => {
               />
             </label>
           </div>
-          <Btn textBtn="Сохранить" dC={styles.saveBtn} />
+          <Button variant="contained" style={{ width: "100%", marginTop: 15 }}>
+            Сохранить
+          </Button>
         </form>
       </Modal>
     </div>

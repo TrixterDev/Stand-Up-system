@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { getUserInfo, loginUser } from "../../api";
 import { useTranslation } from "react-i18next";
-import ky from "ky";
+import axios from "axios";
 
 export const Login = () => {
   const [userData, setUserData] = useState<loginData>({
@@ -41,7 +41,7 @@ export const Login = () => {
       .then(async (resp) => {
         console.log(resp);
         Cookie.set("key", resp.jwt);
-        await ky
+        await axios
           .get("http://localhost:1337/api/users/me?populate=role", {
             headers: {
               Authorization: `Bearer ${resp.jwt}`,
@@ -62,7 +62,18 @@ export const Login = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        const errorMessage = err.response.data.error.message;
+        switch (errorMessage) {
+          case "Invalid identifier or password":
+            enqueueSnackbar("Неверный логин или пароль", {
+              variant: "error",
+              autoHideDuration: 2000,
+            });
+            break;
+
+          default:
+            break;
+        }
       })
       .finally(() => {
         setLoading(false);

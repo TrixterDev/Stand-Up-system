@@ -740,46 +740,16 @@ const PanelQuestion = () => {
               <span>Такого пользователя не сущетствует</span>
             )}
             <Autocomplete
-              id="country-select-demo"
-              sx={{ width: 300 }}
-              style={{ width: "100%", marginTop: 20 }}
-              options={autoCompleteUsers}
-              freeSolo
+              options={autoCompleteUsers || []}
               getOptionLabel={(option) => option.username}
-              renderOption={(props, option) => (
-                <Box
-                  component="li"
-                  sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-                  {...props}
-                >
-                  <img
-                    src={
-                      option.avatarka
-                        ? option?.avatarka.url
-                        : "/img/base-avatar.png"
-                    }
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                  {option.username}
-                </Box>
-              )}
+              onChange={(event, value) =>
+                setAddUserField(value?.username || "")
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  disabled={permissionUserLoading}
-                  variant="filled"
-                  label="Введите username пользователя"
-                  inputProps={{
-                    ...params.inputProps,
-                    autoComplete: "new-password",
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setAddUserField(e.target.value);
-                  }}
+                  label="Выберите пользователя"
+                  onChange={(e) => setAddUserField(e.target.value)}
                 />
               )}
             />

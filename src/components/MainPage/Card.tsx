@@ -119,7 +119,6 @@ const CardUi: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
                 variant="contained"
                 fullWidth
                 type="submit"
-                endIcon={<SendIcon />}
               >
                 Ответить
               </Button>

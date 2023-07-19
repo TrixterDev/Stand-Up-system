@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import React, { FormEventHandler, useState, useEffect } from "react";
 import styles from "./auth.module.sass";
 import Cookie from "js-cookie";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar, useSnackbar } from "notistack";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { RegUser } from "../../api";
@@ -51,7 +51,32 @@ export const RegisterPage = () => {
         navigate("/home");
       })
       .catch((err) => {
-        console.log(err);
+        const errorMessage = err.response.data.error.message;
+
+        switch (errorMessage) {
+          case "Email or Username are already taken":
+            enqueueSnackbar("Имя пользователя или емейл уже используются", {
+              variant: "error",
+              autoHideDuration: 2000,
+            });
+            break;
+
+          case "email must be a valid email":
+            enqueueSnackbar("Введите правильный емейл", {
+              variant: "error",
+              autoHideDuration: 2000,
+            });
+            break;
+          case "password must be at least 6 characters":
+            enqueueSnackbar("Пароль должен содержать минимум 6 символов", {
+              variant: "error",
+              autoHideDuration: 2000,
+            });
+            break;
+
+          default:
+            break;
+        }
       })
       .finally(() => {
         setLoading(false);
