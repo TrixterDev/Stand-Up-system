@@ -39,7 +39,6 @@ export const Login = () => {
     setLoading(true);
     loginUser(userData)
       .then(async (resp) => {
-        console.log(resp);
         Cookie.set("key", resp.jwt);
         await axios
           .get("http://localhost:1337/api/users/me?populate=role", {
@@ -47,19 +46,20 @@ export const Login = () => {
               Authorization: `Bearer ${resp.jwt}`,
             },
           })
-          .json()
           .then((resp) => {
-            Cookie.set("role", resp.role.name);
-            if (resp.role.name === "Admin") {
-              navigate("/admin-page/statistics");
+            let userRole = resp.data.role.name;
+
+            Cookie.set("role", userRole);
+            if (userRole === "Admin") {
+              navigate("/admin-page/statistic");
             } else {
               navigate("/home");
             }
+            enqueueSnackbar("Successful login", {
+              variant: "success",
+              autoHideDuration: 3000,
+            });
           });
-        enqueueSnackbar("Successful login", {
-          variant: "success",
-          autoHideDuration: 3000,
-        });
       })
       .catch((err) => {
         const errorMessage = err.response.data.error.message;
