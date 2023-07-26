@@ -1,121 +1,124 @@
+import { Question } from "./index";
+import axios from "axios";
 import Cookie from "js-cookie";
-import ky, { ResponsePromise } from "ky";
+import { User } from "../components/UserPage";
 
-// dsdsd
+const apiUrl = "http://localhost:1337/api";
 
-export interface User {
-  // Типы данных для пользователя
-}
-
-export interface Question {
-  // Типы данных для вопроса
-}
-
-const strapiAPI = ky.create({
-  prefixUrl: "http://localhost:1337/api",
+const axiosInstance = axios.create({
+  baseURL: apiUrl,
 });
 
-const request = <T>(
-  url: string,
-  options?: Record<string, any>
-): Promise<any> => {
-  const token = Cookie.get("key");
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-  return strapiAPI(url, { ...options, headers }).json();
-};
+axiosInstance.interceptors.request.use(
+  (config: { headers: { Authorization: string } }) => {
+    const token = Cookie.get("key");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }
+);
 
 export const getUserInfo = async (): Promise<User> => {
-  return await request<User>("users/me?populate=deep");
+  const response = await axiosInstance.get<User>("users/me?populate=deep");
+  return response.data;
 };
 
-// export const loginUser = (data: {
-//   username: string;
-//   password: string;
-// }): Promise<any> => {
-//   return request("auth/local", { method: "post", json: data });
-// };
+export const getUserInfoByUsername = async (
+  username: string
+): Promise<User> => {
+  const response = await axiosInstance.get<User>(
+    `users?filters[username]=${username}&populate=deep`
+  );
+  return response.data;
+};
 
-export const loginUser = (data: {
+export const loginUser = async (data: {
   identifier: string;
   password: string;
 }): Promise<any> => {
-  return strapiAPI.post("auth/local?populate=*", { json: data }).json();
+  const response = await axiosInstance.post("auth/local", data);
+  return response.data;
 };
 
-export const RegUser = (data: {
+export const RegUser = async (data: {
   username: string;
   email: string;
   password: string;
 }): Promise<any> => {
-  return request("auth/local/register", { method: "post", json: data });
+  const response = await axiosInstance.post("auth/local/register", data);
+  return response.data;
 };
 
-export const getData = (): Promise<any> => {
-  return request("questions?populate=*", {
-    method: "get",
-  });
+export const getData = async (): Promise<any> => {
+  const response = await axiosInstance.get("questions?populate=*");
+  return response.data;
 };
 
-export const getUsers = (): Promise<any> => {
-  return request("users?populate=*", {
-    method: "get",
-  });
+export const getUsers = async (): Promise<any> => {
+  const response = await axiosInstance.get("users?populate=*");
+  return response.data;
 };
 
-export const changeData = (
+export const changeData = async (
   data: any,
   idUsers: number,
   createdDate: string
 ): Promise<any> => {
-  return request("answers?populate=deep", {
-    method: "post",
-    json: {
-      data: {
-        createdDate: createdDate,
-        answer: data.answer,
-        category: data.category_id,
-        question: data.id,
-        users: idUsers,
-      },
+  const response = await axiosInstance.post("answers?populate=deep", {
+    data: {
+      createdDate: createdDate,
+      answer: data.answer,
+      category: data.category_id,
+      question: data.id,
+      users: idUsers,
     },
   });
+  return response.data;
 };
 
-export const changeUserInfo = (data: User, id: number): Promise<any> => {
-  return request(`users/${id}`, { method: "put", json: data });
-};
-export const changeUserOnline = (data: User, id: number): Promise<any> => {
-  return request(`users/${id}`, { method: "put", json: data });
-};
-export const uploadImage = (data: FormData): Promise<any> => {
-  return request("upload", { method: "post", body: data });
+export const changeUserInfo = async (data: User, id: number): Promise<any> => {
+  const response = await axiosInstance.put(`users/${id}`, data);
+  return response.data;
 };
 
-export const changeImage = (data: FormData, id: number): Promise<any> => {
-  return request(`upload?id=${id}`, { method: "post", body: data });
+export const changeUserOnline = async (
+  data: User,
+  id: number
+): Promise<any> => {
+  const response = await axiosInstance.put(`users/${id}`, data);
+  return response.data;
 };
 
-export const getQuestions = (): Promise<Question[]> => {
-  return request("questions?populate=deep");
+export const uploadImage = async (data: FormData): Promise<any> => {
+  const response = await axiosInstance.post("upload", data);
+  return response.data;
 };
 
-export const getCategories = (): Promise<any> => {
-  return request("question-categories");
+export const changeImage = async (data: FormData, id: number): Promise<any> => {
+  const response = await axiosInstance.post(`upload?id=${id}`, data);
+  return response.data;
 };
 
-export const updateCategories = (data: any[]): Promise<any> => {
-  console.log("Update working");
+export const getQuestions = async (): Promise<Question[]> => {
+  const response = await axiosInstance.get("questions?populate=deep");
+  return response.data;
+};
+
+export const getCategories = async (): Promise<any> => {
+  const response = await axiosInstance.get("question-categories");
+  return response.data;
+};
+
+export const updateCategories = async (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
     if (!item.id) {
-      return request("question-categories", {
-        method: "post",
-        json: { data: { category_name: item.category_name } },
+      return axiosInstance.post("question-categories", {
+        data: { category_name: item.category_name },
       });
     } else {
-      return request(`question-categories/${item.id}`, {
-        method: "put",
-        json: { data: item },
+      return axiosInstance.put(`question-categories/${item.id}`, {
+        data: item,
       });
     }
   });
@@ -123,22 +126,26 @@ export const updateCategories = (data: any[]): Promise<any> => {
   return Promise.all(requests);
 };
 
-export const GetloginUser = (
+export const GetloginUser = async (
   token: any,
   data: string,
   id: number
 ): Promise<any> => {
-  return request(`users/${id}`, {
-    method: "put",
-    headers: { Authorization: `Bearer ${token}` },
-    json: { about: data },
-  });
+  const response = await axiosInstance.put(
+    `users/${id}`,
+    { about: data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
 };
 
-export const getCategory = (category_name: string): Promise<any> => {
-  return request(
+export const getCategory = async (category_name: string): Promise<any> => {
+  const response = await axiosInstance.get(
     `question-categories?filters[category_name][$eq]=${category_name}`
   );
+  return response.data;
 };
 
 interface dataItem {
@@ -147,29 +154,26 @@ interface dataItem {
   edit: boolean;
   category_id: number;
 }
-export const updateQuestions = (data: dataItem[]): Promise<any> => {
-  console.log("Update working");
+
+export const updateQuestions = async (data: dataItem[]): Promise<any> => {
   const requests = data.map((item) => {
     if (typeof item.id === "string") {
       if (!item.edit) {
         if (!item.category_id) {
           return getCategory(item.category).then((resp) => {
-            return request("questions", {
-              method: "post",
-              json: { data: { title: item.title, category: resp.data[0].id } },
+            return axiosInstance.post("questions", {
+              data: { title: item.title, category: resp.data[0].id },
             });
           });
         } else {
-          return request("questions", {
-            method: "post",
-            json: { data: { title: item.title, category: item.category_id } },
+          return axiosInstance.post("questions", {
+            data: { title: item.title, category: item.category_id },
           });
         }
       }
     } else {
-      return request(`questions/${item.id}`, {
-        method: "put",
-        json: { data: { title: item.title } },
+      return axiosInstance.put(`questions/${item.id}`, {
+        data: { title: item.title },
       });
     }
   });
@@ -177,19 +181,27 @@ export const updateQuestions = (data: dataItem[]): Promise<any> => {
   return Promise.all(requests);
 };
 
-export const removeQuestions = (data: any[]): Promise<any> => {
-  console.log("Remove working");
+export const removeQuestions = async (data: any[]): Promise<any> => {
   const requests = data.map((item) => {
-    return request(`questions/${item.id}`, { method: "delete" });
+    return axiosInstance.delete(`questions/${item.id}`);
   });
 
   return Promise.all(requests);
 };
 
-export const removeCategories = (data: any[]): Promise<any> => {
+export const removeCategories = async (
+  data: any[],
+  questions: Question[]
+): Promise<any> => {
   const requests = data.map((item) => {
     if (item.deleted) {
-      return request(`question-categories/${item.id}`, { method: "delete" });
+      questions.map((elem) => {
+        if (elem.category === item.category_name) {
+          console.log("ok");
+          console.log(item, elem);
+        }
+      });
+      return axiosInstance.delete(`question-categories/${item.id}`);
     }
   });
 
@@ -197,36 +209,64 @@ export const removeCategories = (data: any[]): Promise<any> => {
 };
 
 export const getAnswers = async () => {
-  return await strapiAPI.get("answers?populate=deep").json();
+  const response = await axiosInstance.get("answers?populate=deep");
+  return response.data;
 };
 
 export const getAnswersByUser = async (
   username: string,
   time: string | undefined
 ): Promise<any> => {
-  return await strapiAPI
-    .get(
-      `answers?populate=deep&filters[createdDate][$eq]=${
-        time ? time : "*"
-      }&filters[[users][data][attributes][username]][$and]=${username}
-      }`
-    )
-    .json();
+  const response = await axiosInstance.get(
+    `answers?populate=deep,3&filters[users][username]=${username}${
+      time ? `&filters[createdDate]=${time}` : ``
+    }`
+  );
+  return response.data;
 };
 
-export const getAnswersById = async (id: number): Promise<any> => {
-  return await strapiAPI
-    .get(
-      `answers?populate=deep&filter[users[data[attributes[username]]]]=${id}`
-    )
-    .json();
+export const getAnswersById = async (
+  id: number | string,
+  time: string | undefined
+): Promise<any> => {
+  const response = await axiosInstance.get(
+    `answers?populate=deep,3&filters[id]=${id}${
+      time ? `&filters[createdDate]=${time}` : ``
+    }`
+  );
+  return response.data;
 };
 
 export const getAnswersByTitle = async (
-  title: string
-  // date: string
+  title: string,
+  date: string
 ): Promise<any> => {
-  return await strapiAPI
-    .get(`answers?populate=deep&filters[answer]=${title}`)
-    .json();
+  const response = await axiosInstance.get(
+    `answers?populate=deep&filters[answer]=${title}${
+      date ? `&filters[createdDate]=${date}` : ``
+    }`
+  );
+  return response.data;
+};
+
+export const updateQuestionById = async (
+  questionData: Question,
+  id: number
+): Promise<any> => {
+  const response = await axiosInstance.put(`questions/${id}?populate=deep`, {
+    data: questionData,
+  });
+  return response.data;
+};
+
+export const getQuestionById = async (id: number): Promise<any> => {
+  const response = await axiosInstance.get(`questions/${id}?populate=deep`);
+  return response.data;
+};
+
+export const getUserByUsername = async (username: string): Promise<any> => {
+  const response = await axiosInstance.get(
+    `users?filters[username][$eq]=${username}`
+  );
+  return response.data;
 };

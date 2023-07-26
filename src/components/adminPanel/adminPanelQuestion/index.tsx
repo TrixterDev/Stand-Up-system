@@ -3,21 +3,35 @@ import { v4 as uuidv4 } from "uuid";
 import st from "./style.module.sass";
 import Btn from "../../ui/Btn/Btn";
 import Input from "../../ui/Input/Input";
-import { FaEdit, FaPlus, FaTrash, FaTrashAlt } from "react-icons/fa";
+import {
+  FaCross,
+  FaEdit,
+  FaPlus,
+  FaTimes,
+  FaTrash,
+  FaTrashAlt,
+} from "react-icons/fa";
 import clsx from "clsx";
 import { Loader } from "../../ui/Loader";
 import {
   getCategories,
+  getQuestionById,
   getQuestions,
+  getUserInfo,
+  getUserInfoByUsername,
   getUsers,
   removeCategories,
   removeQuestions,
   updateCategories,
+  updateQuestionById,
   updateQuestions,
 } from "../../../api";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Modal } from "../../ui/Modal";
+import { useNavigate } from "react-router";
+import { Autocomplete, Box, Button, TextField, Tooltip } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 interface Category {
   id: string;
@@ -64,7 +78,17 @@ const PanelQuestion = () => {
     error: null,
   });
 
-  const [autoCompleteUsers, setAutoCompleteUsers] = useState<any>([]);
+  const [autoCompleteUsers, setAutoCompleteUsers] = useState<any[] | null>(
+    null
+  );
+
+  const [addUserField, setAddUserField] = useState<string | null>(null);
+  const [permissionUserLoading, setPermissionsUserLoading] =
+    useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     setLoading(true);
@@ -88,6 +112,8 @@ const PanelQuestion = () => {
           category_id: item.attributes.category.data.id,
         }));
         setQuestions(questionsData);
+
+        getUsers().then((resp) => setAutoCompleteUsers(resp));
         console.log(categoriesData);
         setActiveCategory({
           category_name: categoriesData[0].category_name,
@@ -143,10 +169,6 @@ const PanelQuestion = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setAutoCompleteUsers(getUsers().then((resp) => console.log(resp)));
-  }, [addingNewUserForm]);
-
   const addQuestion = () => {
     if (activeCategory) {
       const newQuestion: Question = {
@@ -164,9 +186,78 @@ const PanelQuestion = () => {
   const addUserToQuestion = (index: number) => {
     setModalUsers({
       users: questions[index].access_users.data,
+      question: questions[index],
     });
 
     setModalUsersVisible(true);
+  };
+
+  const addUserToQuestionFunc = () => {
+    setPermissionsUserLoading(true);
+
+    const fetchData = async () => {
+      try {
+        let userId = null;
+        await getUserInfoByUsername(addUserField).then((resp) => {
+          if (resp.length > 0) {
+            userId = resp[0].id;
+          } else {
+            enqueueSnackbar("User not found", { variant: "error" });
+          }
+        });
+
+        await getQuestionById(modalUsers.question.id)
+          .then((resp) => {
+            return {
+              ...resp.data.attributes,
+              access_users: {
+                disconnect: [],
+                connect: [{ id: userId }],
+              },
+            };
+          })
+          .then((resp) => {
+            console.log(resp);
+            updateQuestionById(resp, modalUsers.question.id).then((resp) => {
+              setModalUsers((prev) => {
+                return {
+                  ...prev,
+                  users: resp.data.attributes.access_users.data,
+                };
+              });
+              enqueueSnackbar("Пользователь был успешно привязан", {
+                variant: "success",
+              });
+            });
+
+            setQuestions((prev) => {
+              const questions = [...prev];
+              const index = questions.findIndex(
+                (item) => item.id === modalUsers.question.id
+              );
+              console.log(index);
+              questions.splice(index, 1, {
+                ...resp,
+                id: resp.id,
+                edit: false,
+                category: resp.category.data.attributes.category_name,
+                category_id: resp.category.data.id,
+              });
+              console.log(questions);
+              return [...prev];
+            });
+          });
+      } catch (error) {
+        console.log("Error", error);
+        enqueueSnackbar("При добавлении пользователя возникла ошибка", {
+          variant: "error",
+        });
+      } finally {
+        setPermissionsUserLoading(false);
+      }
+    };
+
+    fetchData();
   };
 
   const save = async () => {
@@ -182,7 +273,7 @@ const PanelQuestion = () => {
       }
 
       if (categoriesBasket.length > 0) {
-        await removeCategories(categoriesBasket);
+        await removeCategories(categoriesBasket, questions);
       }
 
       console.log("Save successful");
@@ -491,8 +582,8 @@ const PanelQuestion = () => {
                             return (
                               <img
                                 src={
-                                  item?.avatarka?.data?.attributes?.url ||
-                                  "/img/base-avatar.png"
+                                  item.attributes.avatarka.data?.attributes
+                                    ?.url || "/img/base-avatar.png"
                                 }
                                 alt={item.username}
                                 className={st.avatar}
@@ -524,17 +615,157 @@ const PanelQuestion = () => {
           <h4>Отображение</h4>
           <p>Этим пользователям будет отображаться этот вопрос:</p>
           <ul className={st["users-list"]}>
-            {modalUsers.users.map((item) => {
-              return <li>{item.attributes.username}</li>;
+            {modalUsers.users.map((item, index) => {
+              return (
+                <Tooltip
+                  title={
+                    <React.Fragment>
+                      <div className={st["user-info-card"]}>
+                        <img
+                          src={
+                            item.attributes.avatarka.data?.attributes?.url ||
+                            "/img/base-avatar.png"
+                          }
+                          style={{ width: 25, height: 25, borderRadius: "50%" }}
+                        />
+
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                          >
+                            <h5>{item.attributes.firstname}</h5>
+                            <h5>{item.attributes.lastname}</h5>
+                          </div>
+
+                          <h4
+                            style={{
+                              color: item.attributes.online
+                                ? "lime"
+                                : "#ff4444",
+                              fontSize: 14,
+                            }}
+                          >
+                            {item.attributes.online ? "Онлайн" : "Оффлайн"}
+                          </h4>
+                          <h4 style={{ color: "#fff", fontSize: 14 }}>
+                            @{item.attributes.username}
+                          </h4>
+                          <h4 style={{ color: "#fff", fontSize: 14 }}>
+                            {item.attributes.email}
+                          </h4>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  }
+                  followCursor
+                >
+                  <li className={st["users-list-item"]}>
+                    <img
+                      src={
+                        item.attributes.avatarka.data?.attributes?.url ||
+                        "/img/base-avatar.png"
+                      }
+                      style={{ width: 25, height: 25, borderRadius: "50%" }}
+                    />
+                    <span onClick={() => navigate("/")}>
+                      {item.attributes.username}
+                    </span>
+
+                    <button
+                      onClick={() => {
+                        setPermissionsUserLoading(true);
+
+                        const fetchData = async () => {
+                          try {
+                            let userId = item.id;
+
+                            getQuestionById(modalUsers.question.id)
+                              .then((resp) => {
+                                return {
+                                  ...resp.data.attributes,
+                                  access_users: {
+                                    disconnect: [{ id: userId }],
+                                    connect: [],
+                                  },
+                                };
+                              })
+                              .then((resp) => {
+                                console.log(resp);
+                                updateQuestionById(
+                                  resp,
+                                  modalUsers.question.id
+                                ).then((resp) => {
+                                  setModalUsers((prev) => {
+                                    return {
+                                      ...prev,
+                                      users:
+                                        resp.data.attributes.access_users.data,
+                                    };
+                                  });
+                                });
+                              });
+
+                            enqueueSnackbar(
+                              "Пользователь был успешно отвзязан",
+                              {
+                                variant: "success",
+                              }
+                            );
+                          } catch (error) {
+                            console.log(error);
+                          } finally {
+                            setPermissionsUserLoading(false);
+                          }
+                        };
+
+                        fetchData();
+                      }}
+                    >
+                      <FaTimes />
+                    </button>
+                  </li>
+                </Tooltip>
+              );
             })}
           </ul>
 
           <div className={st["users-adding-form"]}>
-            {addingNewUserForm.error && (
+            {addingNewUserForm.error === "user not found" && (
               <span>Такого пользователя не сущетствует</span>
             )}
-            <input type="text" placeholder="Введите email или username..." />
-            <button>Добавить</button>
+            <Autocomplete
+              options={autoCompleteUsers || []}
+              getOptionLabel={(option) => option.username}
+              onChange={(event, value) =>
+                setAddUserField(value?.username || "")
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Выберите пользователя"
+                  onChange={(e) => setAddUserField(e.target.value)}
+                />
+              )}
+            />
+
+            <Button
+              onClick={addUserToQuestionFunc}
+              variant="contained"
+              style={{
+                backgroundColor: "#ffcc00",
+                marginTop: 20,
+                alignSelf: "center",
+              }}
+              disabled={permissionUserLoading}
+            >
+              Добавить
+            </Button>
           </div>
           {/* <button className={st["add-btn"]}>Добавить пользователя</button> */}
         </Modal>

@@ -3,16 +3,16 @@ import {
   changeImage,
   changeUserInfo,
   getUserInfo,
-  getUsers,
   uploadImage,
 } from "../../api";
 import Cookie from "js-cookie";
 import styles from "./UserPage.module.sass";
-import Btn from "../ui/Btn/Btn";
 import { FaEdit, FaEnvelope, FaPhone, FaShareAlt } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Modal } from "../ui/Modal";
 import Input from "../ui/Input/Input";
+import { Button, IconButton, Slide, SlideProps, Tooltip } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 export interface User {
   username?: string;
@@ -21,11 +21,13 @@ export interface User {
   lastname?: string;
   position?: string;
   phone?: string;
-  avatarka?: string;
+  avatarka?: any;
 }
 
 export const UserPage = () => {
   const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -36,8 +38,8 @@ export const UserPage = () => {
   }, []);
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
-  const [avatar, setAvatar] = useState<string>("");
+  const [open, setOpen] = React.useState(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
 
   const [userInfo, setUserInfo] = useState<User>({
     firstname: "",
@@ -55,6 +57,12 @@ export const UserPage = () => {
     usernameValid: false,
   });
 
+  type TransitionProps = Omit<SlideProps, "direction">;
+
+  function TransitionLeft(props: TransitionProps) {
+    return <Slide {...props} direction="left" />;
+  }
+
   if (!user) {
     return <h2>Loading</h2>;
   }
@@ -67,41 +75,66 @@ export const UserPage = () => {
     e.preventDefault();
     const fetchData = async () => {
       try {
+        let userInfo = { ...updatedUserInfo };
         const image = new FormData();
         image.append("files", avatar);
-        const setAvatar = async (file) => {
+        if (avatar) {
           if (user.avatarka) {
-            await changeImage(file, user.avatarka.id).then((resp) => {
-              setUpdatedUserInfo((prev: any) => {
-                return { ...prev, avatarka: resp[0] };
+            await changeImage(image, user.avatarka.id).then((resp) => {
+              console.log("avatar successfully changed");
+              enqueueSnackbar("Аватарка успешно изменена", {
+                variant: "success",
               });
             });
           } else {
-            await uploadImage(file).then((resp) => {
-              setUpdatedUserInfo((prev: any) => {
-                return { ...prev, avatarka: resp[0] };
+            await uploadImage(image).then((resp) => {
+              console.log("avatar successfully sent to server");
+              userInfo = { ...userInfo, avatarka: resp[0] };
+            });
+          }
+        }
+
+        if (userInfo) {
+          await changeUserInfo(userInfo, user.id).then((resp) => {
+            getUserInfo().then((userResp) => {
+              setUser(userResp);
+              enqueueSnackbar("Данные успешно изменены", {
+                variant: "success",
               });
+
+              setShowEditModal(false);
             });
-          }
-        };
-
-        await setAvatar(image);
-
-        await changeUserInfo(updatedUserInfo, user.id).then((resp) => {
-          setShowEditModal(false);
-
-          if (updatedUserInfo.avatarka) {
-            setUser((prev) => {
-              return { ...prev, ...resp.avatarka };
+          });
+        }
+      } catch (error: any) {
+        console.log(error.response.data.error.message);
+        let errorMessage = error.response.data.error.message;
+        switch (errorMessage) {
+          case "email must be at least 1 characters":
+            enqueueSnackbar("Эл.почта должна содержать минимум 1 символ", {
+              variant: "error",
             });
-          }
-        });
-      } catch (error) {
-        alert("Произошла ошибка");
+            break;
+          case "Username already taken":
+            enqueueSnackbar("Имя пользователя уже занято", {
+              variant: "error",
+            });
+            break;
+          default:
+            break;
+        }
       } finally {
-        // location.reload();
+        setAvatar(null);
+        setUserInfo({
+          firstname: "",
+          lastname: "",
+          username: "",
+          email: "",
+          phone: "",
+        });
       }
     };
+
     fetchData();
   };
 
@@ -116,17 +149,25 @@ export const UserPage = () => {
   };
 
   const addAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAvatar(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setAvatar(e.target.files[0]);
+    } else {
+      addAvatar(null);
+    }
   };
 
   return (
     <div className={styles.userPage}>
       <div className={styles.container}>
-        <Btn
-          textBtn="Назад"
-          onClick={() => navigate("/home")}
-          dC={styles["back-btn"]}
-        />
+        <Tooltip title="Назад">
+          <Button
+            variant="contained"
+            style={{ background: "#333", alignSelf: "flex-start" }}
+            onClick={() => navigate("/home")}
+          >
+            Назад
+          </Button>
+        </Tooltip>
         <div className={styles["user-card"]}>
           <img
             src={user.avatarka ? user.avatarka.url : "/img/base-avatar.png"}
@@ -152,15 +193,23 @@ export const UserPage = () => {
             </div>
           </div>
           <div className={styles.buttons}>
-            <button
-              className={styles.btn}
-              onClick={() => setShowEditModal(true)}
-            >
-              <FaEdit />
-            </button>
-            <button className={styles.btn}>
-              <FaShareAlt />
-            </button>
+            <Tooltip title="Редактировать">
+              {/* <button
+                className={styles.btn}
+                onClick={() => setShowEditModal(true)}
+              >
+                <FaEdit />
+              </button> */}
+
+              <IconButton onClick={() => setShowEditModal(true)}>
+                <FaEdit />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Поделиться">
+              <IconButton onClick={() => enqueueSnackbar("Недоступно")}>
+                <FaShareAlt />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -170,7 +219,7 @@ export const UserPage = () => {
           <div className={styles.form}>
             <label className={styles.avatarLabel}>
               Аватарка
-              {avatar !== "" && (
+              {avatar && (
                 <img
                   src={URL.createObjectURL(avatar)}
                   className={styles.image}
@@ -236,7 +285,13 @@ export const UserPage = () => {
               />
             </label>
           </div>
-          <Btn textBtn="Сохранить" dC={styles.saveBtn} />
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: 15 }}
+            onClick={saveUserInfo}
+          >
+            Сохранить
+          </Button>
         </form>
       </Modal>
     </div>

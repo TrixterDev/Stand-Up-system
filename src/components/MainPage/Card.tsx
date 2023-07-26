@@ -1,11 +1,15 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
 import st from "./MainPage.module.sass";
 import React, { useEffect, useState } from "react";
-import { questionItem } from ".";
-import Btn from "../ui/Btn/Btn";
 import { changeData, getUserInfo } from "../../api";
-import { it } from "date-fns/locale";
 import { Loader } from "../ui/Loader";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
+import { Button, CardActions, TextField } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 interface props {
   id: number;
@@ -22,7 +26,7 @@ interface itemKeys {
   userId: number;
   createdDate: string;
 }
-const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
+const CardUi: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
   const [item, setItem] = useState<itemKeys>({
     title: productInfo.title,
     answer: "",
@@ -74,29 +78,56 @@ const Card: React.FC<props> = ({ productInfo, userId, id, category_id }) => {
   }
 
   return (
-    <div key={item?.id} className={st.grid_item}>
-      {item.title}
+    <div key={item?.id}>
       <form onSubmit={handleSubmit}>
         {submitted ? (
-          <div>
-            <p>Ответь отправлен. Спасибо! </p>
-            <p>Вот ответ: {item.answer}</p>
-          </div>
+          <Card sx={{ minWidth: 275 }} className={st.doneAns}>
+            <CardContent className={st.doneAns__title}>
+              <h3>Ответ отправлен. Спасибо! </h3>
+            </CardContent>
+            <CardActions className={st.doneAns__desc}>
+              <p>Ваш ответ: {item.answer}</p>
+            </CardActions>
+          </Card>
         ) : (
-          <div className={st.input_And_btn}>
-            <input
-              className={st.input_style}
-              type="text"
-              name="answer"
-              value={item.answer}
-              onChange={(e) => setItem({ ...item, answer: e.target.value })}
-            />
-            <Btn textBtn="submit" />
-          </div>
+          <Accordion className={st.card}>
+            <AccordionSummary
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>{item.title}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <TextField
+                style={{ borderColor: "#fff" }}
+                className={st.input_style}
+                type="number"
+                name="answer"
+                value={item.answer}
+                onChange={(e) => setItem({ ...item, answer: e.target.value })}
+                fullWidth
+                variant="standard"
+                id="fullWidth"
+                label="Ответ"
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
+              />
+
+              <Button
+                className={st.btn}
+                variant="contained"
+                fullWidth
+                type="submit"
+              >
+                Ответить
+              </Button>
+            </AccordionDetails>
+          </Accordion>
         )}
       </form>
     </div>
   );
 };
 
-export default Card;
+export default CardUi;

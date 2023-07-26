@@ -1,173 +1,88 @@
-.auth
-  &__wrap
-    height: 100vh
-    background: url(./bg.svg) no-repeat center
-    background-size: cover
-    display: flex
-    align-items: center
-    justify-content: center
-    padding: 25px
-    > div
-      width: max-content
-      height: max-content
-      margin: auto
-  &__content
-    background: #33333399
-    border-radius: 2rem
-    padding: 3.4375rem
-    width: 100%
-    display: flex
-    flex-direction: column
-    gap: 20px
-    align-items: center
-    justify-content: center
-    margin-top: -70px
-  &__title
-    display: flex
-    flex-direction: column
-    align-items: center
-    color: #fff
-    max-height: 150px
-  &__input
-    width: 100%
-    margin-top: 2.625rem
-  &__btn
-    margin-top: 1.875rem
-    display: flex
-    align-items: center
-    gap: 1.25rem
-    width: 100%
-    > input
-      width: 100%
-    > button
-      border-radius: .75rem
-
-.customInput
-  position: relative
-  width: 100%
-  > label
-    position: absolute
-    left: 1.5625rem
-    top: .9375rem
-    width: 80%
-    transition: .3s all
-    margin-top: 0
-  > input
-    width: 100%
-    color: #fff
-    &:focus
-      color: #000
-      + label
-        top: -1.5625rem
-        color: #fff
-        left: 0
-
-    &:valid
-      color: #000
-      + label
-        top: -1.5625rem
-        color: #fff
-        left: 0
-
-.span
-  color: white
-  text-align: center
-  & a
-    text-decoration: underline
-    color: #ffcc00
-
-.err
-  color: tomato
-  min-height: 20px
-  margin-top: 30px
-
-.title
-  color: white
-  font-size: 3.3125rem
-  margin: 0
-
-hr
-  background: white
-  width: 80%
-  min-height: 0.25rem
-  margin-top: 0.625rem
-
-.authTitle
-  color: white
-  font-size: 2.625rem
-  margin: 0.3125rem 0 0 0
-
-.form
-  display: grid
-  gap: 1.625rem
-  max-width: 31.25rem
-  width: 100%
-
-label.eyeLabel
-  width: 50px
-  height: 100%
-  position: absolute
-  left: 78%
-  top: 0
+.form_wrapper
+  width: 100vw
+  height: 100vh
   display: flex
-  align-items: center
   justify-content: center
-  background-color: #fff
-  border-radius: 50%
+  align-items: center
+  display: flex
+  background: #111
+  overflow: hidden
 
-.eye
-  width: 32px
-  height: 32px
-  background: url(./eye.svg) no-repeat center
-  color: #333333
-  cursor: pointer
+  .form_field_wrap
+    width: 50%
+    max-height: 100vh
+    height: 100vh
+    overflow-y: auto
+    background: #222
+    border-right: 1px solid rgba(255,255,255,.16)
 
-.checkbox
-  display: none
+    .form
+      max-width: 430px
 
-.checkbox:checked + .eye
-  background: url(./eye-blocked.svg) no-repeat center
+      margin: 100px auto
+      display: flex
+      flex-direction: column
+      gap: 25px
+      padding: 40px
+      border-radius: 5px
 
-.passInput
-  padding-right: 55px
+      &_title
+        color: #f4f4f4
+        font-size: 1.5rem
+        margin-bottom: 1rem
+        & strong
+          font-weight: 700
+          color: #d98f40
 
-  /* Media */
+      &_field
+        position: relative
 
-@media (max-width: 540px)
-  .auth__content
-    padding: 20px
+        &_label
+          position: absolute
+          left: 10px
+          top: 22.5%
+          font-size: 20px
+          color: #e2d3d3
+          transition: .2s
+          pointer-events: none
 
-  .title
-    font-size: 44px
+        input
+          background: unset
+          border: unset
+          outline: unset
+          padding: 15px
+          color: #ecdede
+          font-size: 1rem
+          width: 100%
+          border: 2px solid #413635
+          border-radius: 5px
 
-  .authTitle
-    font-size: 38px
+          &:-webkit-autofill,
+          &:-webkit-autofill:focus
+            transition: background-color 600000s 0s, color 600000s 0s
 
-@media (max-width: 450px)
-  .auth__title
-    max-height: 100px
+          &:focus
+            border: 2px solid #AF2B1E
 
-  .title
-    font-size: 38px
+          &:focus ~ .form_field_label, &:valid ~ .form_field_label
+            top: -10px
+            background: #222
+            padding: 0 10px
+            font-size: 0.875rem
 
-  .authTitle
-    font-size: 34px
+          &::placeholder
+            color: #ccc
 
-  .form
-    gap: 0
+  .form_bg
+    width: 50%
+    height: 100vh
+    background: url("/auth-bg.png") no-repeat
+    background-size: cover
+    background-position: 50%
 
-  .auth__wrap
-    padding: 0 20px
+  p
+    color: #f2f2f2
 
-  .auth__btn
-    display: grid
-
-@media (max-width: 330px)
-  .title
-    font-size: 32px
-
-  .authTitle
-    font-size: 30px
-
-  .auth__input
-    margin-top: 1.25rem
+  a
+    font-weight: 600
+    color: #0d60ad

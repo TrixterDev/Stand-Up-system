@@ -11,6 +11,7 @@ import st from "./style.module.sass";
 import clsx from "clsx";
 import { DraftCard } from "./DraftCard";
 import { format, parseISO } from "date-fns";
+import { Loader } from "../../ui/Loader";
 
 const ArchivePage = () => {
   const [users, setUsers] = useState<any>({
@@ -22,6 +23,7 @@ const ArchivePage = () => {
   const [activeTab, setActiveTab] = useState<"answers" | "questions">(
     "answers"
   );
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState<
     "id" | "name" | "user" | "date"
@@ -85,6 +87,7 @@ const ArchivePage = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSearchQuery(event.target.value);
+    console.log(searchQuery);
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -92,38 +95,36 @@ const ArchivePage = () => {
   };
 
   const search = () => {
+    setLoading(true);
     if (selectedFilter === "user") {
-      getAnswersByUser(searchQuery, time).then((resp) => {
-        setAnswers(resp.data);
-        console.log(resp.data);
-      });
+      getAnswersByUser(searchQuery, time)
+        .then((resp) => {
+          setAnswers(resp.data);
+          console.log(resp.data);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } else if (selectedFilter === "id") {
-      getAnswersById(searchQuery).then((resp) => setAnswers(resp.data));
+      getAnswersById(searchQuery, time).then((resp) => setAnswers(resp.data));
     } else if (selectedFilter === "name") {
-      getAnswersByTitle(searchQuery).then((resp) => setAnswers(resp.data));
+      getAnswersByTitle(searchQuery, time).then((resp) =>
+        setAnswers(resp.data)
+      );
+    }
+    if (answers.length < 1) {
+      setLoading(false);
     }
   };
 
   return (
     <section className={st.container}>
-      <h2 className={st.text}>Архив ответов и вопросов</h2>
-      <div className={st.header}>
-        <div className="tabs">
-          <button
-            className={clsx("tab", activeTab === "answers" && "active")}
-            onClick={() => setActiveTab("answers")}
-          >
-            Ответы
-          </button>
-          <button
-            className={clsx("tab", activeTab === "questions" && "active")}
-            onClick={() => setActiveTab("questions")}
-          >
-            Вопросы
-          </button>
+      {/* {loading && (
+        <div className={st.loader}>
+          <Loader />
         </div>
-      </div>
-
+      )} */}
+      <h2 className={st.text}>Архив ответов</h2>
       {activeTab === "answers" ? (
         <div className={st["draft-content"]}>
           <div className={st["filters"]}>
@@ -143,10 +144,12 @@ const ArchivePage = () => {
                 ))}
               </datalist>
               <select value={selectedFilter} onChange={handleFilterChange}>
+                <option value="" selected disabled>
+                  Выбирите тип
+                </option>
                 <option value="id">По ID</option>
                 <option value="name">По названию</option>
                 <option value="user">По пользователю</option>
-                <option value="date">По дате</option>
               </select>
               <input
                 type="date"
@@ -155,10 +158,9 @@ const ArchivePage = () => {
                   setTime(e.target.value)
                 }
               />
-              <button onClick={search}>Поиск</button>
+              <Btn dC={st.btn} textBtn="Поиск" onClick={search} />
             </div>
           </div>
-
           <div className={st.cards}>
             {answers.map((item: { attributes: { answer: string } }) => (
               <DraftCard title={item.attributes.answer} key={item.id} />

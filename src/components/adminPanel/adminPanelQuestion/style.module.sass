@@ -1,9 +1,9 @@
 .container
   position: relative
   max-width: 1280px
+  padding: 25px
   width: 100%
   margin: 20px auto
-  padding: 15px
   display: flex
   flex-direction: column
   gap: 10px
@@ -202,6 +202,7 @@
   .avatar
     width: 25px
     height: 25px
+    border-radius: .75rem
 
     &:first-child
       width: 20px
@@ -210,14 +211,53 @@
     &:last-child
       width: 20px
       height: 20px
+.modal
+  &-title
+    text-align: center
+  &-desc
+    max-width: 15.625rem
+    margin: auto
+    margin-top: .625rem
+    text-align: center
 
 .users-list
   list-style: none
   display: flex
   flex-direction: column
   gap: 5px
-  margin-top: 10px
-  margin-left: 10px
+  margin-top: 1.5625rem
+  &-item
+    display: inline-flex
+    align-items: center
+    gap: 10px
+.users-list-item
+  padding: .625rem
+  display: flex
+  width: 100%
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  align-items: center
+  justify-content: space-between
+  background: #f2f2f2
+  border-bottom: 2px solid #ccc
+
+  > button
+    font-size: 1.25rem
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
 
 .users-adding-form
   margin-top: 10px
+  display: flex
+  flex-direction: column
+
+.user-info-card
+  display: flex
+  flex-direction: row
+  gap: 10px
+  align-items: flex-start
+
+  h5
+    font-size: 1.125rem

@@ -1,0 +1,17 @@
+{
+  "StandUp": "IWEX StandUp",
+  "login_title": "Авторизация в",
+  "login": "Логин",
+  "password": "Пароль",
+  "login_submit_btn": "Войти",
+  "dont_have_an_account": "Нету аккаунта ? ",
+  "dont_have_an_account_link": "Зарегистрируйтесь",
+
+  "register_title": "Регистрация в",
+  "username": "Имя пользователя",
+  "firstname": "Имя",
+  "lastname": "Фамилия",
+  "register_submit_btn": "Зарегистрироваться",
+  "already_has_account": "Уже есть аккаунт? ",
+  "already_has_account_link": "Авторизуйтесь"
+}
