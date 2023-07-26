@@ -78,27 +78,60 @@ export const UserPage = () => {
         let userInfo = { ...updatedUserInfo };
         const image = new FormData();
         image.append("files", avatar);
-        if (user.avatarka) {
-          await changeImage(image, user.avatarka.id).then((resp) => {
-            console.log("avatar successfully changed");
-            enqueueSnackbar("Аватарка успешно изменена", {
-              variant: "success",
+        if (avatar) {
+          if (user.avatarka) {
+            await changeImage(image, user.avatarka.id).then((resp) => {
+              console.log("avatar successfully changed");
+              enqueueSnackbar("Аватарка успешно изменена", {
+                variant: "success",
+              });
             });
-          });
-        } else {
-          await uploadImage(image).then((resp) => {
-            console.log("avatar successfully sent to server");
-            userInfo = { ...userInfo, avatarka: resp[0] };
-          });
+          } else {
+            await uploadImage(image).then((resp) => {
+              console.log("avatar successfully sent to server");
+              userInfo = { ...userInfo, avatarka: resp[0] };
+            });
+          }
         }
 
         if (userInfo) {
           await changeUserInfo(userInfo, user.id).then((resp) => {
-            setShowEditModal(false);
+            getUserInfo().then((userResp) => {
+              setUser(userResp);
+              enqueueSnackbar("Данные успешно изменены", {
+                variant: "success",
+              });
+
+              setShowEditModal(false);
+            });
           });
         }
-      } catch (error) {
-        alert("Произошла ошибка");
+      } catch (error: any) {
+        console.log(error.response.data.error.message);
+        let errorMessage = error.response.data.error.message;
+        switch (errorMessage) {
+          case "email must be at least 1 characters":
+            enqueueSnackbar("Эл.почта должна содержать минимум 1 символ", {
+              variant: "error",
+            });
+            break;
+          case "Username already taken":
+            enqueueSnackbar("Имя пользователя уже занято", {
+              variant: "error",
+            });
+            break;
+          default:
+            break;
+        }
+      } finally {
+        setAvatar(null);
+        setUserInfo({
+          firstname: "",
+          lastname: "",
+          username: "",
+          email: "",
+          phone: "",
+        });
       }
     };
 
@@ -252,7 +285,11 @@ export const UserPage = () => {
               />
             </label>
           </div>
-          <Button variant="contained" style={{ width: "100%", marginTop: 15 }}>
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: 15 }}
+            onClick={saveUserInfo}
+          >
             Сохранить
           </Button>
         </form>
